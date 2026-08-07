@@ -1,0 +1,20 @@
+Package: SimMark
+Version: 0.0.1
+Date: 2026-08-04
+Title: R Code for Mark Analysis
+Authors@R: c(person(given = "Jeff",
+                        family = "Laake",
+                        role = c("cre","aut"),
+                        email = "jefflaake@gmail.com"))
+Description: An interface to the software package MARK that constructs input
+    files for simulation with MARK. MARK was developed by Gary White
+    and is freely available at <http://www.phidot.org/software/mark/downloads/>
+    but is not open source.
+SystemRequirements: notepad.exe, mark32.exe or mark64.exe on Windows and only mark on Linux (>= 11.2) (see README.txt in package directory)
+Depends:
+    R (>= 2.13.0)
+LazyLoad: yes
+License: GPL (>=2)
+Maintainer: Jeff Laake <jefflaake@gmail.com>
+Encoding: UTF-8
+Config/roxygen2/version: 8.0.0

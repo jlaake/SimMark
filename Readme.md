@@ -1,0 +1,1 @@
+Simulation from capture-recapture models is being added to MARK. This package will function as an interface from R to those capabilities. It is currently in development and not ready for use as of yet.

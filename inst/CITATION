@@ -1,0 +1,11 @@
+citHeader("To cite package 'RMark' in publications use:")
+
+bibentry(bibtype="TechReport",
+   author = person(given="Jeff",family="Laake"),
+   type = "{AFSC} Processed Rep.",
+   number = "2013-01",
+   institution = "Alaska Fish. Sci. Cent., {NOAA}, Natl. Mar. Fish. Serv.",
+   pages="25",
+   title="{RMark} : An R Interface for Analysis of Capture-Recapture Data with MARK",
+   url = "https://apps-afsc.fisheries.noaa.gov/Publications/ProcRpt/PR2013-01.pdf",
+   year = "2013")
