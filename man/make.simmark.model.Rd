@@ -16,6 +16,7 @@ make.simmark.model(
   seed = NULL,
   releases = NULL,
   beta = NULL,
+  real = NULL,
   call = NULL,
   default.fixed = TRUE,
   options = NULL,
@@ -54,9 +55,11 @@ or previously run model (optional)}
 
 \item{seed}{the seed for random number generation}
 
-\item{releases}{matrix of number of releases with columns being nocc-1 and rows are groups}
+\item{releases}{matrix of number of releases with rows being nocc-1 and columns are groups or array with dim occasion,strata,groups}
 
 \item{beta}{vector of parameters for simulation on link scale}
+
+\item{real}{vector of parameters for simulation on real scale}
 
 \item{call}{Pass function call when this function is called from another
 function (e.g.\code{\link{mark}}) (internal use)}

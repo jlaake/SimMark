@@ -51,8 +51,9 @@
 #' @param numsims number of simulations data sets to create
 #' @param simfile name of simulation results file
 #' @param seed the seed for random number generation
-#' @param releases matrix of number of releases with columns being nocc-1 and rows are groups
+#' @param releases matrix of number of releases with rows being nocc-1 and columns are groups or array with dim occasion,strata,groups
 #' @param beta vector of parameters for simulation on link scale
+#' @param real vector of parameters for simulation on real scale
 #' @param call Pass function call when this function is called from another
 #' function (e.g.\code{\link{mark}}) (internal use)
 #' @param default.fixed if TRUE, real parameters for which the design data have
@@ -88,7 +89,7 @@
 #' 
 make.simmark.model <-
 function(data,ddl,parameters=list(),title="",model.name=NULL,initial=NULL,
-         numsims=1,simfile=NULL,seed=NULL,releases=NULL,beta=NULL,call=NULL,
+         numsims=1,simfile=NULL,seed=NULL,releases=NULL,beta=NULL,real=NULL,call=NULL,
 		     default.fixed=TRUE,options=NULL,profile.int=FALSE,chat=NULL,simplify=TRUE,
 		     input.links=NULL,parm.specific=FALSE,mlogit0=TRUE,hessian=FALSE,accumulate=TRUE,
          icvalues=NULL,wrap=TRUE,nodes=101,useddl=FALSE,check.model=FALSE)
@@ -496,21 +497,55 @@ else
 			sep = " ", col.names = FALSE, row.names = FALSE, quote = FALSE, append = TRUE)
 }
 # output releases for each group
-for (i in 1:number.of.groups)
+if(model$model=="CJS")
 {
-  write(paste("releases group=",i,";",sep=""),file=outfile,append=TRUE)
-  write(paste(paste(releases[i,],collapse=" "),";",sep=""),file=outfile,append=TRUE)
-}
+  for (i in 1:number.of.groups)
+  {
+    write(paste("releases group=",i,";",sep=""),file=outfile,append=TRUE)
+    write(paste(paste(releases[,i],collapse=" "),";",sep=""),file=outfile,append=TRUE)
+  }
+} else
+  if(model$model=="Multistrata")
+  {
+    for (i in 1:number.of.groups)
+      for(j in 1:nstrata)
+      {
+         write(paste("releases group=",i," strata=",j,";",sep=""),file=outfile,append=TRUE)
+         write(paste(paste(releases[,j,i],collapse=" "),";",sep=""),file=outfile,append=TRUE)
+      }
+  }  
 # output parmvals and link
-write(paste("parmvals link=",link,";",sep=""),file=outfile,append=TRUE)
-if(!is.list(beta)) stop("beta must be a list of vectors named with parameters")
-parmvals=sum(sapply(beta,length))
-for(i in 1:length(beta))
+identityDM=FALSE
+if(all(apply(complete.design.matrix,1,function(x) sum(as.numeric(x)))==1)
+  &all(apply(complete.design.matrix,2,function(x) sum(as.numeric(x)))==1)) identityDM=TRUE
+if(!is.null(beta))
+{  
+   param.link=link
+   param=beta
+} else
 {
-  iname=names(beta)[i]
-  icol=grep(paste(iname,":",sep=""),colnames(complete.design.matrix))
-  if(!length(icol)==length(beta[[i]])) stop(paste("For ",iname," ",length(beta[[i]])," values specified for ",length(icol)," parameter(s)",sep=""))
-  parmvals[icol]=beta[[i]]
+  if(!is.null(real))
+  {
+    if(!identityDM) stop("\nCannot specify real values when the DM is not an identity matrix")
+    param.link="identity"
+    param=real
+  } else
+      stop("either beta or real needs to be specified for parmvals")
+}
+write(paste("parmvals link=",param.link,";",sep=""),file=outfile,append=TRUE)
+if(!is.list(param)) stop("beta or real must be a list of vectors named with parameters")
+parmvals=NULL
+# need to make them row/column model order
+for(i in 1:length(param))
+{
+  j=which(names(param)==param.names[i])
+  iname=names(param)[j]
+  if(param.link=="identity")
+    icol=grep(paste(iname," ",sep=""),rownames(complete.design.matrix))
+  else
+    icol=grep(paste(iname,":",sep=""),colnames(complete.design.matrix))
+  if(!length(icol)==length(param[[j]])) stop(paste("For ",iname," ",length(param[[j]])," values specified for ",length(icol)," parameter(s)",sep=""))
+  parmvals=c(parmvals,param[[j]])
 }
 write(paste(paste(parmvals,collapse=" "),";",sep=""),file=outfile,append=TRUE)
 
@@ -915,14 +950,24 @@ create.agenest.var=function(data,init.agevar,time.intervals)
   if(is.null(releases))
     stop("\nMust specify releases")
   else
-    if(!is.matrix(releases))
-      stop("\nreleases must be a matrix")
+    if(!is.array(releases))
+      stop("\nreleases must be an array")
     else
     {
-      if(ncol(releases)!=nocc-1)
-        stop("number of columns of releases must be # of occasions -1")
-      if(nrow(releases)!=number.of.groups)
+      len=dim(releases)
+      len=len[length(len)]
+      if(!len==number.of.groups)
         stop("number of rows must be number of groups")
+      len=dim(releases)
+      len=len[1]
+      if(len!=nocc-1)
+        stop("number of releases must be # of occasions -1")
+      len=dim(releases)
+      if(length(len)>2)
+      {
+         if(len[2]!=nstrata)
+           stop("number of columns must be number of strata")
+      }
     }
   hist=sum(releases)
   string=paste("proc title ",title,";")

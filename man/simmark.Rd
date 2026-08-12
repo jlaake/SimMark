@@ -24,6 +24,7 @@ simmark(
   seed = 0,
   releases = NULL,
   beta = NULL,
+  real = NULL,
   nocc = NULL,
   simfile = "simresults.bin",
   output = TRUE,
@@ -102,9 +103,11 @@ age}
 
 \item{seed}{the seed for random number generation; default is 0 for random seed start}
 
-\item{releases}{matrix of number of releases with columns being nocc-1 and rows are groups}
+\item{releases}{matrix of number of releases with rows being nocc-1 and columns are groups or array with dim occasion,strata,groups}
 
 \item{beta}{vector of parameters for simulation on link scale}
+
+\item{real}{vector of parameters for simulation on real scale}
 
 \item{nocc}{number of occasions for Nest model; either time.intervals or nocc must be specified for this model}
 
