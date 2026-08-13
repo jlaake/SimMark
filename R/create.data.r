@@ -33,9 +33,9 @@ create.data=function(model,nocc,ngroups,nstates)
     ch=paste(rep("1",nocc),collapse="")
     simdata=data.frame(ch=rep(ch,ngroups),group=factor(1:ngroups))
     if(ngroups>1)
-      dp=process.data(simdata,model="CJS",groups="group")
+      dp=sim.process.data(simdata,model="CJS",groups="group")
     else
-      dp=process.data(simdata,model="CJS")
+      dp=sim.process.data(simdata,model="CJS")
     return(dp)
   }
 
@@ -57,9 +57,9 @@ create.data=function(model,nocc,ngroups,nstates)
   if(ngroups>1)
   {
     simdata$group=factor(simdata$group)
-    dp=process.data(simdata,model="Multistrata",groups="group")
+    dp=sim.process.data(simdata,model="Multistrata",groups="group")
   }
   else
-    dp=process.data(simdata,model="Multistrata")
+    dp=sim.process.data(simdata,model="Multistrata")
   return(dp)
 }
