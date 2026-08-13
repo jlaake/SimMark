@@ -216,7 +216,7 @@ if(is.null(data$data))
       message("Warning: specification of ddl ignored, as data have not been processed\n")
       ddl=NULL
    }
-   data.proc=process.data(data,begin.time=begin.time, model=model,mixtures=mixtures, 
+   data.proc=sim.process.data(data,begin.time=begin.time, model=model,mixtures=mixtures, 
                           groups = groups, age.var = age.var, initial.ages = initial.ages, 
                           age.unit = age.unit, time.intervals = time.intervals,nocc=nocc,
 				                  allgroups=allgroups, strata.labels=strata.labels,counts=counts,events=events)

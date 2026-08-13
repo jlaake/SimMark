@@ -46,8 +46,7 @@
 #' @param parameters List of parameter formula specifications
 #' @param title Title for the analysis (optional)
 #' @param model.name Model name to override default name (optional)
-#' @param initial Vector of named or unnamed initial values for beta parameters
-#' or previously run model (optional)
+#' @param initial Vector of named or unnamed initial values for beta parameters or previously run model (optional)
 #' @param numsims number of simulations data sets to create
 #' @param simfile name of simulation results file
 #' @param seed the seed for random number generation
@@ -516,8 +515,8 @@ if(model$model=="CJS")
   }  
 # output parmvals and link
 identityDM=FALSE
-if(all(apply(complete.design.matrix,1,function(x) sum(as.numeric(x)))==1)
-  &all(apply(complete.design.matrix,2,function(x) sum(as.numeric(x)))==1)) identityDM=TRUE
+if(all(apply(complete.design.matrix,1,function(x) sum(as.numeric(x)))==1)&
+   all(apply(complete.design.matrix,2,function(x) sum(as.numeric(x)))==1)) identityDM=TRUE
 if(!is.null(beta))
 {  
    param.link=link

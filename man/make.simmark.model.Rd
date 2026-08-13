@@ -46,8 +46,7 @@ make.simmark.model(
 
 \item{model.name}{Model name to override default name (optional)}
 
-\item{initial}{Vector of named or unnamed initial values for beta parameters
-or previously run model (optional)}
+\item{initial}{Vector of named or unnamed initial values for beta parameters or previously run model (optional)}
 
 \item{numsims}{number of simulations data sets to create}
 

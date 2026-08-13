@@ -1,67 +1,57 @@
 # attach packages
 library(RMark)
 library(SimMark)
- 
-## CJS ##
 
-# Define function to create a CJS data set with specifie number of occasions and number of groups
-# group variable named group. Could be expanded if wanted to introduce age into the model.
-create_cjs_data=function(nocc,ngroups)
-{
-  ch=paste(rep("1",nocc),collapse="")
-  simdata=data.frame(ch=rep(ch,ngroups),group=factor(1:ngroups))
-  if(ngroups>1)
-    dp=process.data(simdata,model="CJS",groups="group")
-  else
-    dp=process.data(simdata,model="CJS")
-  return(dp)
-}
-
-# 4 occasions, 3 groups, Phi(.)p(.) model
+# CJS 4 occasions, 3 groups, Phi(.)p(.) model
 nocc=4
 ngroups=3
+simdata=create.data("CJS",nocc,ngroups)
+
 dm.formulas=list(Phi=list(formula=~1),p=list(formula=~1)) # design matrix formulas Phi(.)p(.)
 beta.values=list(Phi=1,p=-.3) # parameters in list can be in any order; length of values must match number of columns in design matrix
 release.values=matrix(c(rep(500,nocc-1),rep(200,nocc-1),rep(400,nocc-1)),ncol=ngroups) # release values for 3 groups
 # run simulations
-mod=simmark(create_cjs_data(nocc,ngroups),model.parameters=dm.formulas,releases=release.values,numsims=1,
+mod=simmark(simdata,model.parameters=dm.formulas,releases=release.values,numsims=1,
     beta=beta.values,filename="simresults.bin")
 
 
-# 6 occasions, 1 group, Phi(.)p(time) model; specify real values
+# CJS 6 occasions, 1 group, Phi(.)p(time) model; specify real values
 nocc=6
 ngroups=1
+simdata=create.data("CJS",nocc,ngroups)
+
 dm.formulas=list(Phi=list(formula=~1),p=list(formula=~-1+time))  # design matrix formulas Phi(.)p(time); -1+time makes each beta time separate for identity matrix
 real.values=list(Phi=.7,p=c(0.1,0.3,0.4,0.05,0.7)) # parameters in list can be in any order; length of values must match number of rows(reals) in design matrix
 release.values=matrix(c(rep(500,nocc-1)),ncol=ngroups) # release values for 1 group
 # run simulations
-mod=simmark(create_cjs_data(nocc,ngroups),model.parameters=dm.formulas,releases=release.values,numsims=1,
+mod=simmark(simdata,model.parameters=dm.formulas,releases=release.values,numsims=1,
     real=real.values,filename="simresults.bin")
 
 
-# Multistratum example 
-create_ms_data=function(nocc,ngroups,nstates)
-{
-  strata=LETTERS[1:nstates]
-  simdata=data.frame(ch=apply(matrix(rep(suppressWarnings(t(matrix(strata,ncol=nocc))),ngroups),ncol=nocc),1,paste,collapse=""),group=1:ngroups)
-  if(ngroups>1)
-  {
-    simdata$group=factor(simdata$group)
-    dp=process.data(simdata,model="Multistrata",groups="group")
-  }
-  else
-    dp=process.data(simdata,model="Multistrata")
-  return(dp)
-}
 
+# multistrata 5 occasions, 1 group, 3 states S(stratum)p(stratum)Psi(stratum:tostratum) model; specify real values
+nocc=5
+ngroups=1
+nstates=3
 
-dp
-ddl=make.design.data(dp,parameters=list(Psi=list(pim.type="constant")))
-# number of occasions =3, number of strata=3, number of groups=1
-releases=array(c(1000,0,0),dim=c(3,3,1))
-mod=simmark(dp,ddl,model.parameters=list(S=list(formula=~-1+stratum),p=list(formula=~-1+stratum),Psi=list(formula=~-1+stratum:tostratum)),
+simdata=create.data("Multistrata",nocc,ngroups,nstates)
+# create design data so we can specify constant pims for Psi
+ddl=make.design.data(simdata,parameters=list(Psi=list(pim.type="constant")))
+releases=array(rep(c(1000,0,0,0),ngroups),dim=c(4,3,1))
+mod=simmark(simdata,ddl,model.parameters=list(S=list(formula=~-1+stratum),p=list(formula=~-1+stratum),Psi=list(formula=~-1+stratum:tostratum)),
  releases=releases,numsims=1,real=list(S=rep(.7,3),p=rep(.5,3),Psi=rep(0.2,6)),filename="simresults.bin")
 mod
- 
- 
 
+
+nocc=5
+ngroups=2
+nstates=5
+
+simdata=create.data("Multistrata",nocc,ngroups,nstates)
+ddl=make.design.data(simdata,parameters=list(Psi=list(pim.type="constant")))
+releases=array(rep(c(1000,0,0,0),ngroups),dim=c(nocc-1,nstates,ngroups))
+
+mod=simmark(simdata,ddl,model.parameters=list(S=list(formula=~-1+stratum),p=list(formula=~-1+stratum),Psi=list(formula=~-1+group:stratum:tostratum)),
+    releases=releases,numsims=1,real=list(S=rep(.7,nstates),p=rep(.5,nstates),Psi=rep(0.2,ngroups*nstates*(nstates-1))),filename="simresults.bin")
+
+ 

@@ -1,0 +1,3 @@
+MarkNumber	model	etype	robust	closed	occupancy	derived	default.mixtures	num	divisor	strata
+1	CJS	Live	FALSE	FALSE	FALSE	FALSE	1	-1	1	FALSE
+9	Multistrata	Multistrata	FALSE	FALSE	FALSE	FALSE	1	-1	1	TRUE
