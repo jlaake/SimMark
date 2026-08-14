@@ -42,7 +42,7 @@ model is valid and sets up some parameters specific to the model that are
 used in the code.
 }
 \seealso{
-\code{\link{setup.parameters}}, \code{\link{valid.parameters}}
+\code{\link{setup.parameters}}
 }
 \author{
 Jeff Laake

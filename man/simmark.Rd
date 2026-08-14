@@ -259,44 +259,9 @@ Need additional function to read through set of simulations, run mark analysis a
 
 
 The function mark is a shell that calls 5 other functions in the following
-order as needed: 1) \code{\link{process.data}}, 2)
-\code{\link{make.design.data}}, 3) \code{\link{make.mark.model}}, 4)
-\code{\link{run.mark.model}}, and 5) \code{\link{summary.mark}}. A MARK
-model can be fitted with this function (\code{mark}) or by calling the
-individual functions that it uses.  The calling arguments for \code{mark}
-are a compilation of the calling arguments for each of the functions it
-calls (with some arguments renamed to avoid conflicts). If data is a
-processed dataframe (see \code{\link{process.data}}) then it expects to find
-a value for \code{ddl}.  Likewise, if the data have not been processed, then
-\code{ddl} should be NULL.  This dual calling structure allows either a
-single call approach for each model or alternatively for the data to be
-processed and the design data (\code{ddl}) to be created once and then a
-whole series of models can be analyzed without repeating those steps.
-
-For descriptions of the arguments \code{data}, \code{begin.time},
-\code{groups}, \code{age.var}, \code{initial.ages}, \code{age.unit},
-\code{time.intervals} and \code{mixtures} see \code{\link{process.data}}.
-
-For descriptions of \code{ddl}, \code{design.parameters}=\code{parameters},
-and \code{right}, see \code{\link{make.design.data}}.
-
-For descriptions of \code{model.name} , \code{model},
-\code{title},\code{model.parameters}=\code{parameters} ,
-\code{default.fixed} , \code{initial}, \code{options}, see
-\code{\link{make.mark.model}}.
-
-And finally, for descriptions of arguments \code{invisible}, \code{filename}
-and \code{adjust},see \code{\link{run.mark.model}}.
-
-\code{output},\code{silent}, and \code{retry} are the only arguments
-specific to mark.  \code{output} controls whether a summary of the model
-input and output are given(if \code{output=TRUE}). \code{silent} controls
-whether errors are shown when fitting a model. \code{retry} controls the
-number of times a model will be refitted with new starting values (uses 0)
-when some parameters are determined to be non-estimable or at a boundary.
-The latter is the only time it makes sense to retry with new starting values
-but MARK cannot discern between these two instances. The indices of the beta
-parameters that are "singular" are stored in \code{results$singular}.
+order as needed: 1) \code{\link{sim.process.data}}, 2)
+make.design.data in RMark, 3) \code{\link{make.simmark.model}}, 4)
+\code{\link{run.simmark.model}}, and 5) \code{\link{summarize.simmark}}.
 }
 \note{
 It is assumed that MARK.EXE is located in directory "C:/Program
@@ -310,11 +275,11 @@ each R session.  It is easiest to do this assignment automatically by
 putting the MarkPath assignment into your .First function which is run each
 time an R session is initiated.  In addition to MarkPath, the variable
 MarkViewer can be assigned to a program other than notepad.exe (see
-\code{\link{print.mark}}).
+print.mark in RMark).
 }
 \seealso{
 \code{\link{make.simmark.model}}, \code{\link{run.simmark.model}},
-\code{\link{make.design.data}}, \code{\link{process.data}}
+\code{\link{sim.process.data}}
 }
 \author{
 Jeff Laake

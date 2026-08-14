@@ -13,9 +13,12 @@ nocc=4
 ngroups=3
 simdata=create.data("CJS",nocc,ngroups)
 
-dm.formulas=list(Phi=list(formula=~1),p=list(formula=~1)) # design matrix formulas Phi(.)p(.)
-beta.values=list(Phi=1,p=-.3) # parameters in list can be in any order; length of values must match number of columns in design matrix
-release.values=matrix(c(rep(500,nocc-1),rep(200,nocc-1),rep(400,nocc-1)),ncol=ngroups) # release values for 3 groups
+# design matrix formulas Phi(.)p(.)
+dm.formulas=list(Phi=list(formula=~1),p=list(formula=~1)) 
+beta.values=list(Phi=1,p=-.3) # parameters in list can be in any order
+                             # length of values must match number of columns in design matrix
+# for CJS releases are a matrix with dimensions nocc-1 and ngroups
+release.values=matrix(c(rep(500,nocc-1),rep(200,nocc-1),rep(400,nocc-1)),ncol=ngroups) 
 # run simulations
 mod=simmark(simdata,model.parameters=dm.formulas,releases=release.values,numsims=1,
    beta=beta.values,filename="simresults.bin")
@@ -25,9 +28,12 @@ mod=simmark(simdata,model.parameters=dm.formulas,releases=release.values,numsims
 nocc=6
 ngroups=1
 simdata=create.data("CJS",nocc,ngroups)
-
-dm.formulas=list(Phi=list(formula=~1),p=list(formula=~-1+time))  # design matrix formulas Phi(.)p(time); -1+time makes each beta time separate for identity matrix
-real.values=list(Phi=.7,p=c(0.1,0.3,0.4,0.05,0.7)) # parameters in list can be in any order; length of values must match number of rows(reals) in design matrix
+# design matrix formulas Phi(.)p(time); -1+time makes each beta time separate for identity matrix
+dm.formulas=list(Phi=list(formula=~1),p=list(formula=~-1+time))  
+real.values=list(Phi=.7,p=c(0.1,0.3,0.4,0.05,0.7)) # parameters in list can be in any order
+                                                  # length of values must match number of 
+                                                  # rows(reals) in design matrix
+# for CJS releases are a matrix with dimensions nocc-1 and ngroups
 release.values=matrix(c(rep(500,nocc-1)),ncol=ngroups) # release values for 1 group
 # run simulations
 mod=simmark(simdata,model.parameters=dm.formulas,releases=release.values,numsims=1,

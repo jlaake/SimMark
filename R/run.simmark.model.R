@@ -6,12 +6,13 @@
 #' 
 #' @param model MARK model created by \code{\link{make.simmark.model}}
 #' @param invisible if TRUE, execution of MARK.EXE is hidden from view
+#' @param filename if NULL uses base filename of "mark" otherwise filename is the base part of output filename
 #' @param threads number of cpus to use with mark.exe if positive or number of cpus to remain idle if negative
 #' @param ignore.stderr If set TRUE, messages from mark.exe are suppressed; they are automatically suppressed with Rterm
-#' @return model: MARK model object with the base filename stored in
-#' \code{output} and the extracted \code{results} from the output file appended
-#' onto list; see \code{\link{mark}} for a detailed description of a
-#' \code{mark} object.
+#' @return model: mark model object with the base filename stored in
+#' \code{output} and the extracted simulation results in \code{simresults} from the output file
+#' onto list; see mark in RMark for a detailed description of many (but not all) values
+#' \code{mark} object created here.
 #' @author Jeff Laake
 #' @export
 #' @seealso \code{\link{make.simmark.model}},

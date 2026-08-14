@@ -3,7 +3,7 @@
 #' Defines list of parameters used in the specified type of model
 #' (\code{model}) and adds default values for each parameter to the list of
 #' user specified values (eg formula, link etc) defined in the call to
-#' \code{\link{make.mark.model}}
+#' \code{\link{make.simmark.model}}
 #' 
 #' The primary difference in setting up models for MARK is the number and types
 #' of parameters that are included in the model.  This function sets up the
@@ -16,8 +16,8 @@
 #' not specified by the user and adds default values for each type of parameter
 #' and then returns the modified list. The structure of the argument
 #' \code{parameters} and the return value of this function are the same as the
-#' structure of the argument \code{parameters} in \code{\link{make.mark.model}}
-#' and argument \code{model.parameters} in \code{\link{mark}}.  They are lists
+#' structure of the argument \code{parameters} in \code{\link{make.simmark.model}}
+#' and argument \code{model.parameters} in \code{\link{simmark}}.  They are lists
 #' with an element for each type of parameter in the model and the name of each
 #' list element is the parameter name (e.g., "p", "Phi","S", etc).  For each
 #' parameter there are a list of values (e.g., formula, link, num etc as
@@ -34,7 +34,7 @@
 #' then the return value is a vector of the names of the parameters used in the
 #' specified type of model. For example, if \code{model="CJS"} then the return
 #' value is \code{c("Phi","p")}.  This is used by the function
-#' \code{\link{valid.parameters}} to make sure that parameter specifications
+#' valid.parameters in RMark to make sure that parameter specifications
 #' are valid for the model (i.e., specifying recovery rate r for "CJS" would
 #' give an error).  If the function is called with the default of
 #' \code{check=FALSE}, the function returns a list of parameter specifications
@@ -64,7 +64,7 @@
 #' heterogeneity models \cr \code{fixed} \tab fixed values specified by user
 #' and \cr \tab not used modified in this function \cr }
 #' @author Jeff Laake
-#' @seealso \code{\link{setup.model}},\code{\link{valid.parameters}}
+#' @seealso \code{\link{setup.model}}
 #' @keywords utility
 setup.parameters <-
 		function(model,parameters=list(),nocc=NULL,check=FALSE,number.of.groups=1)

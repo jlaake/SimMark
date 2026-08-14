@@ -29,7 +29,7 @@
 #' occasions (0 or -1)} \item{mixtures}{number of mixtures if any}
 #' \item{derived}{logical; TRUE if model produces derived estimates}
 #' @author Jeff Laake
-#' @seealso \code{\link{setup.parameters}}, \code{\link{valid.parameters}}
+#' @seealso \code{\link{setup.parameters}}
 #' @keywords utility
 setup.model <-
 function(model,nocc,mixtures=1)

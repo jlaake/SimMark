@@ -36,9 +36,9 @@ make.simmark.model(
 )
 }
 \arguments{
-\item{data}{Data list resulting from function \code{\link{process.data}}}
+\item{data}{Data list resulting from function \code{\link{sim.process.data}}}
 
-\item{ddl}{Design data list from function \code{\link{make.design.data}}}
+\item{ddl}{Design data list from function make.design.data in RMark}
 
 \item{parameters}{List of parameter formula specifications}
 
@@ -61,7 +61,7 @@ make.simmark.model(
 \item{real}{vector of parameters for simulation on real scale}
 
 \item{call}{Pass function call when this function is called from another
-function (e.g.\code{\link{mark}}) (internal use)}
+function (internal use)}
 
 \item{default.fixed}{if TRUE, real parameters for which the design data have
 been deleted are fixed to default values}
@@ -100,55 +100,24 @@ problem set to FALSE and it will run faster}
 }
 \value{
 model: a MARK object except for the elements \code{output} and
-\code{results}. See \code{\link{mark}} for a detailed description of the
+\code{results}. See mark in RMark for a detailed description of the
 list contents.
 }
 \description{
 Creates a MARK model object that contains a MARK input file with PIMS and
 design matrix specific to the data and model structure and formulas
-specified for the model parameters. It is very similar to \code{\link{make.mark.model}}
+specified for the model parameters. It is very similar to make.mark.model in RMark.
 with additional statements that are added to specify simulation parameters.
 }
 \details{
-This function is called by \code{\link{simmark}} to create the model but it can
-be called directly to create but not run the model.  All of the arguments
-have default values except for the first 2 that specify the processed data
-list (\code{data}) and the design data list (\code{ddl}). If only these 2
-arguments are specified default models are used for the parameters.  For
-example, following with the example from \code{\link{process.data}} and
-\code{\link{make.design.data}}, the default model can be created with:
-
-\code{mymodel=make.simmark.model(proc.example.data,ddl)}
-
-The call to \code{make.simmark.model} only creates a model object
-The function returns a list that includes several fields
-including a design matrix and the MARK input file that will be used with
-\code{MARK.EXE} to run simulation from function
-\code{\link{run.simmark.model}}. The following shows the names of the list
-elements in mymodel:
-
-\preformatted{ names(mymodel) [1] "data" "model" "title" "model.name"
-"links" [6] "mixtures" "call" "parameters" "input" "number.of.groups" [11]
-"group.labels" "nocc" "begin.time" "covariates" "fixed" [16] "design.matrix"
-"pims" "design.data" "strata.labels" "mlogit.list" [21] "simplify" }
-
-The list is defined to be a mark object which is done by assigning a class
-vector to the list.  The classes for an R object can be viewed with the
-class function as shown below:
-
-\preformatted{ class(mymodel) [1] "mark" "CJS" } Each MARK model has 2 class
-values.  The first identifies it as a mark object and the second identifies
-the type of mark analysis, which is the default "CJS" (recaptures only) in
-this case.  The use of the class feature has advantages in using generic
-functions and identifying types of objects.  An object of class \code{mark}
-is defined in more detail in function \code{\link{mark}}.
+See help file for make.mark.model in RMark for further explanation.
 
 For descriptions of the standard calling arguments see \code{make.mark.model}. Additional 
 arguments for simulation will be described here.
 }
 \seealso{
-\code{\link{process.data}},\code{\link{make.design.data}},
-\code{\link{run.mark.model}} \code{\link{mark}}
+\code{\link{sim.process.data}},
+\code{\link{run.simmark.model}} \code{\link{simmark}}
 }
 \author{
 Jeff Laake
