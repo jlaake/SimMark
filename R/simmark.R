@@ -254,9 +254,13 @@ nderived=NULL
 outfile=paste(runmodel$output,".out",sep="")
 out=readLines(outfile)  
 x=grep("R Variable Values:",out,fixed=TRUE)
-eval(parse(text=out[x+1]))
-eval(parse(text=out[x+2]))
-eval(parse(text=out[x+3]))
-runmodel$simresults=summarize.simmark(ncovs,nlogit,nderived,filename)
+if(length(x)!=0)
+{
+  eval(parse(text=out[x+1]))
+  eval(parse(text=out[x+2]))
+  eval(parse(text=out[x+3]))
+  runmodel$simresults=summarize.simmark(ncovs,nlogit,nderived,filename)
+} else
+  runmodel$simresults=NULL
 return(runmodel)
 }

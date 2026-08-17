@@ -965,7 +965,7 @@ create.agenest.var=function(data,init.agevar,time.intervals)
   for(i in 1:length(parameters))
     if(link!=parameters[[i]]$link)link="Parm-Specific"
   if(!is.null(input.links) | parm.specific)link="Parm-Specific"
-  string=paste(string," link=",link,options,sep="")
+  string=paste(string," link=",link," ",options,sep="")
   
   if(mixtures!=1)
      string=paste(string," mixtures =",mixtures)

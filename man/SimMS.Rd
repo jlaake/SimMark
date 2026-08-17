@@ -26,21 +26,9 @@ mod=simmark(simdata,model.parameters=dm.formulas,releases=releases,numsims=1,
             beta=beta.values,param.link="logit",filename="simresults.bin")
 #show betas used for simulation
 mod$beta.values
-#
-
-nocc=5
-ngroups=2
-nstates=5
-#create dummy data
-simdata=create.data("Multistrata",nocc,ngroups,nstates)
-# for MS model, releases are a 3-way array with dimensions nocc-1,nstates,ngroups
-releases=array(rep(c(1000,1000,1000,1000),ngroups),dim=c(nocc-1,nstates,ngroups))
-dm.formulas=list(S=list(formula=~-1+stratum),p=list(formula=~-1+stratum),
-                Psi=list(formula=~-1+stratum:tostratum,link="logit"))
-beta.values=list(S=rep(0.8473,nstates),p=rep(0,nstates),Psi=rep(-2,nstates*(nstates-1)))
-mod=simmark(simdata,ddl,model.parameters=dm.formulas,
-           releases=releases,numsims=1,beta=beta.values,filename="simresults.bin")
 mod$simresults
+
+
 # multistrata 5 occasions, 2 groups, 5 states 
 # S(-1+stratum)p(-1+stratum)Psi(-1+group:stratum:tostratum) model; specify beta values
 # allow parm-specific for link
@@ -54,9 +42,9 @@ ddl=make.design.data(simdata,parameters = list(Psi=list(pim.type="constant")))
 releases=array(rep(c(1000,0,0,0),ngroups),dim=c(nocc-1,nstates,ngroups))
 dm.formulas=list(S=list(formula=~-1+stratum),p=list(formula=~-1+stratum),
                    Psi=list(formula=~-1+group:stratum:tostratum))
-#'beta.values=list(S=rep(0.8473,nstates),p=rep(0,nstates),Psi=rep(-2,ngroups*nstates*(nstates-1)))
+beta.values=list(S=rep(0.8473,nstates),p=rep(0,nstates),Psi=rep(-2,ngroups*nstates*(nstates-1)))
 mod=simmark(simdata,ddl,model.parameters=dm.formulas,
-   releases=releases,numsims=1,real=real.values,filename="simresults.bin")
+   releases=releases,numsims=1,beta=beta.values,filename="simresults.bin")
 mod$beta.values
 mod$simresults
 
