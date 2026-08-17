@@ -156,7 +156,7 @@ robust.occasions<-function(times)
 #
 #  Setup model
 #
-   model.list=SimMark::setup.model(model,nocc,mixtures)
+   model.list=sim.setup.model(model,nocc,mixtures)
 #
 #  data checks - make sure ch is a character string; freq is numeric and no all 0 ch except
 #  for some mark-resight models

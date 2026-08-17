@@ -25,6 +25,7 @@ simmark(
   releases = NULL,
   beta = NULL,
   real = NULL,
+  param.link = NULL,
   nocc = NULL,
   simfile = "simresults.bin",
   output = TRUE,
@@ -108,6 +109,8 @@ age}
 \item{beta}{vector of parameters for simulation on link scale}
 
 \item{real}{vector of parameters for simulation on real scale}
+
+\item{param.link}{if not NULL, it is used as link for specified simulation parameters}
 
 \item{nocc}{number of occasions for Nest model; either time.intervals or nocc must be specified for this model}
 

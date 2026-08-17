@@ -8,11 +8,10 @@ CJS Simulation Examples
 }
 \examples{
 {
-# CJS 4 occasions, 3 groups, Phi(.)p(.) model
+# CJS 4 occasions, 3 groups, Phi(.)p(.) model; specify beta values for simulation
 nocc=4
 ngroups=3
 simdata=create.data("CJS",nocc,ngroups)
-
 # design matrix formulas Phi(.)p(.)
 dm.formulas=list(Phi=list(formula=~1),p=list(formula=~1)) 
 beta.values=list(Phi=1,p=-.3) # parameters in list can be in any order
@@ -22,7 +21,10 @@ release.values=matrix(c(rep(500,nocc-1),rep(200,nocc-1),rep(400,nocc-1)),ncol=ng
 # run simulations
 mod=simmark(simdata,model.parameters=dm.formulas,releases=release.values,numsims=1,
    beta=beta.values,filename="simresults.bin")
-
+# show beta.values used to simulate data
+mod$beta.values
+#show simulation results
+mod$simresults
 
 # CJS 6 occasions, 1 group, Phi(.)p(time) model; specify real values
 nocc=6
@@ -38,6 +40,10 @@ release.values=matrix(c(rep(500,nocc-1)),ncol=ngroups) # release values for 1 gr
 # run simulations
 mod=simmark(simdata,model.parameters=dm.formulas,releases=release.values,numsims=1,
    real=real.values,filename="simresults.bin")
+# show real values used for simulation
+mod$real.values
+#show simresults
+mod$simresults
 }
 }
 \author{

@@ -22,6 +22,7 @@
 #' @param releases matrix of number of releases with rows being nocc-1 and columns are groups or array with dim occasion,strata,groups
 #' @param beta vector of parameters for simulation on link scale
 #' @param real vector of parameters for simulation on real scale
+#' @param param.link if not NULL, it is used as link for specified simulation parameters
 #' @param call Pass function call when this function is called from another
 #' function (internal use)
 #' @param default.fixed if TRUE, real parameters for which the design data have
@@ -57,7 +58,7 @@
 #' 
 make.simmark.model <-
 function(data,ddl,parameters=list(),title="",model.name=NULL,initial=NULL,
-         numsims=1,simfile=NULL,seed=NULL,releases=NULL,beta=NULL,real=NULL,call=NULL,
+         numsims=1,simfile=NULL,seed=NULL,releases=NULL,beta=NULL,real=NULL,param.link=NULL,call=NULL,
 		     default.fixed=TRUE,options=NULL,profile.int=FALSE,chat=NULL,simplify=TRUE,
 		     input.links=NULL,parm.specific=FALSE,mlogit0=TRUE,hessian=FALSE,accumulate=TRUE,
          icvalues=NULL,wrap=TRUE,nodes=101,useddl=FALSE,check.model=FALSE)
@@ -277,7 +278,7 @@ function(model)
 # Value:
 #
 #  model - same mark model object with added list elements simplify
-#          and a rewritten input object for MARK
+#          and a rewritten input object for MARK and parmvals
 #
 #
 #
@@ -451,9 +452,11 @@ if(!is.null(icvalues))
 #
 # Write out the design matrix into the MARK input file
 #
+identityDM=FALSE
 if(nrow(complete.design.matrix)==ncol(complete.design.matrix)&&all(complete.design.matrix==diag(nrow(complete.design.matrix))))
 {
 	string=paste("design matrix constraints=",nrow(complete.design.matrix), " covariates=",nrow(complete.design.matrix)," identity;",sep="")
+	identityDM=TRUE
 	write(string, file = outfile, append = TRUE)
 }
 else
@@ -483,12 +486,12 @@ if(model$model=="CJS")
       }
   }  
 # output parmvals and link
-identityDM=FALSE
-if(all(apply(complete.design.matrix,1,function(x) sum(as.numeric(x)))==1)&
-   all(apply(complete.design.matrix,2,function(x) sum(as.numeric(x)))==1)) identityDM=TRUE
 if(!is.null(beta))
 {  
-   param.link=link
+   if(is.null(param.link))
+      param.link=link
+   else
+      param.link=param.link
    param=beta
 } else
 {
@@ -516,7 +519,10 @@ for(i in 1:length(param))
   parmvals=c(parmvals,param[[j]])
 }
 write(paste(paste(parmvals,collapse=" "),";",sep=""),file=outfile,append=TRUE)
-
+if(!is.null(real))
+  names(parmvals)=rownames(complete.design.matrix)
+else
+  names(parmvals)=colnames(complete.design.matrix)
 #
 # If there is a link specification for models that use different links for
 # each real parameter, write those out now shifting them for translation of
@@ -572,6 +578,10 @@ if(!is.null(newlinks))
    model$simplify=list(design.matrix=complete.design.matrix,pim.translation=new.indices,links=newlinks)
 else
    model$simplify=list(design.matrix=complete.design.matrix,pim.translation=new.indices)
+if(!is.null(beta))
+  model$beta.values=parmvals
+else
+  model$real.values=parmvals
 return(model)
 }
 
@@ -699,8 +709,8 @@ create.agenest.var=function(data,init.agevar,time.intervals)
   nocc.secondary=data$nocc.secondary
   nstrata=data$nstrata
   number.of.groups=dim(data$freq)[2]
-  par.list=setup.parameters(data$model,check=TRUE)
-  parameters=setup.parameters(data$model,parameters,nocc,number.of.groups=number.of.groups)
+  par.list=sim.setup.parameters(data$model,check=TRUE)
+  parameters=sim.setup.parameters(data$model,parameters,nocc,number.of.groups=number.of.groups)
   parameters=parameters[par.list]
   temp.rev=data$reverse
   data$reverse=FALSE
@@ -756,7 +766,7 @@ create.agenest.var=function(data,init.agevar,time.intervals)
   }
   param.names=sub("DoublePrime","''",names(parameters))
   param.names=sub("Prime","'",param.names)
-  model.list= setup.model(data$model,0)
+  model.list= sim.setup.model(data$model,0)
   etype=model.list$etype
 #	
 # Output data portion of MARK input file:
@@ -913,7 +923,6 @@ create.agenest.var=function(data,init.agevar,time.intervals)
 	  zzd[,2:(ng+1)]=freq
 	  zz=zzd[,1:(ng+1)]
   }
-#
 # Output proc simulate statement 
   if(is.null(releases))
     stop("\nMust specify releases")

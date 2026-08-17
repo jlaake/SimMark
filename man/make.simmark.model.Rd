@@ -17,6 +17,7 @@ make.simmark.model(
   releases = NULL,
   beta = NULL,
   real = NULL,
+  param.link = NULL,
   call = NULL,
   default.fixed = TRUE,
   options = NULL,
@@ -59,6 +60,8 @@ make.simmark.model(
 \item{beta}{vector of parameters for simulation on link scale}
 
 \item{real}{vector of parameters for simulation on real scale}
+
+\item{param.link}{if not NULL, it is used as link for specified simulation parameters}
 
 \item{call}{Pass function call when this function is called from another
 function (internal use)}

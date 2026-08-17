@@ -38,6 +38,7 @@
 #' @param releases matrix of number of releases with rows being nocc-1 and columns are groups or array with dim occasion,strata,groups
 #' @param beta vector of parameters for simulation on link scale
 #' @param real vector of parameters for simulation on real scale
+#' @param param.link if not NULL, it is used as link for specified simulation parameters
 #' @param nocc number of occasions for Nest model; either time.intervals or nocc must be specified for this model
 #' @param simfile name of simulation results binary file
 #' @param output If TRUE produces summary of model input and model output
@@ -165,7 +166,7 @@
 simmark <-
 function(data,ddl=NULL,begin.time=1,model.name=NULL,model="CJS",title="",model.parameters=list(),initial=NULL,
 design.parameters=list(), right=TRUE, groups = NULL, age.var = NULL, initial.ages = 0, age.unit = 1, time.intervals = NULL,
-numsims=1,seed=0, releases=NULL,beta=NULL,real=NULL,nocc=NULL,simfile="simresults.bin",output=TRUE,
+numsims=1,seed=0, releases=NULL,beta=NULL,real=NULL,param.link=NULL,nocc=NULL,simfile="simresults.bin",output=TRUE,
 invisible=TRUE,adjust=TRUE,mixtures=1,se=FALSE,filename=NULL,prefix="marksim",default.fixed=TRUE,silent=FALSE,retry=0,options=NULL,brief=FALSE,
 realvcv=FALSE,delete=FALSE,external=FALSE,profile.int=FALSE,chat=NULL,input.links=NULL,parm.specific=FALSE,mlogit0=TRUE,threads=-1,hessian=FALSE,accumulate=TRUE,
 allgroups=FALSE,strata.labels=NULL,counts=NULL,icvalues=NULL,wrap=TRUE,events=NULL,nodes=101,useddl=FALSE,check.model=FALSE)
@@ -213,8 +214,8 @@ if(length(model.parameters)!=0)
 if(is.list(model.parameters))
 {
   model<-try(make.simmark.model(data.proc,title=title,parameters=model.parameters,
-         ddl=ddl,initial=initial,numsims=numsims,seed=seed,releases=releases,beta=beta,real=real,simfile=simfile,
-         call=match.call(),default.fixed=default.fixed,
+         ddl=ddl,initial=initial,numsims=numsims,seed=seed,releases=releases,beta=beta,real=real,param.link=param.link,
+         simfile=simfile, call=match.call(),default.fixed=default.fixed,
          model.name=model.name,options=options,profile.int=profile.int,chat=chat,
   			 input.links=input.links,parm.specific=parm.specific,mlogit0=mlogit0,hessian=hessian,
 			   accumulate=accumulate,icvalues=icvalues,wrap=wrap,nodes=nodes,useddl=useddl,

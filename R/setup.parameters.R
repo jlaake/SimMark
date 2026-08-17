@@ -64,12 +64,12 @@
 #' heterogeneity models \cr \code{fixed} \tab fixed values specified by user
 #' and \cr \tab not used modified in this function \cr }
 #' @author Jeff Laake
-#' @seealso \code{\link{setup.model}}
+#' @seealso \code{\link{sim.setup.model}}
 #' @keywords utility
-setup.parameters <-
+sim.setup.parameters <-
 		function(model,parameters=list(),nocc=NULL,check=FALSE,number.of.groups=1)
 # ----------------------------------------------------------------------------------------
-#  setup.parameters  - fills in value for begin and num for each parameter type depending
+#  sim.setup.parameters  - fills in value for begin and num for each parameter type depending
 #                      on the type of c-r model. num defines number of parameters relative to
 #                      number of occasions.  begin defines the first occasion which is relevant
 #                      to the parameter
