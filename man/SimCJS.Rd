@@ -20,7 +20,7 @@ beta.values=list(Phi=1,p=-.3) # parameters in list can be in any order
 release.values=matrix(c(rep(500,nocc-1),rep(200,nocc-1),rep(400,nocc-1)),ncol=ngroups) 
 # run simulations
 mod=simmark(simdata,model.parameters=dm.formulas,releases=release.values,numsims=1,
-   beta=beta.values,filename="simresults.bin")
+   beta=beta.values,simfile="simresults.bin")
 # show beta.values used to simulate data
 mod$beta.values
 #show simulation results
@@ -39,7 +39,7 @@ real.values=list(Phi=.7,p=c(0.1,0.3,0.4,0.05,0.7)) # parameters in list can be i
 release.values=matrix(c(rep(500,nocc-1)),ncol=ngroups) # release values for 1 group
 # run simulations
 mod=simmark(simdata,model.parameters=dm.formulas,releases=release.values,numsims=1,
-   real=real.values,filename="simresults.bin")
+   real=real.values,simfile="simresults.bin")
 # show real values used for simulation
 mod$real.values
 #show simresults

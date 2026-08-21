@@ -13,6 +13,7 @@ make.simmark.model(
   initial = NULL,
   numsims = 1,
   simfile = NULL,
+  simdata = NULL,
   seed = NULL,
   releases = NULL,
   beta = NULL,
@@ -52,6 +53,8 @@ make.simmark.model(
 \item{numsims}{number of simulations data sets to create}
 
 \item{simfile}{name of simulation results file}
+
+\item{simdata}{if not NULL it should specify a data file where the numsims simulated data sets are stored; in this case simfile is not used because estimations and summary do not occur}
 
 \item{seed}{the seed for random number generation}
 

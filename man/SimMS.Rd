@@ -23,7 +23,7 @@ dm.formulas=list(S=list(formula=~-1+stratum),p=list(formula=~-1+stratum),
                 Psi=list(formula=~-1+stratum:tostratum))
 beta.values=list(S=rep(.84,nstates),p=rep(0,nstates),Psi=rep(-2,nstates*(nstates-1)))
 mod=simmark(simdata,model.parameters=dm.formulas,releases=releases,numsims=1,
-            beta=beta.values,param.link="logit",filename="simresults.bin")
+            beta=beta.values,param.link="logit",simfile="simresults.bin")
 #show betas used for simulation
 mod$beta.values
 mod$simresults
@@ -44,7 +44,7 @@ dm.formulas=list(S=list(formula=~-1+stratum),p=list(formula=~-1+stratum),
                    Psi=list(formula=~-1+group:stratum:tostratum))
 beta.values=list(S=rep(0.8473,nstates),p=rep(0,nstates),Psi=rep(-2,ngroups*nstates*(nstates-1)))
 mod=simmark(simdata,ddl,model.parameters=dm.formulas,
-   releases=releases,numsims=1,beta=beta.values,filename="simresults.bin")
+   releases=releases,numsims=1,beta=beta.values,simfile="simresults.bin")
 mod$beta.values
 mod$simresults
 
@@ -63,7 +63,7 @@ dm.formulas=list(S=list(formula=~-1+stratum),p=list(formula=~-1+stratum),
                Psi=list(formula=~-1+stratum:tostratum,link="logit"))
 beta.values=list(S=rep(0.8473,nstates),p=rep(0,nstates),Psi=rep(-2,nstates*(nstates-1)))
 mod=simmark(simdata,model.parameters=dm.formulas,
-   releases=releases,numsims=1,beta=beta.values,filename="simresults.bin")
+   releases=releases,numsims=1,beta=beta.values,simfile="simresults.bin")
 mod$beta.values
 mod$simresults
 }

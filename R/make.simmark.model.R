@@ -18,6 +18,7 @@
 #' @param initial Vector of named or unnamed initial values for beta parameters or previously run model (optional)
 #' @param numsims number of simulations data sets to create
 #' @param simfile name of simulation results file
+#' @param simdata if not NULL it should specify a data file where the numsims simulated data sets are stored; in this case simfile is not used because estimations and summary do not occur
 #' @param seed the seed for random number generation
 #' @param releases matrix of number of releases with rows being nocc-1 and columns are groups or array with dim occasion,strata,groups
 #' @param beta vector of parameters for simulation on link scale
@@ -58,7 +59,7 @@
 #' 
 make.simmark.model <-
 function(data,ddl,parameters=list(),title="",model.name=NULL,initial=NULL,
-         numsims=1,simfile=NULL,seed=NULL,releases=NULL,beta=NULL,real=NULL,param.link=NULL,call=NULL,
+         numsims=1,simfile=NULL,simdata=NULL,seed=NULL,releases=NULL,beta=NULL,real=NULL,param.link=NULL,call=NULL,
 		     default.fixed=TRUE,options=NULL,profile.int=FALSE,chat=NULL,simplify=TRUE,
 		     input.links=NULL,parm.specific=FALSE,mlogit0=TRUE,hessian=FALSE,accumulate=TRUE,
          icvalues=NULL,wrap=TRUE,nodes=101,useddl=FALSE,check.model=FALSE)
@@ -467,24 +468,26 @@ else
 	write.table(complete.design.matrix, file = outfile, eol = ";\n",
 			sep = " ", col.names = FALSE, row.names = FALSE, quote = FALSE, append = TRUE)
 }
-# output releases for each group
-if(model$model=="CJS")
-{
-  for (i in 1:number.of.groups)
-  {
-    write(paste("releases group=",i,";",sep=""),file=outfile,append=TRUE)
-    write(paste(paste(releases[,i],collapse=" "),";",sep=""),file=outfile,append=TRUE)
-  }
-} else
-  if(model$model=="Multistrata")
-  {
-    for (i in 1:number.of.groups)
-      for(j in 1:nstrata)
-      {
-         write(paste("releases group=",i," strata=",j,";",sep=""),file=outfile,append=TRUE)
-         write(paste(paste(releases[,j,i],collapse=" "),";",sep=""),file=outfile,append=TRUE)
-      }
-  }  
+# output releases for each group (releases(nocc,nstrata+nevents,number.of.groups))
+output_releases(outfile,releases,nocc=nocc,number.of.groups=number.of.groups,nstrata=nstrata,nevents=0)
+# if(model$model=="CJS")
+# {
+#   for (i in 1:number.of.groups)
+#   {
+#     write(paste("releases group=",i,";",sep=""),file=outfile,append=TRUE)
+#     write(paste(paste(releases[,i],collapse=" "),";",sep=""),file=outfile,append=TRUE)
+#   }
+# } else
+#   if(model$model=="Multistrata")
+#   {
+#     for (i in 1:number.of.groups)
+#       for(j in 1:nstrata)
+#       {
+#         write(paste("releases group=",i," strata=",j,";",sep=""),file=outfile,append=TRUE)
+#         write(paste(paste(releases[,j,i],collapse=" "),";",sep=""),file=outfile,append=TRUE)
+#       }
+#   }  
+
 # output parmvals and link
 if(!is.null(beta))
 {  
@@ -924,28 +927,25 @@ create.agenest.var=function(data,init.agevar,time.intervals)
 	  zz=zzd[,1:(ng+1)]
   }
 # Output proc simulate statement 
-  if(is.null(releases))
-    stop("\nMust specify releases")
-  else
-    if(!is.array(releases))
-      stop("\nreleases must be an array")
-    else
-    {
-      len=dim(releases)
-      len=len[length(len)]
-      if(!len==number.of.groups)
-        stop("number of rows must be number of groups")
-      len=dim(releases)
-      len=len[1]
-      if(len!=nocc-1)
-        stop("number of releases must be # of occasions -1")
-      len=dim(releases)
-      if(length(len)>2)
-      {
-         if(len[2]!=nstrata)
-           stop("number of columns must be number of strata")
-      }
-    }
+  test_releases(releases,nocc=nocc,number.of.groups=number.of.groups,nstrata=nstrata,nevents=0)
+  # if(is.null(releases))
+  #   stop("\nMust specify releases")
+  # if(!is.array(releases))
+  #   stop("\nreleases must be an array")
+  # len=dim(releases)
+  # len=len[length(len)]
+  # if(!len==number.of.groups)
+  #   stop("number of rows must be number of groups")
+  # len=dim(releases)
+  # len=len[1]
+  # if(len!=nocc-1)
+  #   stop("number of releases must be # of occasions -1")
+  # len=dim(releases)
+  # if(length(len)>2)
+  # {
+  #    if(len[2]!=nstrata)
+  #      stop("number of columns must be number of strata")
+  # }
   hist=sum(releases)
   string=paste("proc title ",title,";")
   if(is.null(nocc.secondary))
@@ -957,7 +957,10 @@ create.agenest.var=function(data,init.agevar,time.intervals)
   else
      string=paste("\nproc simulate occasions=",sum(nocc.secondary)," groups=",number.of.groups," etype=",etype," Nodes=",nodes,sep="")
   if(model.list$strata)string=paste(string," strata=",data$nstrata,sep="")
-  string=paste(string," hist=",hist," numsims=",numsims," seed=",seed," simfile=",simfile,sep="")
+  if(!is.null(simdata))
+     string=paste(string," hist=",hist," numsims=",numsims," seed=",seed," simdata=",simdata,sep="")
+  else
+     string=paste(string," hist=",hist," numsims=",numsims," seed=",seed," simfile=",simfile,sep="")
   #
   # Next determine if a single link was used or differing links
   #

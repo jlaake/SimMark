@@ -49,10 +49,11 @@ function(model,nocc,mixtures=1)
 	fdir=system.file(package="SimMark")	
 	fdir=file.path(fdir,"models.txt")	
 	model_definitions=read.delim(fdir,header=TRUE,
-			colClasses=c("numeric","character","character",rep("logical",4),rep("numeric",3),"logical"))
+			colClasses=c("numeric","character","character",rep("logical",4),rep("numeric",3),"logical","logical"))
     model_def=model_definitions[model_definitions$model==model,]	
     if(nrow(model_def)==0)
         stop("Invalid type of model = ",model," Valid types are\n", paste(model_definitions$model,collapse="\n"))
+  if(!model_def$simulate) stop("model ",model, " is not supported for simulation")
 	if(mixtures==1) 
 		model_def$mixtures=model_def$default.mixtures
 	else

@@ -64,8 +64,8 @@
 #' used to identify strata in Multistrata models}
 #' \item{group.covariates}{factor covariates used to define groups}
 #' @importFrom stats as.formula formula median model.matrix terms
-#' @importFrom utils read.delim write.table
-#' @author Jeff Laake
+#' @importFrom utils read.delim write.table read.table
+#' @author Jeff Laake 
 #' @export
 #' @keywords utility
 sim.process.data <-

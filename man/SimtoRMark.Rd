@@ -11,6 +11,7 @@ Simulation Example Using RMark
 # CJS 4 occasions, 3 groups, Phi(.)p(.) model; specify beta values for simulation
 nocc=4
 ngroups=3
+nreps=10
 simdata=create.data("CJS",nocc,ngroups)
 # design matrix formulas Phi(.)p(.)
 dm.formulas=list(Phi=list(formula=~1),p=list(formula=~1)) 
@@ -18,14 +19,16 @@ beta.values=list(Phi=1,p=-.3) # parameters in list can be in any order
                              # length of values must match number of columns in design matrix
 # for CJS releases are a matrix with dimensions nocc-1 and ngroups
 release.values=matrix(c(rep(500,nocc-1),rep(200,nocc-1),rep(400,nocc-1)),ncol=ngroups) 
-# run simulations with 10 reps
+# generate simulation data 
+mod=simmark(simdata,model.parameters=dm.formulas,releases=release.values,numsims=nreps,
+             beta=beta.values,simdata="data.inp", options=c("nodetail"),
+             invisible=TRUE,silent=TRUE)
+simdata=readSimData("data.inp",nreps=10,group.df=data.frame(group=1:ngroups))
 reals=list(length(10))
 for(i in 1:10)
 {
- mod=simmark(simdata,model.parameters=dm.formulas,releases=release.values,numsims=1,
-             beta=beta.values,filename="simresults.bin", options=c("nodetail simdata=data.inp"))
- data=convert.inp("data.inp",group.df=data.frame(group=1:ngroups))
- mod=mark(data,model="CJS",model.parameters=list(Phi=list(formula=~1),p=list(formula=~1)),options="batch")
+ mod=mark(simdata[[i]],model="CJS",options="batch",
+  model.parameters=list(Phi=list(formula=~1),p=list(formula=~1)))
  reals[[i]]=mod$results$real
 }
 reals

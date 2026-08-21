@@ -15,7 +15,7 @@
 #'release.values=matrix(c(rep(500,nocc-1),rep(200,nocc-1),rep(400,nocc-1)),ncol=ngroups) 
 #'# run simulations
 #'mod=simmark(simdata,model.parameters=dm.formulas,releases=release.values,numsims=1,
-#'    beta=beta.values,filename="simresults.bin")
+#'    beta=beta.values,simfile="simresults.bin")
 #'# show beta.values used to simulate data
 #'mod$beta.values
 #'#show simulation results
@@ -34,7 +34,7 @@
 #'release.values=matrix(c(rep(500,nocc-1)),ncol=ngroups) # release values for 1 group
 #'# run simulations
 #'mod=simmark(simdata,model.parameters=dm.formulas,releases=release.values,numsims=1,
-#'    real=real.values,filename="simresults.bin")
+#'    real=real.values,simfile="simresults.bin")
 #'# show real values used for simulation
 #'mod$real.values
 #'#show simresults
@@ -62,7 +62,7 @@ NULL
 #'                 Psi=list(formula=~-1+stratum:tostratum))
 #'beta.values=list(S=rep(.84,nstates),p=rep(0,nstates),Psi=rep(-2,nstates*(nstates-1)))
 #'mod=simmark(simdata,model.parameters=dm.formulas,releases=releases,numsims=1,
-#'             beta=beta.values,param.link="logit",filename="simresults.bin")
+#'             beta=beta.values,param.link="logit",simfile="simresults.bin")
 #'#show betas used for simulation
 #'mod$beta.values
 #'mod$simresults
@@ -83,7 +83,7 @@ NULL
 #'                    Psi=list(formula=~-1+group:stratum:tostratum))
 #'beta.values=list(S=rep(0.8473,nstates),p=rep(0,nstates),Psi=rep(-2,ngroups*nstates*(nstates-1)))
 #'mod=simmark(simdata,ddl,model.parameters=dm.formulas,
-#'    releases=releases,numsims=1,beta=beta.values,filename="simresults.bin")
+#'    releases=releases,numsims=1,beta=beta.values,simfile="simresults.bin")
 #'mod$beta.values
 #'mod$simresults
 #' 
@@ -102,7 +102,7 @@ NULL
 #'                Psi=list(formula=~-1+stratum:tostratum,link="logit"))
 #'beta.values=list(S=rep(0.8473,nstates),p=rep(0,nstates),Psi=rep(-2,nstates*(nstates-1)))
 #'mod=simmark(simdata,model.parameters=dm.formulas,
-#'    releases=releases,numsims=1,beta=beta.values,filename="simresults.bin")
+#'    releases=releases,numsims=1,beta=beta.values,simfile="simresults.bin")
 #'mod$beta.values
 #'mod$simresults
 #' }
@@ -117,6 +117,7 @@ NULL
 #'# CJS 4 occasions, 3 groups, Phi(.)p(.) model; specify beta values for simulation
 #'nocc=4
 #'ngroups=3
+#'nreps=10
 #'simdata=create.data("CJS",nocc,ngroups)
 #'# design matrix formulas Phi(.)p(.)
 #'dm.formulas=list(Phi=list(formula=~1),p=list(formula=~1)) 
@@ -124,14 +125,16 @@ NULL
 #'                              # length of values must match number of columns in design matrix
 #' # for CJS releases are a matrix with dimensions nocc-1 and ngroups
 #'release.values=matrix(c(rep(500,nocc-1),rep(200,nocc-1),rep(400,nocc-1)),ncol=ngroups) 
-#'# run simulations with 10 reps
+#'# generate simulation data 
+#'mod=simmark(simdata,model.parameters=dm.formulas,releases=release.values,numsims=nreps,
+#'              beta=beta.values,simdata="data.inp", options=c("nodetail"),
+#'              invisible=TRUE,silent=TRUE)
+#'simdata=readSimData("data.inp",nreps=10,group.df=data.frame(group=1:ngroups))
 #'reals=list(length(10))
 #'for(i in 1:10)
 #'{
-#'  mod=simmark(simdata,model.parameters=dm.formulas,releases=release.values,numsims=1,
-#'              beta=beta.values,filename="simresults.bin", options=c("nodetail simdata=data.inp"))
-#'  data=convert.inp("data.inp",group.df=data.frame(group=1:ngroups))
-#'  mod=mark(data,model="CJS",model.parameters=list(Phi=list(formula=~1),p=list(formula=~1)),options="batch")
+#'  mod=mark(simdata[[i]],model="CJS",options="batch",
+#'   model.parameters=list(Phi=list(formula=~1),p=list(formula=~1)))
 #'  reals[[i]]=mod$results$real
 #'}
 #'reals
