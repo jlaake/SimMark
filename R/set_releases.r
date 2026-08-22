@@ -1,16 +1,15 @@
 output_releases=function(outfile,releases,nocc,number.of.groups,nstrata,nevents)
 {
 if(length(releases)==1)
-{
-  #releases=c(releases,rep(0,nocc-1))
   releases=array(releases,dim=c(1,nstrata+nevents,number.of.groups))
-}
+if(is.matrix(releases))
+  dim(releases)=c(nrow(releases),1,ncol(releases))
 if(nstrata<=1)
 {
   for (i in 1:number.of.groups)
   {
     write(paste("releases group=",i,";",sep=""),file=outfile,append=TRUE)
-    write(paste(paste(releases[,,i],collapse=" "),";",sep=""),file=outfile,append=TRUE)
+    write(paste(paste(releases[,1,i],collapse=" "),";",sep=""),file=outfile,append=TRUE)
   }
 } else
 {

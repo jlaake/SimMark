@@ -510,16 +510,19 @@ write(paste("parmvals link=",param.link,";",sep=""),file=outfile,append=TRUE)
 if(!is.list(param)) stop("beta or real must be a list of vectors named with parameters")
 parmvals=NULL
 # need to make them row/column model order
-for(i in 1:length(param))
+for(i in 1:length(param.names))
 {
   j=which(names(param)==param.names[i])
-  iname=names(param)[j]
-  if(param.link=="identity")
-    icol=grep(paste(iname," ",sep=""),rownames(complete.design.matrix))
-  else
-    icol=grep(paste(iname,":",sep=""),colnames(complete.design.matrix))
-  if(!length(icol)==length(param[[j]])) stop(paste("For ",iname," ",length(param[[j]])," values specified for ",length(icol)," parameter(s)",sep=""))
-  parmvals=c(parmvals,param[[j]])
+  if(length(j)!=0)
+  {
+    iname=names(param)[j]
+    if(param.link=="identity")
+      icol=grep(paste(iname," ",sep=""),rownames(complete.design.matrix))
+    else
+      icol=grep(paste(iname,":",sep=""),colnames(complete.design.matrix))
+    if(!length(icol)==length(param[[j]])) stop(paste("For ",iname," ",length(param[[j]])," values specified for ",length(icol)," parameter(s)",sep=""))
+    parmvals=c(parmvals,param[[j]])
+  }
 }
 write(paste(paste(parmvals,collapse=" "),";",sep=""),file=outfile,append=TRUE)
 if(!is.null(real))
