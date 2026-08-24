@@ -4,7 +4,15 @@
 \alias{create.data}
 \title{Dummy data creation for simulation}
 \usage{
-create.data(model, nocc, ngroups, nstates = 1, time.intervals = NULL, ...)
+create.data(
+  model,
+  nocc,
+  ngroups,
+  nstates = 1,
+  time.intervals = NULL,
+  live = FALSE,
+  ...
+)
 }
 \arguments{
 \item{model}{supported c-r model name (eg "CJS","multistrata")}
@@ -16,6 +24,8 @@ create.data(model, nocc, ngroups, nstates = 1, time.intervals = NULL, ...)
 \item{nstates}{number of states in multistate model}
 
 \item{time.intervals}{needs to be specified for robust models}
+
+\item{live}{defaults to FALSE, if live include encounters}
 
 \item{...}{additional arguments that can be passed to process.data}
 }

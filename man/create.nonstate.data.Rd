@@ -4,7 +4,16 @@
 \alias{create.nonstate.data}
 \title{Dummy data creation for models without states}
 \usage{
-create.nonstate.data(model, nocc, ngroups, robust, time.intervals, ...)
+create.nonstate.data(
+  model,
+  nocc,
+  ngroups,
+  robust,
+  time.intervals,
+  divisor,
+  live = FALSE,
+  ...
+)
 }
 \arguments{
 \item{model}{supported c-r model name (eg "CJS","multistrata")}
@@ -16,6 +25,10 @@ create.nonstate.data(model, nocc, ngroups, robust, time.intervals, ...)
 \item{robust}{logical as to whether it is a robust design model}
 
 \item{time.intervals}{needs to be specified for robust models}
+
+\item{divisor}{if 2 then double the nocc to create the capture history}
+
+\item{live}{defaults to FALSE, if live include encounters}
 
 \item{...}{additional arguments that can be passed to process.data}
 }

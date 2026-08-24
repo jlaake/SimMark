@@ -487,7 +487,7 @@ output_releases(outfile,releases,nocc=nocc,number.of.groups=number.of.groups,nst
 #         write(paste(paste(releases[,j,i],collapse=" "),";",sep=""),file=outfile,append=TRUE)
 #       }
 #   }  
-
+#browser()
 # output parmvals and link
 if(!is.null(beta))
 {  
@@ -510,19 +510,24 @@ write(paste("parmvals link=",param.link,";",sep=""),file=outfile,append=TRUE)
 if(!is.list(param)) stop("beta or real must be a list of vectors named with parameters")
 parmvals=NULL
 # need to make them row/column model order
-for(i in 1:length(param.names))
+DMnames=unique(sapply(strsplit(colnames(complete.design.matrix),":"),function(x)x[[1]][1]))
+missingParam=!DMnames%in%names(param)
+if(any(missingParam))
+  stop("Following parameters have not been assigned values: ",DMnames[missingParam])
+for(i in 1:length(names(parameters)))
 {
-  j=which(names(param)==param.names[i])
-  if(length(j)!=0)
-  {
-    iname=names(param)[j]
-    if(param.link=="identity")
-      icol=grep(paste(iname," ",sep=""),rownames(complete.design.matrix))
-    else
-      icol=grep(paste(iname,":",sep=""),colnames(complete.design.matrix))
-    if(!length(icol)==length(param[[j]])) stop(paste("For ",iname," ",length(param[[j]])," values specified for ",length(icol)," parameter(s)",sep=""))
-    parmvals=c(parmvals,param[[j]])
-  }
+    j=which(names(param)==names(parameters)[i])
+    if(length(j)!=0)
+    {
+      iname=param.names[j]
+      jname=names(parameters)[j]
+      if(param.link=="identity")
+        icol=grep(paste(" ",iname," ",sep=""),paste(" ",rownames(complete.design.matrix),sep=""))
+      else
+        icol=grep(paste(" ",jname,":",sep=""),paste(" ",colnames(complete.design.matrix),sep=""))
+      if(!length(icol)==length(param[[jname]])) stop(paste("For ",iname," ",length(param[[jname]])," values specified for ",length(icol)," parameter(s)",sep=""))
+      parmvals=c(parmvals,param[[j]])
+    }
 }
 write(paste(paste(parmvals,collapse=" "),";",sep=""),file=outfile,append=TRUE)
 if(!is.null(real))
