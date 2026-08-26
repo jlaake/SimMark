@@ -69,5 +69,5 @@ mod$simresults
 }
 }
 \author{
-Jeff Laake
+Gary White
 }

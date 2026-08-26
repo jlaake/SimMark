@@ -3,13 +3,48 @@
 #' Calls mark.exe to simulate data based on a specified capture-recapture model and
 #' specified parameter formulas and other parameters.
 #' 
-#' Need additional function to read through set of simulations, run mark analysis and store results 
-#' 
-#' 
-#' The function mark is a shell that calls 5 other functions in the following
+#' The function simmark is a shell that calls 5 other functions in the following
 #' order as needed: 1) \code{\link{sim.process.data}}, 2)
 #' make.design.data in RMark, 3) \code{\link{make.simmark.model}}, 4)
 #' \code{\link{run.simmark.model}}, and 5) \code{\link{summarize.simmark}}. 
+#' Functions 1,3,4 are modifications of the equivalent functions in RMark to 
+#' handle the additional requirements for Proc Simulate in MARK to specify
+#' 1. number of simulation replicates (numsims), 2. optional seed for random
+#' number generation, 3. filename for binary file containing simulation results,
+#' 4. simdata filename if simulated data are to be output without estimation, 
+#' 5. releases which are numbers of animals per occasion used in simulation, 
+#' 6. parameter values specified as beta for link function values or real for real parameter values.
+#' 
+#' Because the functions in the package are derivatives of RMark functions they follow the same pattern of model 
+#' development which requires a data set which is used to generate the design data for the specific 
+#' model and the design data are used with the parameter formulas to generate the design matrix. All of
+#' the code to create the PIMs and design matrices and options in RMark are also included in this package
+#' because it uses the same code moved over to this package. Thus it is necessary to start off with data that
+#' fits the structure of the model (eg. correct values of capture history, number of occasions, group structure etc).
+#' For CJS type models a capture history with all 1's and specified number of occasions is sufficient and if there
+#' are groups, then a factor variable group is included and a capture history is given for each group. For multistate
+#' models all of the states (specified with capital letters) must be present in the data. For models with a two character 
+#' capture history creating the data is slightly more complicated but all of this is handled in the function \code{\link{create.data}}
+#' and some additional functions.  
+#' 
+#' There are 2 different approaches you can take in using simmark: 
+#' 
+#' 1) specify the model, data (from create.data), formulas for the design matrix and simulation parameters to generate 
+#' replicate data sets (numsims) which are then analyzed with the same model and design matrix in MARK and the parameter 
+#' estimates (beta and real) are output to the binary file named with argument simfile and summarized in the element simresults 
+#' in the model list returned from the function. 
+#' 
+#' 2) specify the model, data (from create.data), formulas for the design matrix and simulation parameters to generate 
+#' replicate data sets (numsims) which are then output to the file specifed by the argument simdata. These simulation
+#' data sets can then be in RMark with the same or different model and formulas/design matrix and any of the results 
+#' extracted from the estimation run can be summarized to compute any value of interest (eg confidence interval coverage,etc)
+#' analyzed. An example of this approach is given in \code{\link{SimtoRMark}} using the function \code{\link{readSimData}}.
+#' 
+#' Numerous examples are provided in \code{\link{SimCJS}}, \code{\link{SimMS}},\code{\link{SimRobust}},\code{\link{SimOccupancy}},
+#' \code{\link{SimOpenAbundance}}, and \code{\link{SimClosedAbundance}} with more to follow.
+#' 
+#' Note that some of these arguments to the function have been carried over from RMark mark function
+#' out of ease and they may not necessarily be useful.
 #' 
 #' @param data Either the raw data which is a dataframe with at least one
 #' column named ch (a character field containing the capture history) or a

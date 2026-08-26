@@ -4,7 +4,16 @@
 \alias{create.ms.data}
 \title{Dummy data creation for models with states}
 \usage{
-create.ms.data(model, nocc, ngroups, nstates, robust, time.intervals, ...)
+create.ms.data(
+  model,
+  nocc,
+  ngroups,
+  nstates,
+  robust,
+  time.intervals,
+  live = FALSE,
+  ...
+)
 }
 \arguments{
 \item{model}{supported c-r model name (eg "CJS","multistrata")}
@@ -18,6 +27,8 @@ create.ms.data(model, nocc, ngroups, nstates, robust, time.intervals, ...)
 \item{robust}{logical as to whether it is a robust design model}
 
 \item{time.intervals}{needs to be specified for robust models}
+
+\item{live}{defaults to FALSE, if live-dead include encounters}
 
 \item{...}{additional arguments that can be passed to process.data}
 }

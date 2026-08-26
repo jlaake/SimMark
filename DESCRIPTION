@@ -1,11 +1,14 @@
 Package: SimMark
 Version: 0.0.1
 Date: 2026-08-04
-Title: R Code for Mark Analysis
+Title: Interface to Mark for Simulation Analysis
 Authors@R: c(person(given = "Jeff",
                         family = "Laake",
                         role = c("cre","aut"),
-                        email = "jefflaake@gmail.com"))
+                        email = "jefflaake@gmail.com"),
+                        person(given = "Gary",
+                        family = "White",
+                        role = c("ctb")))
 Description: An interface to the software package MARK that constructs input
     files for simulation with MARK. MARK was developed by Gary White
     and is freely available at <http://www.phidot.org/software/mark/downloads/>

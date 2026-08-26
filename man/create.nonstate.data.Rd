@@ -28,7 +28,7 @@ create.nonstate.data(
 
 \item{divisor}{if 2 then double the nocc to create the capture history}
 
-\item{live}{defaults to FALSE, if live include encounters}
+\item{live}{defaults to FALSE, if live-dead include encounters}
 
 \item{...}{additional arguments that can be passed to process.data}
 }

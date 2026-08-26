@@ -44,8 +44,52 @@ mod=simmark(simdata,model.parameters=dm.formulas,releases=release.values,numsims
 mod$real.values
 #show simresults
 mod$simresults
+
+# Fixing a parameter example
+
+data(dipper)
+mark(dipper,model="CJSRandom",
+    model.parameters=list(Phi=list(formula=~-1+time,link="sin"),
+                          sigmaphi=list(formula=~1,fixed=0), 
+                          sigmap=list(formula=~1),p=list(formula=~-1+time,link="sin")))
+
+# CJSRandom 10 occasions, 2 groups, Phi(group*time)p(group*time) model
+
+# Example of fixing a parameter
+nocc=10
+ngroups=2
+
+simdata=create.data("CJSRandom",nocc,ngroups)
+
+ddl=make.design.data(simdata)
+
+ddl$sigmaphi
+ddl$sigmap#'
+ddl$sigmaphi$fix=0.0
+ddl$sigmaphi
+
+mod=simmark(simdata,ddl=ddl,numsims=1,   
+           releases=matrix(c(rep(1000,ngroups)),ncol=ngroups),                
+           model.parameters=list(sigmaphi=list(formula=~1),
+           Phi=list(formula=~-1+time:group,link="sin"),   
+           sigmap=list(formula=~-1+group),p=list(formula=~-1+time:group,link="sin")),
+           beta=list(Phi=rep(asin(0.9*2-1),(nocc-1)*ngroups),
+           sigmap=log(c(0.5,1.0)),p=rep(asin(0.5*2-1),(nocc-1)*ngroups)),              
+           filename="simresults.bin",silent=TRUE,invisible=TRUE)
+nocc=10
+ngroups=2
+
+simdata=create.data("CJSRandom",nocc,ngroups)
+
+mod=simmark(simdata,numsims=1,releases=matrix(c(rep(1000,ngroups)),ncol=ngroups), 
+           model.parameters=list(sigmaphi=list(formula=~1,fixed=0),
+           Phi=list(formula=~-1+time:group,link="sin"),  
+           sigmap=list(formula=~-1+group),p=list(formula=~-1+time:group,link="sin")),
+           beta=list(Phi=rep(asin(0.9*2-1),(nocc-1)*ngroups),
+           sigmap=log(c(0.5,1.0)),p=rep(asin(0.5*2-1),(nocc-1)*ngroups)),
+           filename="simresults.bin",silent=TRUE,invisible=TRUE)
 }
 }
 \author{
-Jeff Laake
+Gary White
 }

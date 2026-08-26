@@ -8,12 +8,11 @@
 #' @param ngroups number of groups
 #' @param nstates number of states in multistate model
 #' @param time.intervals needs to be specified for robust models
-#' @param live defaults to FALSE, if live include encounters
 #' @param ... additional arguments that can be passed to process.data
 #' @return list of processed data set run through process.data
 #' @author Jeff Laake
 #' @export
-create.data=function(model,nocc,ngroups,nstates=1,time.intervals=NULL,live=FALSE,...)
+create.data=function(model,nocc,ngroups,nstates=1,time.intervals=NULL,...)
 {
   model_def=sim.setup.model(model,nocc)
   if(model_def$robust)
@@ -24,9 +23,9 @@ create.data=function(model,nocc,ngroups,nstates=1,time.intervals=NULL,live=FALSE
        stop("Number of time intervals must be nocc-1")
   }
   if(nstates==1)
-    return(create.nonstate.data(model,nocc,ngroups,robust=model$robust,time.intervals=time.intervals,divisor=model_def$divisor,live=live,...))
+    return(create.nonstate.data(model,nocc,ngroups,robust=model$robust,time.intervals=time.intervals,divisor=model_def$divisor,live=model_def$LD,...))
   else
-    return(create.ms.data(model,nocc,ngroups,nstates,robust=model$robust,time.intervals=time.intervals,...))
+    return(create.ms.data(model,nocc,ngroups,nstates,robust=model$robust,time.intervals=time.intervals,live=model_def$LD,...))
 }
 #' Dummy data creation for models without states
 #'
@@ -39,7 +38,7 @@ create.data=function(model,nocc,ngroups,nstates=1,time.intervals=NULL,live=FALSE
 #' @param robust logical as to whether it is a robust design model
 #' @param time.intervals needs to be specified for robust models
 #' @param divisor if 2 then double the nocc to create the capture history
-#' @param live defaults to FALSE, if live include encounters
+#' @param live defaults to FALSE, if live-dead include encounters
 #' @param ... additional arguments that can be passed to process.data
 #' @return processed data set list run through process.data
 #' @author Jeff Laake
@@ -91,11 +90,12 @@ create.data=function(model,nocc,ngroups,nstates=1,time.intervals=NULL,live=FALSE
 #' @param nstates number of states in multistate model
 #' @param robust logical as to whether it is a robust design model
 #' @param time.intervals needs to be specified for robust models
+#' @param live defaults to FALSE, if live-dead include encounters
 #' @param ... additional arguments that can be passed to process.data
 #' @return processed data set list from process.data
 #' @author Jeff Laake
 #' @export
-  create.ms.data=function(model,nocc,ngroups,nstates,robust,time.intervals,...)
+  create.ms.data=function(model,nocc,ngroups,nstates,robust,time.intervals,live=FALSE,...)
 {
   strata=LETTERS[1:nstates]
   simdata=data.frame(ch=apply(matrix(rep(suppressWarnings(t(matrix(strata,ncol=nocc))),ngroups),ncol=nocc),1,paste,collapse=""),group=1:ngroups)

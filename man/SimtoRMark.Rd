@@ -35,5 +35,5 @@ reals
 }
 }
 \author{
-Jeff Laake
+Gary White
 }
