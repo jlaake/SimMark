@@ -1437,6 +1437,8 @@ create.agenest.var=function(data,init.agevar,time.intervals)
      design.matrix[[i]]=as.data.frame(design.matrix[[i]],stringsAsFactors=FALSE)
      if(parameters[[i]]$formula=="~1")
         names(design.matrix[[i]])[1]="(Intercept)"
+     if(length(names(design.matrix[[i]]))==0) 
+       stop("no columns in design matrix for ",names(parameters)[i])
      names(design.matrix[[i]])=paste(names(parameters)[i],names(design.matrix[[i]]),sep=":")
   } 
   }

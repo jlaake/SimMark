@@ -9,8 +9,8 @@ create.ms.data(
   nocc,
   ngroups,
   nstates,
-  robust,
   time.intervals,
+  divisor,
   live = FALSE,
   ...
 )
@@ -22,13 +22,14 @@ create.ms.data(
 
 \item{ngroups}{number of groups}
 
-\item{nstates}{number of states in multistate model}
-
-\item{robust}{logical as to whether it is a robust design model}
+\item{nstates}{number of states in multistate model
+#@param robust logical as to whether it is a robust design model}
 
 \item{time.intervals}{needs to be specified for robust models}
 
-\item{live}{defaults to FALSE, if live-dead include encounters}
+\item{divisor}{if 2 then double the nocc to create the capture history}
+
+\item{live}{defaults to FALSE, TRUE if live-dead include encounters}
 
 \item{...}{additional arguments that can be passed to process.data}
 }

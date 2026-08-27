@@ -8,7 +8,6 @@ create.nonstate.data(
   model,
   nocc,
   ngroups,
-  robust,
   time.intervals,
   divisor,
   live = FALSE,
@@ -20,15 +19,14 @@ create.nonstate.data(
 
 \item{nocc}{number of occasions}
 
-\item{ngroups}{number of groups}
-
-\item{robust}{logical as to whether it is a robust design model}
+\item{ngroups}{number of groups
+# @param robust logical as to whether it is a robust design model}
 
 \item{time.intervals}{needs to be specified for robust models}
 
 \item{divisor}{if 2 then double the nocc to create the capture history}
 
-\item{live}{defaults to FALSE, if live-dead include encounters}
+\item{live}{defaults to FALSE, TRUE if live-dead include encounters}
 
 \item{...}{additional arguments that can be passed to process.data}
 }
