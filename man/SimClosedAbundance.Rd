@@ -86,7 +86,8 @@ releases=1000
 mod=simmark(simdata,releases=releases,numsims=1,
            model.parameters=list(pi=list(formula=~-1+group),
                                  p=list(formula=~-1+mixture:group,link="sin")),
-           beta=list(pi=rep(logit_from_real(0.4),ngroups),p=rep(c(asin(0.3*2-1),asin(0.7*2-1)),ngroups)),
+           beta=list(pi=rep(logit_from_real(0.4),ngroups),
+                     p=rep(c(asin(0.3*2-1),asin(0.7*2-1)),ngroups)),
            simfile="simresults.bin",invisible=TRUE,silent=TRUE)
            
 mod=simmark(simdata,releases=releases,numsims=1,
@@ -109,8 +110,10 @@ releases=1000
 # pi(g) p(g*mix)
 
 mod=simmark(simdata,releases=releases,numsims=1,
-           model.parameters=list(pi=list(formula=~1),p=list(formula=~mixture+time,share=TRUE)),
-           beta=list(pi=logit_from_real(0.6),p=c(logit_from_real(0.3),logit_from_real(0.5)-logit_from_real(.3),rep(0,nocc-1))),
+           model.parameters=list(pi=list(formula=~1),
+                                 p=list(formula=~mixture+time,share=TRUE)),
+           beta=list(pi=logit_from_real(0.6),
+              p=c(logit_from_real(0.3),logit_from_real(0.5)-logit_from_real(.3),rep(0,nocc-1))),
            simfile="simresults.bin",invisible=TRUE,silent=TRUE)
   
   
@@ -124,8 +127,10 @@ mod=simmark(simdata,releases=releases,numsims=1,
            model.parameters=list(pi=list(formula=~-1+group),
                                  p=list(formula=~-1+time:group+mixture:group,share=TRUE)),
            beta=list(pi=rep(logit_from_real(0.4),ngroups),
-                     p=rep(c(logit_from_real(0.3),rep(0,nocc-1),logit_from_real(0.5)-logit_from_real(0.3),
-                     logit_from_real(0.6)-logit_from_real(0.3),rep(0,nocc-1),logit_from_real(0.5)-logit_from_real(0.6)))),
+                     p=rep(c(logit_from_real(0.3),rep(0,nocc-1),
+                             logit_from_real(0.5)-logit_from_real(0.3),
+                             logit_from_real(0.6)-logit_from_real(0.3),rep(0,nocc-1),
+                             logit_from_real(0.5)-logit_from_real(0.6)))),
            simfile="simresults.bin",invisible=TRUE,silent=TRUE)
 
            

@@ -470,24 +470,6 @@ else
 }
 # output releases for each group (releases(nocc,nstrata+nevents,number.of.groups))
 output_releases(outfile,releases,nocc=nocc,number.of.groups=number.of.groups,nstrata=nstrata,nevents=0)
-# if(model$model=="CJS")
-# {
-#   for (i in 1:number.of.groups)
-#   {
-#     write(paste("releases group=",i,";",sep=""),file=outfile,append=TRUE)
-#     write(paste(paste(releases[,i],collapse=" "),";",sep=""),file=outfile,append=TRUE)
-#   }
-# } else
-#   if(model$model=="Multistrata")
-#   {
-#     for (i in 1:number.of.groups)
-#       for(j in 1:nstrata)
-#       {
-#         write(paste("releases group=",i," strata=",j,";",sep=""),file=outfile,append=TRUE)
-#         write(paste(paste(releases[,j,i],collapse=" "),";",sep=""),file=outfile,append=TRUE)
-#       }
-#   }  
-#browser()
 # output parmvals and link
 if(!is.null(beta))
 {  
@@ -573,6 +555,16 @@ rnames = rep("", dim(complete.design.matrix)[1])
 ipos = 0
 string = paste("rlabel(", 1:dim(complete.design.matrix)[1], ")=", row.names(complete.design.matrix), ";",sep="")
 write(string, file = outfile, append = TRUE)
+#
+# Write out labels for derived parameters, if any
+#
+# for now exclude these data types 124,177,183
+if(!model.list$MarkNumber%in%c(124,177,183))
+   if(!is.null(model.list$derived_labels))
+   {
+     secnocc=ifelse(model.list$robust,sum(nocc.secondary),0)
+     write(create_dlabels(model.list$derived_labels,ngroups=number.of.groups,nocc,secnocc,nstates=nstrata),file=outfile,append=TRUE)
+   }
 #
 #  Complete with stop statement; then read the outfile into the input vector to
 #  store in the model object.  delete the output file and add the fields to the

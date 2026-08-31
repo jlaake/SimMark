@@ -52,12 +52,14 @@ time.intervals=c(0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0
 simdata=create.data("RDOccupEG",nocc,ngroups,time.intervals=time.intervals)
 
 mod=simmark(simdata,numsims=1,releases=1000,
-           model.parameters=list(Psi=list(formula=~-1+group),Epsilon=list(formula=~-1+time:group),
-                    Gamma=list(formula=~-1+time:group),p=list(formula=~-1+session:time:group)),
+                   model.parameters=list(Psi=list(formula=~-1+group),
+                                 Epsilon=list(formula=~-1+time:group),
+                                 Gamma=list(formula=~-1+time:group),
+                                 p=list(formula=~-1+session:time:group)),
                     beta=list(Psi=rep(logit_from_real(0.8),ngroups),
-                    Epsilon=rep(logit_from_real(0.3),(simdata$nocc-1)*ngroups),
-                    Gamma=rep(logit_from_real(0.6),(simdata$nocc-1)*ngroups),
-                    p=rep(logit_from_real(0.4),nocc*ngroups)),
+                              Epsilon=rep(logit_from_real(0.3),(simdata$nocc-1)*ngroups),
+                              Gamma=rep(logit_from_real(0.6),(simdata$nocc-1)*ngroups),
+                              p=rep(logit_from_real(0.4),nocc*ngroups)),
                     simfile="occupancyresults.bin",silent=TRUE,invisible=TRUE)
 
 

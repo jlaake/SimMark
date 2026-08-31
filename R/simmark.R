@@ -137,7 +137,7 @@ delete=FALSE,profile.int=FALSE,chat=NULL,input.links=NULL,parm.specific=FALSE,ml
 allgroups=FALSE,strata.labels=NULL,counts=NULL,icvalues=NULL,wrap=TRUE,events=NULL,nodes=101,useddl=FALSE,check.model=FALSE)
 {
 # 
-#  test to see if model is supported for simulation; will mstop if not supported
+#  test to see if model is supported for simulation; will stop if not supported
    dummy=sim.setup.model(model,1,1)
 #
 #  If the data haven't been processed (data$data is NULL) do it now with specified or default arguments

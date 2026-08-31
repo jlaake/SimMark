@@ -64,8 +64,9 @@ function(model,nocc,mixtures=1)
 	{
 		fdir=system.file(package="SimMark")	
 		fdir=file.path(fdir,"DerivedPar.txt")	
-		deriv_pars=read.delim(fdir,header=TRUE,	colClasses=c("numeric","character"))
-		model_def$derived_labels=list(deriv_pars$dpar_label[deriv_pars$MarkNumber==model_def$MarkNumber])
+		deriv_pars=read.delim(fdir,header=TRUE,	colClasses=c("numeric","character",rep("logical",3),"character","logical","character"))
+		model_def=as.list(model_def)
+		model_def$derived_labels=list(deriv_pars[deriv_pars$MarkNumber == model_def$MarkNumber,])[[1]]
 	}
-    return(as.list(model_def))
+  return(as.list(model_def))
 }
