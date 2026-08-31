@@ -45,7 +45,7 @@
 #'data(dipper)
 #'mark(dipper,model="CJSRandom",
 #'     model.parameters=list(Phi=list(formula=~-1+time,link="sin"),
-#'                           sigmaphi=list(formula=~1,fixed=0), 
+#'                           sigmaphi=list(fixed=0), 
 #'                           sigmap=list(formula=~1),p=list(formula=~-1+time,link="sin")))
 #'
 #'# CJSRandom 10 occasions, 2 groups, Phi(group*time)p(group*time) model

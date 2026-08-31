@@ -3,6 +3,7 @@
 #' For a specific capture-recapture model, create the dlabels which are
 #' used to add labels to the derived parameters.
 #' 
+#' @param model name of model but only needed for special cases
 #' @param ddf dataframe of derived parameters and their attributes
 #' @param nocc number of occasions (number of sessions if robust design)
 #' @param secnocc number of occasions if robust design
@@ -11,7 +12,7 @@
 #' @return vector of dlabels to be added to simmark input file for mark to use to label derived parameter values
 #' @author Jeff Laake
 #' @export
-create_dlabels=function(ddf,nocc,secnocc,ngroups,nstates)
+create_dlabels=function(model,ddf,nocc,secnocc,ngroups,nstates)
 {
   dlabels=NULL
   labelnum=1
@@ -74,6 +75,14 @@ create_dlabels=function(ddf,nocc,secnocc,ngroups,nstates)
             dlabels=c(dlabels,labelstring)
           }
    }
+  }
+  if(model=="MSJollySeber" & ngroups>1)
+  {
+    start=length(dlabels)-4*ngroups+1
+    hold=sapply(dlabels,function(x)strsplit(x,"=")[[1]][2])
+    for(i in 1:ngroups)
+      dlabels[(start+(i-1)*4):(start+(i-1)*4+3)]=paste(paste("dlabel(",(start+(i-1)*4):(start+(i-1)*4+3),sep=""),")=",
+                                                       hold[seq(start+(i-1),start+(i-1)+ngroups*4-1,ngroups)],sep="")
   }
   return(dlabels)
 }

@@ -4,9 +4,11 @@
 \alias{create_dlabels}
 \title{Create labels for derived data}
 \usage{
-create_dlabels(ddf, nocc, secnocc, ngroups, nstates)
+create_dlabels(model, ddf, nocc, secnocc, ngroups, nstates)
 }
 \arguments{
+\item{model}{name of model but only needed for special cases}
+
 \item{ddf}{dataframe of derived parameters and their attributes}
 
 \item{nocc}{number of occasions (number of sessions if robust design)}

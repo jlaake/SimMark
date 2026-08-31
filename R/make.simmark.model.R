@@ -563,7 +563,7 @@ if(!model.list$MarkNumber%in%c(124,177,183))
    if(!is.null(model.list$derived_labels))
    {
      secnocc=ifelse(model.list$robust,sum(nocc.secondary),0)
-     write(create_dlabels(model.list$derived_labels,ngroups=number.of.groups,nocc,secnocc,nstates=nstrata),file=outfile,append=TRUE)
+     write(create_dlabels(model.list$model,model.list$derived_labels,ngroups=number.of.groups,nocc,secnocc,nstates=nstrata),file=outfile,append=TRUE)
    }
 #
 #  Complete with stop statement; then read the outfile into the input vector to
