@@ -2,7 +2,7 @@
 % Please edit documentation in R/logits_from_reals.r
 \name{mlogit_from_real}
 \alias{mlogit_from_real}
-\title{Logit and mlogit functions}
+\title{Mlogit function}
 \usage{
 mlogit_from_real(p)
 }
@@ -13,7 +13,7 @@ mlogit_from_real(p)
 vector of beta values with reference category being the last one
 }
 \description{
-Computes vector of beta values from real values for a logit and mlogit link.
+Computes vector of beta values from real values for an mlogit link.
 }
 \author{
 Gary White

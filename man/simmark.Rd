@@ -23,6 +23,7 @@ simmark(
   numsims = 1,
   seed = 0,
   releases = NULL,
+  marked = NULL,
   beta = NULL,
   real = NULL,
   param.link = NULL,
@@ -85,8 +86,7 @@ on the right and open on left and vice-versa if FALSE}
 
 \item{groups}{Vector of names factor variables for creating groups}
 
-\item{age.var}{Optional index in groups vector of a variable that represents
-age}
+\item{age.var}{Optional index in groups vector of a variable that represents age}
 
 \item{initial.ages}{Optional vector of initial ages for each age level}
 
@@ -98,11 +98,13 @@ age}
 
 \item{seed}{the seed for random number generation; default is 0 for random seed start}
 
-\item{releases}{matrix of number of releases with rows being nocc-1 and columns are groups or array with dim occasion,strata,groups}
+\item{releases}{the number of releases for the simulation; see details below}
 
-\item{beta}{vector of parameters for simulation on link scale}
+\item{marked}{the number of marked animals in the population for the simulation of mark-resight models; see details below}
 
-\item{real}{vector of parameters for simulation on real scale}
+\item{beta}{list with an element for each parameter containing a vector of values on the link scale; see details below}
+
+\item{real}{list with an element for each parameter containing a vector of values on real scale; only works if design matrix is identity; see details below}
 
 \item{param.link}{if not NULL, it is used as link for specified simulation parameters}
 
@@ -220,15 +222,39 @@ estimates (beta and real) are output to the binary file named with argument simf
 in the model list returned from the function. 
 
 2) specify the model, data (from create.data), formulas for the design matrix and simulation parameters to generate 
-replicate data sets (numsims) which are then output to the file specifed by the argument simdata. These simulation
-data sets can then be in RMark with the same or different model and formulas/design matrix and any of the results 
+replicate data sets (numsims) which are then output to the file specified by the argument simdata. These simulation
+data sets can then be used in RMark with the same or different model and formulas/design matrix and any of the results 
 extracted from the estimation run can be summarized to compute any value of interest (eg confidence interval coverage,etc)
 analyzed. An example of this approach is given in \code{\link{SimtoRMark}} using the function \code{\link{readSimData}}.
 
-Numerous examples are provided in \code{\link{SimCJS}}, \code{\link{SimMS}},\code{\link{SimRobust}},\code{\link{SimOccupancy}},
-\code{\link{SimOpenAbundance}}, and \code{\link{SimClosedAbundance}} with more to follow.
+One of the more confusing arguments to specify is releases. It can either be a constant,matrix or array. For closed capture 
+models releases is the number in the population and can be a constant. For CJS type models, the releases is a matrix with rows being
+occasions and columns for groups. CJS type models will only use nocc-1 values where nocc is the number of occasions. For robust 
+models, the number of releases is the number of sessions (primary periods). See \code{\link{SimRobust}} for an example. For models with strata (states), releases should be specified 
+as an array with 3 dimensions (occasions,strata,groups). See \code{\link{SimMS}} for an example of the latter.
 
-Note that some of these arguments to the function have been carried over from RMark mark function
+Similarly, the argument marked is similar to releases. However, it must be specified as an array or matrix. If specified as an  array
+the number of strata (states)=1.At this time there are no state mark-resight models so the number of strata is fixed to 1. The 3 dimensions of the array are (occasions,strata=1,groups). 
+For examples, releases=array(c(100,40,20),dim=c(nocc,nstates,ngroups)) where nocc is the number of sessions. Alternatively, it can be specified as a 
+as a matrix with dimensions nocc and ngroups. It cannot be specified as a constant. The structure and dimensions of releases and marked must match
+and the number of marked must be less than the number of releases for each value.
+The parameters used to simulate the data can be specified as beta values (on link scale) or as real values. The latter only works
+if the entire design matrix is an identity. Note that even though the design matrices for each parameter are identity matrices, when the are put 
+together in single design matrix they are not always in the correct order for the full design matrix to be an identity. It will 
+be easiest to specify beta values but you can use the functions \code{\link{logit_from_real}} and \code{\link{mlogit_from_real}} to 
+convert real values to logit or mlogit values for use in beta. If you specify real values, the length of the vector of values must match the number of rows in the
+design matrix for each parameter. If you specify beta values, the length of the vector of values must match the number of columns in the
+design matrix for each parameter. In both cases they are assigned in order. You can check to make sure they are in the order you want by 
+looking at beta.values or real.values in the returned value from simmark. See \code{\link{SimCJS}} for an example.
+
+Numerous examples are provided in \code{\link{SimCJS}}, \code{\link{SimMS}},\code{\link{SimRobust}},\code{\link{SimOccupancy}},
+\code{\link{SimOpenAbundance}}, \code{\link{SimClosedAbundance}}, and \code{\link{SimtoRMark}}with more to follow.
+
+Notes:
+
+1) Examples may generate a fair number of files from RMark and SimMark. To cleanup, use cleanup(ask=FALSE) to 
+removed mark files and cleanup(ask=FALSE,prefix="simmark") to delete SimMark files.
+2) Some of these arguments to the function have been carried over from RMark mark function
 out of ease and they may not necessarily be useful.
 }
 \seealso{

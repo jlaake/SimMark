@@ -45,17 +45,22 @@ mod$real.values
 #show simresults
 mod$simresults
 
-# Fixing a parameter example
+# Fixing a parameter example by setting fixed=0 in the model.parameter list element for sigmaphi
+# This only works to fix all of the values to 0. If you specify a formula then you need to 
+# provide indices argument giving the par.index values that should be assigned and number of 
+# values must specify number indices.
 
 data(dipper)
-mark(dipper,model="CJSRandom",
+mod=mark(dipper,model="CJSRandom",
     model.parameters=list(Phi=list(formula=~-1+time,link="sin"),
                           sigmaphi=list(fixed=0), 
                           sigmap=list(formula=~1),p=list(formula=~-1+time,link="sin")))
 
+\dontrun{
 # CJSRandom 10 occasions, 2 groups, Phi(group*time)p(group*time) model
+# This takes awhile so it is not run for checking; copy and paste from help file to run
 
-# Example of fixing a parameter
+# Example of fixing a parameter by setting fix value in the design data for sigmaphi
 nocc=10
 ngroups=2
 
@@ -64,7 +69,7 @@ simdata=create.data("CJSRandom",nocc,ngroups)
 ddl=make.design.data(simdata)
 
 ddl$sigmaphi
-ddl$sigmap#'
+ddl$sigmap
 ddl$sigmaphi$fix=0.0
 ddl$sigmaphi
 
@@ -76,18 +81,7 @@ mod=simmark(simdata,ddl=ddl,numsims=1,
            beta=list(Phi=rep(asin(0.9*2-1),(nocc-1)*ngroups),
            sigmap=log(c(0.5,1.0)),p=rep(asin(0.5*2-1),(nocc-1)*ngroups)),              
            filename="simresults.bin",silent=TRUE,invisible=TRUE)
-nocc=10
-ngroups=2
-
-simdata=create.data("CJSRandom",nocc,ngroups)
-
-mod=simmark(simdata,numsims=1,releases=matrix(c(rep(1000,ngroups)),ncol=ngroups), 
-           model.parameters=list(sigmaphi=list(formula=~1,fixed=0),
-           Phi=list(formula=~-1+time:group,link="sin"),  
-           sigmap=list(formula=~-1+group),p=list(formula=~-1+time:group,link="sin")),
-           beta=list(Phi=rep(asin(0.9*2-1),(nocc-1)*ngroups),
-           sigmap=log(c(0.5,1.0)),p=rep(asin(0.5*2-1),(nocc-1)*ngroups)),
-           filename="simresults.bin",silent=TRUE,invisible=TRUE)
+}
 }
 }
 \author{

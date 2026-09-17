@@ -40,17 +40,22 @@
 #'#show simresults
 #'mod$simresults
 #'
-#'# Fixing a parameter example
+#'# Fixing a parameter example by setting fixed=0 in the model.parameter list element for sigmaphi
+#'# This only works to fix all of the values to 0. If you specify a formula then you need to 
+#'# provide indices argument giving the par.index values that should be assigned and number of 
+#'# values must specify number indices.
 #'
 #'data(dipper)
-#'mark(dipper,model="CJSRandom",
+#'mod=mark(dipper,model="CJSRandom",
 #'     model.parameters=list(Phi=list(formula=~-1+time,link="sin"),
 #'                           sigmaphi=list(fixed=0), 
 #'                           sigmap=list(formula=~1),p=list(formula=~-1+time,link="sin")))
 #'
+#'\dontrun{
 #'# CJSRandom 10 occasions, 2 groups, Phi(group*time)p(group*time) model
+#'# This takes awhile so it is not run for checking; copy and paste from help file to run
 #'
-#'# Example of fixing a parameter
+#'# Example of fixing a parameter by setting fix value in the design data for sigmaphi
 #'nocc=10
 #'ngroups=2
 #'
@@ -59,7 +64,7 @@
 #'ddl=make.design.data(simdata)
 #'
 #'ddl$sigmaphi
-#'ddl$sigmap#'
+#'ddl$sigmap
 #'ddl$sigmaphi$fix=0.0
 #'ddl$sigmaphi
 #'
@@ -71,18 +76,7 @@
 #'            beta=list(Phi=rep(asin(0.9*2-1),(nocc-1)*ngroups),
 #'            sigmap=log(c(0.5,1.0)),p=rep(asin(0.5*2-1),(nocc-1)*ngroups)),              
 #'            filename="simresults.bin",silent=TRUE,invisible=TRUE)
-#'nocc=10
-#'ngroups=2
-#'
-#'simdata=create.data("CJSRandom",nocc,ngroups)
-#'
-#'mod=simmark(simdata,numsims=1,releases=matrix(c(rep(1000,ngroups)),ncol=ngroups), 
-#'            model.parameters=list(sigmaphi=list(formula=~1,fixed=0),
-#'            Phi=list(formula=~-1+time:group,link="sin"),  
-#'            sigmap=list(formula=~-1+group),p=list(formula=~-1+time:group,link="sin")),
-#'            beta=list(Phi=rep(asin(0.9*2-1),(nocc-1)*ngroups),
-#'            sigmap=log(c(0.5,1.0)),p=rep(asin(0.5*2-1),(nocc-1)*ngroups)),
-#'            filename="simresults.bin",silent=TRUE,invisible=TRUE)
+#'}
 #' }
 NULL
 
@@ -153,7 +147,7 @@ NULL
 NULL
 
 
-#' Simulation Example Using RMark
+#' Simulation Examples Using RMark
 #' @name SimtoRMark
 #' @author Gary White   
 #' @examples
@@ -182,6 +176,40 @@ NULL
 #'  reals[[i]]=mod$results$real
 #'}
 #'reals
+#'
+#'
+#'#An example of using RMark to compare results for survival using live-dead data (Burnham) 
+#'#and the same data ignoring the recovered mortalities (CJS).
+#'reps=10
+#'nocc=10
+#'ngroups=1
+#'S=0.8
+#'p=.5
+#'r=.2
+#'# Create dummy data for the Burnham model
+#'simdata=create.data("Burnham",nocc=nocc,ngroups=ngroups)
+#'# Create 10 reps simulation data from Burnham model and store in data.inp.
+#'# This example uses default formula for S,p,r of ~1 which is the constant model and F fixed to 1
+#'mod=simmark(simdata,model.parameters=list(F=list(fixed=1)),
+#'            releases=1000,beta=list(S=logit_from_real(S),
+#'                                    p=logit_from_real(p),r=logit_from_real(r)),
+#'            numsims=reps,simdata="data.inp")
+#'#Read in the simulation data sets       
+#'simdata=readSimData("data.inp",nreps=reps)
+#'# create an empty matrix to store survival estimates and std errors from Burnham and CJS models
+#'survival=matrix(0,nrow=reps,ncol=4)
+#'# loop over each simulated data set and fit both models with mark and store results for survival
+#'for(i in 1:reps)
+#'{
+#'  data=simdata[[i]]
+#'  cjsdata=data
+#'  cjsdata$ch=sapply(strsplit(data$ch,""),function(x) paste(x[seq(1,nocc-1,2)],collapse=""))
+#'  ldmod=mark(data,model="Burnham",model.parameters=list(F=list(fixed=1)),delete=TRUE)
+#'  cjsmod=mark(cjsdata,model="CJS",delete=TRUE)
+#'  survival[i,]=c(unlist(ldmod$results$real[1,1:2]),unlist(cjsmod$results$real[1,1:2]))
+#'}
+#'colnames(survival)=c("Both S","se(Both S)","CJS Phi","se(CJS Phi)")
+#'survival
 #'}
 NULL
 
@@ -218,8 +246,9 @@ NULL
 #'simdata=create.data("RDOccupPE",nocc,ngroups,time.intervals=time.intervals)
 #'
 #'mod=simmark(simdata,numsims=1,releases=1000,
-#'            model.parameters=list(Psi=list(formula=~-1+time:group),Epsilon=list(formula=~-1+time:group),
-#'                                p=list(formula=~-1+session:time:group)),
+#'            model.parameters=list(Psi=list(formula=~-1+time:group),
+#'                                  Epsilon=list(formula=~-1+time:group),
+#'                                 p=list(formula=~-1+session:time:group)),
 #'            beta=list(Psi=rep(logit_from_real(0.65),simdata$nocc*ngroups),
 #'            Epsilon=rep(logit_from_real(0.3),(simdata$nocc-1)*ngroups),
 #'            p=rep(logit_from_real(0.4),nocc*ngroups)),

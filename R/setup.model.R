@@ -52,8 +52,11 @@ function(model,nocc,mixtures=1)
 			colClasses=c("numeric","character","character",rep("logical",4),rep("numeric",3),rep("logical",3),"character"))
     model_def=model_definitions[model_definitions$model==model,]	
     if(nrow(model_def)==0)
-        stop("Invalid type of model = ",model," Valid types are\n", paste(model_definitions$model,collapse="\n"))
-  if(!model_def$simulate) stop("model ",model, " is not supported for simulation")
+    {
+      cat(" Valid model names are\n",paste(model_definitions$model,collapse=","))
+      stop("Invalid model name = ",model)
+    }
+  #if(!model_def$simulate) stop("model ",model, " is not supported for simulation")
 	if(mixtures==1) 
 		model_def$mixtures=model_def$default.mixtures
 	else

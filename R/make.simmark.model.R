@@ -21,6 +21,7 @@
 #' @param simdata if not NULL it should specify a data file where the numsims simulated data sets are stored; in this case simfile is not used because estimations and summary do not occur
 #' @param seed the seed for random number generation
 #' @param releases matrix of number of releases with rows being nocc-1 and columns are groups or array with dim occasion,strata,groups
+#' @param marked the number of marked animals in the population for the simulation of mark-resight models as an array with dim nocc,1,ngroups or matrix dropping second dimension
 #' @param beta vector of parameters for simulation on link scale
 #' @param real vector of parameters for simulation on real scale
 #' @param param.link if not NULL, it is used as link for specified simulation parameters
@@ -59,7 +60,7 @@
 #' 
 make.simmark.model <-
 function(data,ddl,parameters=list(),title="",model.name=NULL,initial=NULL,
-         numsims=1,simfile=NULL,simdata=NULL,seed=NULL,releases=NULL,beta=NULL,real=NULL,param.link=NULL,call=NULL,
+         numsims=1,simfile=NULL,simdata=NULL,seed=NULL,releases=NULL,marked=NULL,beta=NULL,real=NULL,param.link=NULL,call=NULL,
 		     default.fixed=TRUE,options=NULL,profile.int=FALSE,chat=NULL,simplify=TRUE,
 		     input.links=NULL,parm.specific=FALSE,mlogit0=TRUE,hessian=FALSE,accumulate=TRUE,
          icvalues=NULL,wrap=TRUE,nodes=101,useddl=FALSE,check.model=FALSE)
@@ -470,6 +471,19 @@ else
 }
 # output releases for each group (releases(nocc,nstrata+nevents,number.of.groups))
 output_releases(outfile,releases,nocc=nocc,number.of.groups=number.of.groups,nstrata=nstrata,nevents=0)
+# output marked if not NULL
+if(!is.null(marked) & model.list$MarkNumber%in% c(114,115,120,158,159,160,171,172,173,174))
+{
+  # check to make sure structure and dimensions of marked = dimensions of releases
+  if(!length(dim(marked))==length(dim(releases)))
+    stop("structure constant/matrix/array must be the same for releases and marked")
+  if(any(dim(marked)!=dim(releases))) 
+    stop("dimensions of marked and release must be the same")
+  # check to make sure less than releases
+  if(any(marked>releases))
+    stop("some values of releases are less than values of marked\n")
+  output_marked(outfile,marked,nocc=nocc,number.of.groups=number.of.groups,nstrata=1,nevents=0)
+}
 # output parmvals and link
 if(!is.null(beta))
 {  
@@ -691,7 +705,7 @@ create.agenest.var=function(data,init.agevar,time.intervals)
 #
 # Check validity of parameter types, if any given
 #
-  if(!RMark:::valid.parameters(data$model,parameters))stop()
+  if(!valid.parameters(data$model,parameters))stop()
 #
 # Next check validity of fields defined in each parameter list.
 #

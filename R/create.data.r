@@ -19,8 +19,6 @@ create.data=function(model,nocc,ngroups,nstates=1,time.intervals=NULL,...)
   {
     if(is.null(time.intervals))
       stop("Must specify time.intervals for robust design models")
-    if(length(time.intervals)!=nocc-1)
-       stop("Number of time intervals must be nocc-1")
   }
   if(nstates==1)
     return(create.nonstate.data(model,nocc,ngroups,time.intervals=time.intervals,divisor=model_def$divisor,live=model_def$LD,...))
@@ -94,6 +92,7 @@ create.data=function(model,nocc,ngroups,nstates=1,time.intervals=NULL,...)
   if(divisor==1)
   {
     simdata=data.frame(ch=apply(matrix(rep(suppressWarnings(t(matrix(strata,ncol=nocc))),ngroups),ncol=nocc),1,paste,collapse=""),group=1:ngroups)
+    simdata$group=factor(simdata$group)
   }else
   {
     mat=diag(1,nocc,nocc)
@@ -116,11 +115,10 @@ create.data=function(model,nocc,ngroups,nstates=1,time.intervals=NULL,...)
         if(live) ch=c(ch,paste(rep(c(strata[i],0),nocc),collapse=""))
     simdata=data.frame(ch=rep(ch,ngroups),group=factor(1:ngroups))
   }
-  simdata$group=factor(simdata$group)
   if(ngroups>1)
-     dp=sim.process.data(simdata,model=model,groups="group",time.intervals=time.intervals,...)
+    dp=sim.process.data(simdata,model=model,groups="group",time.intervals=time.intervals,...)
   else 
-     dp=sim.process.data(simdata,model=model,time.intervals=time.intervals,...)
+    dp=sim.process.data(simdata,model=model,time.intervals=time.intervals,...)
   return(dp)
   }
   

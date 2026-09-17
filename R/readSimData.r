@@ -167,6 +167,13 @@ readSimData=function(inp.filename,nreps,group.df=NULL,covariates=NULL,use.commen
     out.filename=tempfile()
     writeLines(input[(linenum+1):(linenum+nhistory)],out.filename)
     SimData[[i]]=sim.convert.inp(out.filename,group.df=group.df,covariates=covariates,use.comments=use.comments)
+    if(!is.null(names(group.df)))
+    {
+      if(length(names(group.df))>1)
+        SimData[[i]][,names(group.df)]=apply(SimData[[i]][,names(group.df)],2,function(x) as.factor(x))
+      else
+        SimData[[i]][,names(group.df)]=as.factor(SimData[[i]][,names(group.df)])
+    }
     linenum=linenum+nhistory+1
   }
   return(SimData)

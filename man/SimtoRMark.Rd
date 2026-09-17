@@ -2,9 +2,9 @@
 % Please edit documentation in R/SimMark-package.R
 \name{SimtoRMark}
 \alias{SimtoRMark}
-\title{Simulation Example Using RMark}
+\title{Simulation Examples Using RMark}
 \description{
-Simulation Example Using RMark
+Simulation Examples Using RMark
 }
 \examples{
 {
@@ -32,6 +32,40 @@ for(i in 1:10)
  reals[[i]]=mod$results$real
 }
 reals
+
+
+#An example of using RMark to compare results for survival using live-dead data (Burnham) 
+#and the same data ignoring the recovered mortalities (CJS).
+reps=10
+nocc=10
+ngroups=1
+S=0.8
+p=.5
+r=.2
+# Create dummy data for the Burnham model
+simdata=create.data("Burnham",nocc=nocc,ngroups=ngroups)
+# Create 10 reps simulation data from Burnham model and store in data.inp.
+# This example uses default formula for S,p,r of ~1 which is the constant model and F fixed to 1
+mod=simmark(simdata,model.parameters=list(F=list(fixed=1)),
+           releases=1000,beta=list(S=logit_from_real(S),
+                                   p=logit_from_real(p),r=logit_from_real(r)),
+           numsims=reps,simdata="data.inp")
+#Read in the simulation data sets       
+simdata=readSimData("data.inp",nreps=reps)
+# create an empty matrix to store survival estimates and std errors from Burnham and CJS models
+survival=matrix(0,nrow=reps,ncol=4)
+# loop over each simulated data set and fit both models with mark and store results for survival
+for(i in 1:reps)
+{
+ data=simdata[[i]]
+ cjsdata=data
+ cjsdata$ch=sapply(strsplit(data$ch,""),function(x) paste(x[seq(1,nocc-1,2)],collapse=""))
+ ldmod=mark(data,model="Burnham",model.parameters=list(F=list(fixed=1)),delete=TRUE)
+ cjsmod=mark(cjsdata,model="CJS",delete=TRUE)
+ survival[i,]=c(unlist(ldmod$results$real[1,1:2]),unlist(cjsmod$results$real[1,1:2]))
+}
+colnames(survival)=c("Both S","se(Both S)","CJS Phi","se(CJS Phi)")
+survival
 }
 }
 \author{

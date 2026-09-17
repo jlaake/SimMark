@@ -16,6 +16,7 @@ make.simmark.model(
   simdata = NULL,
   seed = NULL,
   releases = NULL,
+  marked = NULL,
   beta = NULL,
   real = NULL,
   param.link = NULL,
@@ -59,6 +60,8 @@ make.simmark.model(
 \item{seed}{the seed for random number generation}
 
 \item{releases}{matrix of number of releases with rows being nocc-1 and columns are groups or array with dim occasion,strata,groups}
+
+\item{marked}{the number of marked animals in the population for the simulation of mark-resight models as an array with dim nocc,1,ngroups or matrix dropping second dimension}
 
 \item{beta}{vector of parameters for simulation on link scale}
 

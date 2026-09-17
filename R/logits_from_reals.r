@@ -1,10 +1,10 @@
-#'Logit and mlogit functions 
+#'Mlogit function 
 #'
-#'Computes vector of beta values from real values for a logit and mlogit link.
+#'Computes vector of beta values from real values for an mlogit link.
 #' @param p vector of real probabilities that sum to 1
 #' @return vector of beta values with reference category being the last one
 #' @author Gary White
-#' @export mlogit_from_real logit_from_real
+#' @export 
 mlogit_from_real <- function(p) 
 {
   # p = vector of real probabilities that sum to 1
@@ -14,6 +14,13 @@ mlogit_from_real <- function(p)
   beta <- log(p[-length(p)] / p[length(p)])
   return(beta)
 }
+#'Logit function 
+#'
+#'Computes vector of beta values from real values for a logit  link.
+#' @param p vector of real probabilities 
+#' @return vector of beta values 
+#' @author Gary White
+#' @export 
 logit_from_real <- function(p)
 {
   if (any(p <= 0)|any(p>=1)) stop("All probabilities must be > 0 and <1")

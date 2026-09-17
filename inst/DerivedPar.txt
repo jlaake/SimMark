@@ -254,7 +254,7 @@ MarkNumber	dpar_label	Group	Strata	Occasion	OccNum	Session	SessNum
 144	Departure	TRUE	FALSE	FALSE	0	FALSE	0
 145	N Population Size	TRUE	FALSE	FALSE	0	FALSE	0
 146	N Population Size	TRUE	FALSE	FALSE	0	TRUE	nocc
-147	N Population Size	NA	NA	FALSE	0	TRUE	nocc
+147	N Population Size	TRUE	TRUE	FALSE	0	TRUE	nocc
 148	N Population Size	NA	NA	FALSE	0	TRUE	nocc
 148	Lambda Population Change	NA	NA	FALSE	0	TRUE	nocc-1
 148	log(Lambda) Population Change	NA	NA	FALSE	0	TRUE	nocc-1
@@ -282,6 +282,7 @@ MarkNumber	dpar_label	Group	Strata	Occasion	OccNum	Session	SessNum
 160	Lambda Mean Resightings	TRUE	FALSE	TRUE	nocc	FALSE	0
 160	Pr(Captured 1 or more times)	TRUE	FALSE	TRUE	nocc	FALSE	0
 161	Density	TRUE	FALSE	FALSE	0	FALSE	0
+162	N Population Size	TRUE	FALSE	FALSE	0	TRUE	nocc
 171	N Population Size	TRUE	FALSE	TRUE	nocc	FALSE	0
 171	Lambda Mean Resightings	TRUE	FALSE	TRUE	nocc	FALSE	0
 171	Pr(Captured 1 or more times)	TRUE	FALSE	TRUE	nocc	FALSE	0
