@@ -39,7 +39,7 @@ make.simmark.model(
 )
 }
 \arguments{
-\item{data}{Data list resulting from function \code{\link{sim.process.data}}}
+\item{data}{Data list resulting from function process.data in RMark}
 
 \item{ddl}{Design data list from function make.design.data in RMark}
 
@@ -125,7 +125,7 @@ For descriptions of the standard calling arguments see \code{make.mark.model}. A
 arguments for simulation will be described here.
 }
 \seealso{
-\code{\link{sim.process.data}},
+\code{\link{process.data}},
 \code{\link{run.simmark.model}} \code{\link{simmark}}
 }
 \author{

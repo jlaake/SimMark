@@ -14,9 +14,12 @@ if(nstrata<=1)
 } else
 {
   for (i in 1:number.of.groups)
-  for(j in 1:nstrata)
+  for(j in 1:(nstrata+nevents))
   {
-    write(paste("releases group=",i," strata=",j,";",sep=""),file=outfile,append=TRUE)
+    if(j<=nstrata)
+       write(paste("releases group=",i," strata=",j,";",sep=""),file=outfile,append=TRUE)
+    else
+      write(paste("releases group=",i," event=",j-nstrata,";",sep=""),file=outfile,append=TRUE)
     write(paste(paste(releases[,j,i],collapse=" "),";",sep=""),file=outfile,append=TRUE)
   }
 }

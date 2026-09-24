@@ -23,7 +23,7 @@
 #' and then covariates (if any)
 #' @author Jeff Laake
 #' @export sim.convert.inp
-#' @seealso \code{\link{sim.process.data}}
+#' @seealso \code{\link{process.data}}
 #' @keywords utility
 sim.convert.inp=function(inp.filename,group.df=NULL,covariates=NULL,use.comments=FALSE)
 {

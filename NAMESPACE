@@ -5,22 +5,22 @@ export(create.ms.data)
 export(create.nonstate.data)
 export(create_dlabels)
 export(logit_from_real)
-export(make.design.data)
 export(make.simmark.model)
 export(mlogit_from_real)
 export(readSimData)
 export(run.simmark.model)
-export(sim.process.data)
-export(sim.setup.model)
-export(sim.setup.parameters)
 export(simmark)
 export(summarize.simmark)
 import(RMark)
-importFrom(stats,as.formula)
-importFrom(stats,formula)
-importFrom(stats,median)
-importFrom(stats,model.matrix)
-importFrom(stats,terms)
-importFrom(utils,read.delim)
-importFrom(utils,read.table)
-importFrom(utils,write.table)
+importFrom(stats,
+  as.formula,
+  formula,
+  median,
+  model.matrix,
+  terms
+)
+importFrom(utils,
+  read.delim,
+  read.table,
+  write.table
+)

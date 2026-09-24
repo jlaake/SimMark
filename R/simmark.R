@@ -4,7 +4,7 @@
 #' specified parameter formulas and other parameters.
 #' 
 #' The function simmark is a shell that calls 5 other functions in the following
-#' order as needed: 1) \code{\link{sim.process.data}}, 2)
+#' order as needed: 1) \code{\link{process.data}}, 2)
 #' make.design.data in RMark, 3) \code{\link{make.simmark.model}}, 4)
 #' \code{\link{run.simmark.model}}, and 5) \code{\link{summarize.simmark}}. 
 #' Functions 1,3,4 are modifications of the equivalent functions in RMark to 
@@ -149,8 +149,10 @@
 #' @author Jeff Laake
 #' @import RMark
 #' @export
+#' @importFrom stats as.formula formula median model.matrix terms
+#' @importFrom utils read.delim write.table read.table
 #' @seealso \code{\link{make.simmark.model}}, \code{\link{run.simmark.model}},
-#' \code{\link{sim.process.data}}
+#' \code{\link{process.data}}
 #' @keywords models
 #' 
 simmark <-
@@ -163,8 +165,8 @@ allgroups=FALSE,strata.labels=NULL,counts=NULL,icvalues=NULL,wrap=TRUE,events=NU
 {
 # 
 #  test to see if model is supported for simulation; will stop if not supported
-#  currently disabled here and it sim.setup.model 
-#   dummy=sim.setup.model(model,1,1)
+#  currently disabled here and it setup.model 
+#   dummy=setup.model(model,1,1)
 
 # test to see if there are duplicate specifications in beta and real arguments and model.parameters
   if(!is.null(beta))
@@ -185,7 +187,7 @@ if(is.null(data$data))
       message("Warning: specification of ddl ignored, as data have not been processed\n")
       ddl=NULL
    }
-   data.proc=sim.process.data(data,begin.time=begin.time, model=model,mixtures=mixtures, 
+   data.proc=process.data(data,begin.time=begin.time, model=model,mixtures=mixtures, 
                           groups = groups, age.var = age.var, initial.ages = initial.ages, 
                           age.unit = age.unit, time.intervals = time.intervals,nocc=nocc,
 				                  allgroups=allgroups, strata.labels=strata.labels,counts=counts,events=events)

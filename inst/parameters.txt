@@ -627,12 +627,12 @@ RDOccupREEG	sigmap	0			Square	all	log	~1					TRUE
 RDOccupREEG	p	0	0	0	Square	all	logit	~1					TRUE										
 Multistate2RE	sigmaS	0	1		Square	all	log	~stratum						TRUE									
 Multistate2RE	S	0	-1	1	Triang	all	logit	~stratum						TRUE									
-Multistate2RE	sigmap	0			Square	all	log	~stratum						TRUE						
+Multistate2RE	sigmap	0	1		Square	all	log	~stratum						TRUE						
 Multistate2RE	p	1	-1	0	Triang	all	logit	~stratum						TRUE									
 Multistate2RE	Psi	0	-1	0	Triang	all	mlogit	~-1+stratum:tostratum						TRUE	TRUE								
 Multistate3RE	sigmaS	0	1		Square	all	log	~stratum						TRUE									
 Multistate3RE	S	0	-1	1	Triang	all	logit	~stratum						TRUE									
-Multistate3RE	sigmap	0			Square	all	log	~stratum						TRUE						
+Multistate3RE	sigmap	0	1		Square	all	log	~stratum						TRUE						
 Multistate3RE	p	1	-1	0	Triang	all	logit	~stratum						TRUE									
-Multistate3RE	sigmaPsi	0			Square	all	log	~stratum						TRUE						
+Multistate3RE	sigmaPsi	0	1		Square	all	log	~-1+stratum:tostratum						TRUE	TRUE					
 Multistate3RE	Psi	0	-1	0	Triang	all	mlogit	~-1+stratum:tostratum						TRUE	TRUE								

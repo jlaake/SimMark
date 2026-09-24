@@ -22,7 +22,7 @@ check_dlabel_length=function(ngroups=2,nstrata=3)
         nocc=40
         secnocc=nocc
       }
-      model_list=sim.setup.model(model,nocc)
+      model_list=setup.model(model,nocc)
       if(model_list$nDerived!="0")
       {
         compute_derived_length=function(nderived,noccas,ngrps,nprimy,nstrta)

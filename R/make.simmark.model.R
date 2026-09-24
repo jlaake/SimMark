@@ -10,7 +10,7 @@
 #' For descriptions of the standard calling arguments see \code{make.mark.model}. Additional 
 #' arguments for simulation will be described here.
 #' 
-#' @param data Data list resulting from function \code{\link{sim.process.data}}
+#' @param data Data list resulting from function process.data in RMark
 #' @param ddl Design data list from function make.design.data in RMark
 #' @param parameters List of parameter formula specifications
 #' @param title Title for the analysis (optional)
@@ -52,7 +52,7 @@
 #' list contents.
 #' @author Jeff Laake
 #' @export
-#' @seealso \code{\link{sim.process.data}},
+#' @seealso \code{\link{process.data}},
 #' \code{\link{run.simmark.model}} \code{\link{simmark}}
 #' @keywords model
 #' 
@@ -470,7 +470,11 @@ else
 			sep = " ", col.names = FALSE, row.names = FALSE, quote = FALSE, append = TRUE)
 }
 # output releases for each group (releases(nocc,nstrata+nevents,number.of.groups))
-output_releases(outfile,releases,nocc=nocc,number.of.groups=number.of.groups,nstrata=nstrata,nevents=0)
+if(!is.null(data$events))
+  nevents=length(data$events)
+else
+  nevents=0
+output_releases(outfile,releases,nocc=nocc,number.of.groups=number.of.groups,nstrata=nstrata,nevents=nevents)
 # output marked if not NULL
 if(!is.null(marked) & model.list$MarkNumber%in% c(114,115,120,158,159,160,171,172,173,174))
 {
@@ -572,8 +576,8 @@ write(string, file = outfile, append = TRUE)
 #
 # Write out labels for derived parameters, if any
 #
-# for now exclude these data types 124,177,183
-if(!model.list$MarkNumber%in%c(124,177,183))
+# for now exclude these data types 124,177
+if(!model.list$MarkNumber%in%c(124,177))
    if(!is.null(model.list$derived_labels))
    {
      secnocc=ifelse(model.list$robust,sum(nocc.secondary),0)
@@ -705,7 +709,7 @@ create.agenest.var=function(data,init.agevar,time.intervals)
 #
 # Check validity of parameter types, if any given
 #
-  if(!valid.parameters(data$model,parameters))stop()
+  if(!RMark:::valid.parameters(data$model,parameters))stop()
 #
 # Next check validity of fields defined in each parameter list.
 #
@@ -726,8 +730,8 @@ create.agenest.var=function(data,init.agevar,time.intervals)
   nocc.secondary=data$nocc.secondary
   nstrata=data$nstrata
   number.of.groups=dim(data$freq)[2]
-  par.list=sim.setup.parameters(data$model,check=TRUE)
-  parameters=sim.setup.parameters(data$model,parameters,nocc,number.of.groups=number.of.groups)
+  par.list=setup.parameters(data$model,check=TRUE)
+  parameters=setup.parameters(data$model,parameters,nocc,number.of.groups=number.of.groups)
   parameters=parameters[par.list]
   temp.rev=data$reverse
   data$reverse=FALSE
@@ -783,7 +787,7 @@ create.agenest.var=function(data,init.agevar,time.intervals)
   }
   param.names=sub("DoublePrime","''",names(parameters))
   param.names=sub("Prime","'",param.names)
-  model.list= sim.setup.model(data$model,0)
+  model.list= setup.model(data$model,0)
   etype=model.list$etype
 #	
 # Output data portion of MARK input file:
@@ -941,7 +945,7 @@ create.agenest.var=function(data,init.agevar,time.intervals)
 	  zz=zzd[,1:(ng+1)]
   }
 # Output proc simulate statement 
-  test_releases(releases,nocc=nocc,number.of.groups=number.of.groups,nstrata=nstrata,nevents=0)
+  #test_releases(releases,nocc=nocc,number.of.groups=number.of.groups,nstrata=nstrata,nevents=0)
   # if(is.null(releases))
   #   stop("\nMust specify releases")
   # if(!is.array(releases))
@@ -1326,7 +1330,7 @@ create.agenest.var=function(data,init.agevar,time.intervals)
 		  fullddl=rbind(fullddl,full.ddl[[shared_par]])
 		  fullddl[shared_par]=c(rep(0,dim1[1]),rep(1,dim2[1]))
 		  row.names(fullddl)=1:dim(fullddl)[1]
-	  } 
+	} 
 #
 #    Calculate number of parameters for this type
 #
@@ -1675,10 +1679,10 @@ create.agenest.var=function(data,init.agevar,time.intervals)
       if(!is.null(full.ddl[[parx]]$tostratum)) stratum.strings=paste(stratum.strings," to",full.ddl[[parx]]$tostratum,sep="")
       strings=paste(param.names[i],stratum.strings," g",full.ddl[[parx]]$group,sep="")
       if(data$reverse)
-	  {
+	    {
 		  if(!is.null(full.ddl[[parx]]$cohort))strings=paste(strings," c",full.ddl[[parx]]$cohort,sep="")
 		  if(!is.null(full.ddl[[parx]]$occ.cohort))strings=paste(strings," c",full.ddl[[parx]]$occ.cohort,sep="")
-	  } else {
+	    } else {
 		  if(!is.null(full.ddl[[parx]]$cohort))
 			  strings=paste(strings," c",full.ddl[[parx]]$cohort,sep="")
 		  else
@@ -1736,7 +1740,6 @@ create.agenest.var=function(data,init.agevar,time.intervals)
 	  if(length(mlogit.indices)>0 & length(fixedvalue)>0)
 		  model$links[fixedvalue[fixedvalue%in%mlogit.indices]]="Logit"
   }
-
 # Simplify the pim structure
   if(simplify) model=simplify.pim.structure(model)
 #

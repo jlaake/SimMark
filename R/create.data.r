@@ -14,7 +14,7 @@
 #' @export
 create.data=function(model,nocc,ngroups,nstates=1,time.intervals=NULL,...)
 {
-  model_def=sim.setup.model(model,nocc)
+  model_def=setup.model(model,nocc)
   if(model_def$robust)
   {
     if(is.null(time.intervals))
@@ -63,9 +63,9 @@ create.data=function(model,nocc,ngroups,nstates=1,time.intervals=NULL,...)
     }
     simdata=data.frame(ch=rep(ch,ngroups),group=factor(1:ngroups))
     if(ngroups>1)
-      dp=sim.process.data(simdata,model=model,groups="group",time.intervals=time.intervals,...)
+      dp=process.data(simdata,model=model,groups="group",time.intervals=time.intervals,...)
     else
-      dp=sim.process.data(simdata,model=model,time.intervals=time.intervals,...)
+      dp=process.data(simdata,model=model,time.intervals=time.intervals,...)
     return(dp)
   }
 
@@ -116,9 +116,9 @@ create.data=function(model,nocc,ngroups,nstates=1,time.intervals=NULL,...)
     simdata=data.frame(ch=rep(ch,ngroups),group=factor(1:ngroups))
   }
   if(ngroups>1)
-    dp=sim.process.data(simdata,model=model,groups="group",time.intervals=time.intervals,...)
+    dp=process.data(simdata,model=model,groups="group",time.intervals=time.intervals,...)
   else 
-    dp=sim.process.data(simdata,model=model,time.intervals=time.intervals,...)
+    dp=process.data(simdata,model=model,time.intervals=time.intervals,...)
   return(dp)
   }
   
