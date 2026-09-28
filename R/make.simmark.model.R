@@ -350,7 +350,7 @@ else
 for (i in 1:length(parameters)) {
   for (j in 1:length(model$pims[[i]]))
   {
-         if(model$model=="MSJollySeber" &i==5)model$pims[[i]][[j]]$stratum=NULL
+         if(model$model%in%c("MSJollySeber","HMMMSJollySeber") &i==5)model$pims[[i]][[j]]$stratum=NULL
          ncol = dim(model$pims[[i]][[j]]$pim)[2]
          string=pim.header(pim[[i]][[j]]$group,param.names[i],parameters[[i]],
                    ncol,model$pims[[i]][[j]]$stratum,model$pims[[i]][[j]]$tostratum,model$strata.labels,
@@ -474,7 +474,10 @@ if(!is.null(data$events))
   nevents=length(data$events)
 else
   nevents=0
-output_releases(outfile,releases,nocc=nocc,number.of.groups=number.of.groups,nstrata=nstrata,nevents=nevents)
+if(data$model%in%c("MSJollySeber","HMMMSJollySeber"))
+  output_releases(outfile,releases,nocc=nocc,number.of.groups=number.of.groups,nstrata=1,nevents=0)
+else
+  output_releases(outfile,releases,nocc=nocc,number.of.groups=number.of.groups,nstrata=nstrata,nevents=nevents)
 # output marked if not NULL
 if(!is.null(marked) & model.list$MarkNumber%in% c(114,115,120,158,159,160,171,172,173,174))
 {
@@ -681,6 +684,7 @@ create.agenest.var=function(data,init.agevar,time.intervals)
 #
 # Test to make sure that all rows of design data are there (no more deletion) and make sure they
 # are ordered
+  if(!is.list(ddl))stop("if specified the second argument is supposed to be a list for design data (ddl)")
   missing=FALSE
   for(i in 1:(length(ddl)-1))
   {
@@ -1042,7 +1046,7 @@ create.agenest.var=function(data,init.agevar,time.intervals)
   npar=1
   for(i in 1:length(parameters))
   {
-     if(data$model=="MSJollySeber"&names(parameters)[i]=="pi")parameters[[i]]$num=parameters[[i]]$num+nstrata-2
+     if(data$model%in%c("MSJollySeber","HMMMSJollySeber")&names(parameters)[i]=="pi")parameters[[i]]$num=parameters[[i]]$num+nstrata-2
      pim[[i]]=list()
      k=0
      for(j in 1:number.of.groups)
@@ -1053,7 +1057,7 @@ create.agenest.var=function(data,init.agevar,time.intervals)
 	        events=data$events
 	      for(jjj in events)
 	      {
-	        if(is.null(parameters[[i]]$bystratum)||!parameters[[i]]$bystratum||(data$model=="MSJollySeber"&names(parameters)[i]=="pi"))
+	        if(is.null(parameters[[i]]$bystratum)||!parameters[[i]]$bystratum||(data$model%in%c("MSJollySeber","HMMMSJollySeber")&names(parameters)[i]=="pi"))
 	          xstrata=1
 	        else
 	          if(!is.null(parameters[[i]]$events)&&parameters[[i]]$events)
@@ -1594,10 +1598,10 @@ create.agenest.var=function(data,init.agevar,time.intervals)
                    max.logit.number=max.logit.number+1
                    string=c(string,paste("mlogit(",rep(max.logit.number,length(x.indices)),")",sep=""))
                  }
-              }
+             }
               if(parx %in% c("pi","Omega"))
               { 
-	                if(is.null(data$events)) 
+	                if(is.null(data$events) | data$model=="HMMMSJollySeber") 
 	                    number.of.events=1
                   else
 	                    number.of.events=length(data$events)
