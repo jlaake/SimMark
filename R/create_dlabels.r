@@ -76,14 +76,13 @@ create_dlabels=function(model,ddf,nocc,secnocc,ngroups,nstates)
           }
    }
   }
-  if(model=="MSJollySeber" & ngroups>1)
-  {
-    start=length(dlabels)-4*ngroups+1
-    hold=sapply(dlabels,function(x)strsplit(x,"=")[[1]][2])
-    for(i in 1:ngroups)
-      dlabels[(start+(i-1)*4):(start+(i-1)*4+3)]=paste(paste("dlabel(",(start+(i-1)*4):(start+(i-1)*4+3),sep=""),")=",
-                                                       hold[seq(start+(i-1),start+(i-1)+ngroups*4-1,ngroups)],sep="")
-  }
+ # if(model=="MSJollySeber" & ngroups>1)
+ #  {
+ #    start=length(dlabels)-4*ngroups+1
+ #   for(i in 1:ngroups)
+ #      dlabels[(start+(i-1)*4):(start+(i-1)*4+3)]=paste(paste("dlabel(",(start+(i-1)*4):(start+(i-1)*4+3),sep=""),")=",
+ #                                                      hold[seq(start+(i-1),start+(i-1)+ngroups*4-1,ngroups)],sep="")
+ #  }
   return(dlabels)
 }
 
