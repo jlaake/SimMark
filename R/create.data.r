@@ -15,11 +15,6 @@
 create.data=function(model,nocc,ngroups,nstates=1,time.intervals=NULL,...)
 {
   model_def=setup.model(model,nocc)
-  if(model_def$robust)
-  {
-    if(is.null(time.intervals))
-      stop("Must specify time.intervals for robust design models")
-  }
   if(nstates==1)
     return(create.nonstate.data(model,nocc,ngroups,time.intervals=time.intervals,divisor=model_def$divisor,live=model_def$LD,...))
   else
