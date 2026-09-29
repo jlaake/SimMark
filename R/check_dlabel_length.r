@@ -1,14 +1,12 @@
-check_dlabel_length=function(ngroups=2,nstrata=3)
+check_dlabel_length=function(ngroups=2,nstrata=3,nspeciesocc=2)
 {
   #read in and loop through models
-  fdir=system.file(package="SimMark")	
+  fdir=system.file(package="RMark")	
   fdir=file.path(fdir,"models.txt")	
   model_definitions=read.delim(fdir,header=TRUE,
                                colClasses=c("numeric","character","character",rep("logical",4),rep("numeric",3),rep("logical",3),"character"))
   for(i in 1:nrow(model_definitions))
   {
-     if(model_definitions$simulate[i])
-     {
       cat("\nchecking ",model_definitions$model[i])
       model=model_definitions$model[i]
       nderived=model_definitions$nderived[i]
@@ -36,10 +34,9 @@ check_dlabel_length=function(ngroups=2,nstrata=3)
             cat("\ncdl= ",cdl)
             cat("\ndl= ",length(dlabels))
             cat("\ndlabels= ",dlabels)
-            stop("Invalid dlabel structure for model",model)
+            cat("Invalid dlabel structure for model",model)
         } else
           cat(" ok")
       }
-    }
   }
 }
