@@ -1,4 +1,4 @@
-check_dlabel_length=function(ngroups=2,nstrata=3,nspeciesocc=2)
+check_dlabel_length=function(ngroups=1,nstrata=3,nspeciesocc=2)
 {
   #read in and loop through models
   fdir=system.file(package="RMark")	
@@ -33,7 +33,7 @@ check_dlabel_length=function(ngroups=2,nstrata=3,nspeciesocc=2)
         {
             cat("\ncdl= ",cdl)
             cat("\ndl= ",length(dlabels))
-            cat("\ndlabels= ",dlabels)
+            cat("\ndlabels= ",paste("\n",dlabels))
             cat("Invalid dlabel structure for model",model)
         } else
           cat(" ok")
