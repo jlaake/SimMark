@@ -477,7 +477,10 @@ else
 if(data$model%in%c("MSJollySeber","HMMMSJollySeber"))
   output_releases(outfile,releases,nocc=nocc,number.of.groups=number.of.groups,nstrata=1,nevents=0)
 else
-  output_releases(outfile,releases,nocc=nocc,number.of.groups=number.of.groups,nstrata=nstrata,nevents=nevents)
+  if(data$model%in%c("MSBarker","MSUncBarker","MSUnc2Barker"))
+    output_releases(outfile,releases,nocc=nocc,number.of.groups=number.of.groups,nstrata=nstrata+1,nevents=nevents)
+  else
+    output_releases(outfile,releases,nocc=nocc,number.of.groups=number.of.groups,nstrata=nstrata,nevents=nevents)
 # output marked if not NULL
 if(!is.null(marked) & model.list$MarkNumber%in% c(114,115,120,158,159,160,171,172,173,174))
 {

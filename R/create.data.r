@@ -108,6 +108,8 @@ create.data=function(model,nocc,ngroups,nstates=1,time.intervals=NULL,...)
     if(live)
       for(i in 1:nstates)
         if(live) ch=c(ch,paste(rep(c(strata[i],0),nocc),collapse=""))
+    if(model=="MSBarker")
+      ch=gsub("1","U",ch)
     simdata=data.frame(ch=rep(ch,ngroups),group=factor(1:ngroups))
   }
   if(ngroups>1)
