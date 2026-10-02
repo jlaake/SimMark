@@ -60,39 +60,34 @@ function(model,invisible=FALSE,filename=NULL,threads=-1,ignore.stderr=FALSE)
 # Write input file to temp file 
 #
   writeLines(model$input,inputfile)
-# Windows operating system
-  if(os=="mingw32")
+
+  markpath=RMark:::create_markpath()
+	 
+  if(is.null(markpath))
   {
-  	 markpath=RMark:::create_markpath()
-	 if(is.null(markpath))
-	 {
-		 cat("mark.exe, mark32.exe or mark64.exe cannot be found. Add to system path or specify MarkPath object (e.g., MarkPath='C:/Programme/Mark'")
-		 return(NULL)
-	 }
-	 if(RunMark)
-		 if(.Platform$GUI[1]=="RTerm")
-		 {
-			 if(invisible)
-				 system(paste(markpath, " i=",inputfile," o=", outfile," threads=", threads,sep = ""),
-				        ignore.stdout=TRUE,ignore.stderr=TRUE)
-			 else
-				 system(paste(markpath, " i=",inputfile," o=", outfile,
-								 "threads=", threads,sep = ""),ignore.stderr=ignore.stderr)
-			 
-		 }else
-		 {
-			 system(paste(markpath, " i=",inputfile," o=", outfile,
-								 " threads=", threads,sep = ""),invisible=TRUE,ignore.stderr=ignore.stderr)
-			 if(file.exists("fort.0"))unlink("fort.0")
-		 }
-  } else
-# Non Windows operating systems
-  {
-    if(!exists("MarkPath"))MarkPath=""
-    if(RunMark)
-       system(paste("mark i=",inputfile," o=", outfile,
-            " threads=", threads,sep = ""),ignore.stderr=ignore.stderr)
+    if(os == "mingw32")
+      stop("mark.exe, mark32.exe or mark64.exe cannot be found. Add to system path or specify MarkPath object (e.g., MarkPath='C:/Programme/Mark'")
+    else
+      stop("MARK executable could not be found.")
   }
+  if(RunMark){
+    if(.Platform$GUI[1]=="RTerm")
+    {
+      if(invisible)
+        system(paste(markpath, " i=",inputfile," o=", outfile," threads=", threads,sep = ""),
+               ignore.stdout=TRUE,ignore.stderr=TRUE)
+      else
+        system(paste(markpath, " i=",inputfile," o=", outfile,
+                     "threads=", threads,sep = ""),ignore.stderr=ignore.stderr)
+      
+    }else
+    {
+      system(paste(markpath, " i=",inputfile," o=", outfile,
+                   " threads=", threads,sep = ""),invisible=TRUE,ignore.stderr=ignore.stderr)
+      if(file.exists("fort.0"))unlink("fort.0")
+    }
+  }
+  
   model$output=basefile
   model$input=NULL
  return(model)
