@@ -8,7 +8,6 @@
 #' 
 #' @param inp.filename name of input file; inp extension is assumed and does
 #' not need to be specified
-#' @param nreps number of simulation reps
 #' @param group.df dataframe with grouping variables that contains a row for
 #' each group defined in the input file row1=group1, row2=group2 etc.  Names
 #' and number of columns in the dataframe is set by user to define grouping
@@ -20,7 +19,7 @@
 #' unique values.
 #' @author Jeff Laake
 #' @export
-readSimData=function(inp.filename,nreps,group.df=NULL,covariates=NULL,use.comments=FALSE)
+readSimData=function(inp.filename,group.df=NULL,covariates=NULL,use.comments=FALSE)
 {
   # Internal functions 
   strip.comments=function(inp.filename,use.comments=TRUE,header=TRUE)
@@ -157,9 +156,10 @@ readSimData=function(inp.filename,nreps,group.df=NULL,covariates=NULL,use.commen
   }
 # End of internal functions  
   input=readLines(inp.filename)
-  SimData=vector("list",length=nreps)
+  SimData=vector("list")
   linenum=1
-  for(i in 1:nreps)
+  i=1
+  while(linenum<length(input))
   {
     xx=suppressWarnings(as.numeric(strsplit(input[linenum]," ")[[1]]))
     xx[is.numeric(xx)]
@@ -175,9 +175,9 @@ readSimData=function(inp.filename,nreps,group.df=NULL,covariates=NULL,use.commen
         SimData[[i]][,names(group.df)]=as.factor(SimData[[i]][,names(group.df)])
     }
     linenum=linenum+nhistory+1
+    i=i+1
   }
   return(SimData)
 }
  
-
 

@@ -22,8 +22,8 @@ release.values=matrix(c(rep(500,nocc-1),rep(200,nocc-1),rep(400,nocc-1)),ncol=ng
 # generate simulation data 
 mod=simmark(simdata,model.parameters=dm.formulas,releases=release.values,numsims=nreps,
              beta=beta.values,simdata="data.inp", options=c("nodetail"),
-             invisible=TRUE,silent=TRUE)
-simdata=readSimData("data.inp",nreps=10,group.df=data.frame(group=1:ngroups))
+             invisible=TRUE)
+simdata=readSimData("data.inp",group.df=data.frame(group=1:ngroups))
 reals=list(length(10))
 for(i in 1:10)
 {
@@ -51,7 +51,7 @@ mod=simmark(simdata,model.parameters=list(F=list(fixed=1)),
                                    p=logit_from_real(p),r=logit_from_real(r)),
            numsims=reps,simdata="data.inp")
 #Read in the simulation data sets       
-simdata=readSimData("data.inp",nreps=reps)
+simdata=readSimData("data.inp")
 # create an empty matrix to store survival estimates and std errors from Burnham and CJS models
 survival=matrix(0,nrow=reps,ncol=4)
 # loop over each simulated data set and fit both models with mark and store results for survival

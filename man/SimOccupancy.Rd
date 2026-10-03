@@ -23,7 +23,7 @@ mod=simmark(simdata,numsims=1,releases=1000,
              beta=list(Psi=rep(logit_from_real(0.65),simdata$nocc*ngroups),
              Gamma=rep(logit_from_real(0.6),(simdata$nocc-1)*ngroups),
                      p=rep(logit_from_real(0.4),nocc*ngroups)),
-           simfile="occupancyresults.bin",silent=TRUE,invisible=TRUE)
+           simfile="occupancyresults.bin")
 
 
 # RDOccupPE
@@ -41,7 +41,7 @@ mod=simmark(simdata,numsims=1,releases=1000,
            beta=list(Psi=rep(logit_from_real(0.65),simdata$nocc*ngroups),
            Epsilon=rep(logit_from_real(0.3),(simdata$nocc-1)*ngroups),
            p=rep(logit_from_real(0.4),nocc*ngroups)),
-           simfile="occupancyresults.bin",silent=TRUE,invisible=TRUE)
+           simfile="occupancyresults.bin")
 
 
 # RDOccupEG
@@ -61,7 +61,7 @@ mod=simmark(simdata,numsims=1,releases=1000,
                               Epsilon=rep(logit_from_real(0.3),(simdata$nocc-1)*ngroups),
                               Gamma=rep(logit_from_real(0.6),(simdata$nocc-1)*ngroups),
                               p=rep(logit_from_real(0.4),nocc*ngroups)),
-                    simfile="occupancyresults.bin",silent=TRUE,invisible=TRUE)
+                    simfile="occupancyresults.bin")
 
 
 # Occupancy
@@ -75,7 +75,7 @@ mod=simmark(simdata,numsims=1,releases=matrix(c(rep(1000,ngroups)),ncol=ngroups)
            model.parameters=list(p=list(formula=~-1+time:group,link="sin"),
            Psi=list(formula=~-1+group,link="sin")),
            real=list(p=c(rep(0.4,nocc),rep(0.2,nocc)),Psi=c(0.6,0.8)),
-           simfile="occupancyresults.bin",silent=TRUE,invisible=TRUE)
+           simfile="occupancyresults.bin")
 }
 }
 \author{

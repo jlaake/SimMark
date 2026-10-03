@@ -80,7 +80,7 @@ mod=simmark(simdata,ddl=ddl,numsims=1,
            sigmap=list(formula=~-1+group),p=list(formula=~-1+time:group,link="sin")),
            beta=list(Phi=rep(asin(0.9*2-1),(nocc-1)*ngroups),
            sigmap=log(c(0.5,1.0)),p=rep(asin(0.5*2-1),(nocc-1)*ngroups)),              
-           filename="simresults.bin",silent=TRUE,invisible=TRUE)
+           filename="simresults.bin")
 }
 }
 }

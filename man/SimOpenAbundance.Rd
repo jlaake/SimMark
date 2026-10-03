@@ -19,13 +19,13 @@ mod=simmark(simdata,releases=1000,numsims=1,
                                  p=list(formula=~-1+time:group,link="sin"),
                                  f=list(formula=~-1+group,link="log")),
            real=list(Phi=rep(0.9,(nocc-1)*ngroups),p=rep(0.6,nocc*ngroups),f=rep(0.1,ngroups)),
-           simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+           simfile="simresults.bin")
 mod=simmark(simdata,releases=1000,numsims=1,
            model.parameters=list(Phi=list(formula=~-1+time:group,link="sin"),
                                  p=list(formula=~-1+group,link="sin"),
                                  f=list(formula=~-1+group,link="log")),
            real=list(Phi=rep(0.9,(nocc-1)*ngroups),p=rep(0.6,ngroups),f=rep(0.1,ngroups)),
-           simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+           simfile="simresults.bin")
            
 mod=simmark(simdata,releases=1000,numsims=1,
            model.parameters=list(Phi=list(formula=~-1+time:group,link="sin"),
@@ -34,7 +34,7 @@ mod=simmark(simdata,releases=1000,numsims=1,
            real=list(Phi=rep(0.9,(nocc-1)*ngroups),
                      p=rep(0.6,ngroups),
                      f=rep(0.1,(nocc-1)*ngroups)),
-           simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+           simfile="simresults.bin")
            
            
 # Pradlambda  
@@ -51,7 +51,7 @@ mod=simmark(simdata,releases=1000,numsims=1,
            real=list(Phi=rep(0.9,(nocc-1)*ngroups),
                      p=rep(0.6,nocc*ngroups),
                      Lambda=rep(1.0,ngroups)),
-           simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+           simfile="simresults.bin")
            
 mod=simmark(simdata,releases=1000,numsims=1,
            model.parameters=list(Phi=list(formula=~-1+time:group,link="sin"),
@@ -60,7 +60,7 @@ mod=simmark(simdata,releases=1000,numsims=1,
            real=list(Phi=rep(0.9,(nocc-1)*ngroups),
                      p=rep(0.6,ngroups),
                      Lambda=rep(1.0,ngroups)),
-           simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+           simfile="simresults.bin")
            
 mod=simmark(simdata,releases=1000,numsims=1,
            model.parameters=list(Phi=list(formula=~-1+time:group,link="sin"),
@@ -69,7 +69,7 @@ mod=simmark(simdata,releases=1000,numsims=1,
            real=list(Phi=rep(0.9,(nocc-1)*ngroups),
                      p=rep(0.6,ngroups),
                      Lambda=rep(1.0,(nocc-1)*ngroups)),
-           simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+           simfile="simresults.bin")
            
            
 # Pradsen  
@@ -83,7 +83,7 @@ mod=simmark(simdata,releases=1000,numsims=1,
            real=list(Phi=rep(0.9,(nocc-1)*ngroups),
                      p=rep(0.6,nocc*ngroups),
                      Gamma=rep(0.9,ngroups)),
-           simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+           simfile="simresults.bin")
            
 mod=simmark(simdata,releases=1000,numsims=1,
            model.parameters=list(Phi=list(formula=~-1+time:group,link="sin"),
@@ -92,7 +92,7 @@ mod=simmark(simdata,releases=1000,numsims=1,
            real=list(Phi=rep(0.9,(nocc-1)*ngroups),
                      p=rep(0.6,ngroups),
                      Gamma=rep(0.9,ngroups)),
-           simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+           simfile="simresults.bin")
            
 mod=simmark(simdata,releases=1000,numsims=1,
            model.parameters=list(Phi=list(formula=~-1+time:group,link="sin"),
@@ -101,7 +101,7 @@ mod=simmark(simdata,releases=1000,numsims=1,
            real=list(Phi=rep(0.9,(nocc-1)*ngroups),
                      p=rep(0.6,ngroups),
                      Gamma=rep(0.9,(nocc-1)*ngroups)),
-           simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+           simfile="simresults.bin")
            
 # Link-Barker
 
@@ -115,14 +115,14 @@ mod=simmark(simdata,releases=1000,numsims=1,
            real=list(Phi=rep(0.9,(nocc-1)*ngroups),
                      p=rep(0.6,nocc*ngroups),
                      f=rep(0.1,ngroups)),
-           simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+           simfile="simresults.bin")
            
 mod=simmark(simdata,releases=1000,numsims=1,
            model.parameters=list(Phi=list(formula=~-1+time:group,link="sin"),
                                  p=list(formula=~-1+group,link="sin"),
                                  f=list(formula=~-1+group,link="log")),
            real=list(Phi=rep(0.9,(nocc-1)*ngroups),p=rep(0.6,ngroups),f=rep(0.1,ngroups)),
-           simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+           simfile="simresults.bin")
            
 mod=simmark(simdata,releases=1000,numsims=1,
            model.parameters=list(Phi=list(formula=~-1+time:group,link="sin"),
@@ -131,7 +131,7 @@ mod=simmark(simdata,releases=1000,numsims=1,
            real=list(Phi=rep(0.9,(nocc-1)*ngroups),
                      p=rep(0.6,ngroups),
                      f=rep(0.1,(nocc-1)*ngroups)),
-           simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+           simfile="simresults.bin")
            
 }
 }

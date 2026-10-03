@@ -75,7 +75,7 @@
 #'            sigmap=list(formula=~-1+group),p=list(formula=~-1+time:group,link="sin")),
 #'            beta=list(Phi=rep(asin(0.9*2-1),(nocc-1)*ngroups),
 #'            sigmap=log(c(0.5,1.0)),p=rep(asin(0.5*2-1),(nocc-1)*ngroups)),              
-#'            filename="simresults.bin",silent=TRUE,invisible=TRUE)
+#'            filename="simresults.bin")
 #'}
 #' }
 NULL
@@ -166,8 +166,8 @@ NULL
 #'# generate simulation data 
 #'mod=simmark(simdata,model.parameters=dm.formulas,releases=release.values,numsims=nreps,
 #'              beta=beta.values,simdata="data.inp", options=c("nodetail"),
-#'              invisible=TRUE,silent=TRUE)
-#'simdata=readSimData("data.inp",nreps=10,group.df=data.frame(group=1:ngroups))
+#'              invisible=TRUE)
+#'simdata=readSimData("data.inp",group.df=data.frame(group=1:ngroups))
 #'reals=list(length(10))
 #'for(i in 1:10)
 #'{
@@ -195,7 +195,7 @@ NULL
 #'                                    p=logit_from_real(p),r=logit_from_real(r)),
 #'            numsims=reps,simdata="data.inp")
 #'#Read in the simulation data sets       
-#'simdata=readSimData("data.inp",nreps=reps)
+#'simdata=readSimData("data.inp")
 #'# create an empty matrix to store survival estimates and std errors from Burnham and CJS models
 #'survival=matrix(0,nrow=reps,ncol=4)
 #'# loop over each simulated data set and fit both models with mark and store results for survival
@@ -234,7 +234,7 @@ NULL
 #'              beta=list(Psi=rep(logit_from_real(0.65),simdata$nocc*ngroups),
 #'              Gamma=rep(logit_from_real(0.6),(simdata$nocc-1)*ngroups),
 #'                      p=rep(logit_from_real(0.4),nocc*ngroups)),
-#'            simfile="occupancyresults.bin",silent=TRUE,invisible=TRUE)
+#'            simfile="occupancyresults.bin")
 #'
 #'
 #'# RDOccupPE
@@ -252,7 +252,7 @@ NULL
 #'            beta=list(Psi=rep(logit_from_real(0.65),simdata$nocc*ngroups),
 #'            Epsilon=rep(logit_from_real(0.3),(simdata$nocc-1)*ngroups),
 #'            p=rep(logit_from_real(0.4),nocc*ngroups)),
-#'            simfile="occupancyresults.bin",silent=TRUE,invisible=TRUE)
+#'            simfile="occupancyresults.bin")
 #'
 #'
 #'# RDOccupEG
@@ -272,7 +272,7 @@ NULL
 #'                               Epsilon=rep(logit_from_real(0.3),(simdata$nocc-1)*ngroups),
 #'                               Gamma=rep(logit_from_real(0.6),(simdata$nocc-1)*ngroups),
 #'                               p=rep(logit_from_real(0.4),nocc*ngroups)),
-#'                     simfile="occupancyresults.bin",silent=TRUE,invisible=TRUE)
+#'                     simfile="occupancyresults.bin")
 #'
 #'
 #'# Occupancy
@@ -286,7 +286,7 @@ NULL
 #'            model.parameters=list(p=list(formula=~-1+time:group,link="sin"),
 #'            Psi=list(formula=~-1+group,link="sin")),
 #'            real=list(p=c(rep(0.4,nocc),rep(0.2,nocc)),Psi=c(0.6,0.8)),
-#'            simfile="occupancyresults.bin",silent=TRUE,invisible=TRUE)
+#'            simfile="occupancyresults.bin")
 #' }
 NULL
 
@@ -311,7 +311,7 @@ NULL
 #'            beta=list(S=c(rep(logit_from_real(0.9),(simdata$nocc-1)*ngroups)),
 #'                      p=c(rep(logit_from_real(0.6),nocc*ngroups)),
 #'                      GammaDoublePrime=c(rep(logit_from_real(0.2),(simdata$nocc-1)*ngroups))),
-#'            simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+#'            simfile="simresults.bin")
 #'
 #'mod=simmark(simdata,releases=releases,numsims=1,
 #'            model.parameters=list(S=list(formula=~-1+time),
@@ -322,7 +322,7 @@ NULL
 #'                      p=c(rep(logit_from_real(0.6),nocc*ngroups)),
 #'                      GammaDoublePrime=c(rep(logit_from_real(0.2),simdata$nocc-1)),
 #'                      GammaPrime=c(rep(logit_from_real(0.2),simdata$nocc-2))),
-#'            simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+#'            simfile="simresults.bin")
 #' 
 #'            
 #'# RD Huggins
@@ -338,7 +338,7 @@ NULL
 #'            beta=list(S=c(rep(logit_from_real(0.9),(simdata$nocc-1)*ngroups)),
 #'                      p=c(rep(logit_from_real(0.6),nocc*ngroups)),
 #'                      GammaDoublePrime=c(rep(logit_from_real(0.2),(simdata$nocc-1)*ngroups))),
-#'            simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+#'            simfile="simresults.bin")
 #'
 #'mod=simmark(simdata,releases=releases,numsims=1,
 #'            model.parameters=list(S=list(formula=~-1+time),
@@ -349,7 +349,7 @@ NULL
 #'                      p=c(rep(logit_from_real(0.6),nocc*ngroups)),
 #'                      GammaDoublePrime=c(rep(logit_from_real(0.2),simdata$nocc-1)),
 #'                      GammaPrime=c(rep(logit_from_real(0.2),simdata$nocc-2))),
-#'            simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+#'            simfile="simresults.bin")
 #'
 #'# parmvals with real list -- will fail because of p session:time and sharing with c 
 #'#                           because duplicate rows in design matrix
@@ -362,7 +362,7 @@ NULL
 #'                                  real=list(S=c(rep(0.9,simdata$nocc-1)),p=c(rep(0.6,nocc*ngroups)),
 #'                                  GammaDoublePrime=c(rep(0.2,simdata$nocc-1)),
 #'                                  GammaPrime=c(rep(0.2,simdata$nocc-2))),
-#'            simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+#'            simfile="simresults.bin")
 #'}
 #'
 #'}
@@ -384,13 +384,13 @@ NULL
 #'                                  p=list(formula=~-1+time:group,link="sin"),
 #'                                  f=list(formula=~-1+group,link="log")),
 #'            real=list(Phi=rep(0.9,(nocc-1)*ngroups),p=rep(0.6,nocc*ngroups),f=rep(0.1,ngroups)),
-#'            simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+#'            simfile="simresults.bin")
 #'mod=simmark(simdata,releases=1000,numsims=1,
 #'            model.parameters=list(Phi=list(formula=~-1+time:group,link="sin"),
 #'                                  p=list(formula=~-1+group,link="sin"),
 #'                                  f=list(formula=~-1+group,link="log")),
 #'            real=list(Phi=rep(0.9,(nocc-1)*ngroups),p=rep(0.6,ngroups),f=rep(0.1,ngroups)),
-#'            simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+#'            simfile="simresults.bin")
 #'            
 #'mod=simmark(simdata,releases=1000,numsims=1,
 #'            model.parameters=list(Phi=list(formula=~-1+time:group,link="sin"),
@@ -399,7 +399,7 @@ NULL
 #'            real=list(Phi=rep(0.9,(nocc-1)*ngroups),
 #'                      p=rep(0.6,ngroups),
 #'                      f=rep(0.1,(nocc-1)*ngroups)),
-#'            simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+#'            simfile="simresults.bin")
 #'            
 #'            
 #'# Pradlambda  
@@ -416,7 +416,7 @@ NULL
 #'            real=list(Phi=rep(0.9,(nocc-1)*ngroups),
 #'                      p=rep(0.6,nocc*ngroups),
 #'                      Lambda=rep(1.0,ngroups)),
-#'            simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+#'            simfile="simresults.bin")
 #'            
 #'mod=simmark(simdata,releases=1000,numsims=1,
 #'            model.parameters=list(Phi=list(formula=~-1+time:group,link="sin"),
@@ -425,7 +425,7 @@ NULL
 #'            real=list(Phi=rep(0.9,(nocc-1)*ngroups),
 #'                      p=rep(0.6,ngroups),
 #'                      Lambda=rep(1.0,ngroups)),
-#'            simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+#'            simfile="simresults.bin")
 #'            
 #'mod=simmark(simdata,releases=1000,numsims=1,
 #'            model.parameters=list(Phi=list(formula=~-1+time:group,link="sin"),
@@ -434,7 +434,7 @@ NULL
 #'            real=list(Phi=rep(0.9,(nocc-1)*ngroups),
 #'                      p=rep(0.6,ngroups),
 #'                      Lambda=rep(1.0,(nocc-1)*ngroups)),
-#'            simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+#'            simfile="simresults.bin")
 #'            
 #'            
 #'# Pradsen  
@@ -448,7 +448,7 @@ NULL
 #'            real=list(Phi=rep(0.9,(nocc-1)*ngroups),
 #'                      p=rep(0.6,nocc*ngroups),
 #'                      Gamma=rep(0.9,ngroups)),
-#'            simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+#'            simfile="simresults.bin")
 #'            
 #'mod=simmark(simdata,releases=1000,numsims=1,
 #'            model.parameters=list(Phi=list(formula=~-1+time:group,link="sin"),
@@ -457,7 +457,7 @@ NULL
 #'            real=list(Phi=rep(0.9,(nocc-1)*ngroups),
 #'                      p=rep(0.6,ngroups),
 #'                      Gamma=rep(0.9,ngroups)),
-#'            simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+#'            simfile="simresults.bin")
 #'            
 #'mod=simmark(simdata,releases=1000,numsims=1,
 #'            model.parameters=list(Phi=list(formula=~-1+time:group,link="sin"),
@@ -466,7 +466,7 @@ NULL
 #'            real=list(Phi=rep(0.9,(nocc-1)*ngroups),
 #'                      p=rep(0.6,ngroups),
 #'                      Gamma=rep(0.9,(nocc-1)*ngroups)),
-#'            simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+#'            simfile="simresults.bin")
 #'            
 #'# Link-Barker
 #'
@@ -480,14 +480,14 @@ NULL
 #'            real=list(Phi=rep(0.9,(nocc-1)*ngroups),
 #'                      p=rep(0.6,nocc*ngroups),
 #'                      f=rep(0.1,ngroups)),
-#'            simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+#'            simfile="simresults.bin")
 #'            
 #'mod=simmark(simdata,releases=1000,numsims=1,
 #'            model.parameters=list(Phi=list(formula=~-1+time:group,link="sin"),
 #'                                  p=list(formula=~-1+group,link="sin"),
 #'                                  f=list(formula=~-1+group,link="log")),
 #'            real=list(Phi=rep(0.9,(nocc-1)*ngroups),p=rep(0.6,ngroups),f=rep(0.1,ngroups)),
-#'            simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+#'            simfile="simresults.bin")
 #'            
 #'mod=simmark(simdata,releases=1000,numsims=1,
 #'            model.parameters=list(Phi=list(formula=~-1+time:group,link="sin"),
@@ -496,7 +496,7 @@ NULL
 #'            real=list(Phi=rep(0.9,(nocc-1)*ngroups),
 #'                      p=rep(0.6,ngroups),
 #'                      f=rep(0.1,(nocc-1)*ngroups)),
-#'            simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+#'            simfile="simresults.bin")
 #'            
 #'}
 NULL            
@@ -519,16 +519,16 @@ NULL
 #'             model.parameters=list(p=list(formula=~-1+time,link="sin",share=TRUE),
 #'                                   f0=list(formula=~-1+group)),
 #'             real=list(p=rep(0.4,nocc),f0=rep(3,ngroups)),
-#'             simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+#'             simfile="simresults.bin")
 #'             
 #'mod=simmark(simdata,releases=releases,numsims=1,
 #'            model.parameters=list(p=list(formula=~-1+time:group,link="sin",share=TRUE),
 #'                                 f0=list(formula=~-1+group)),
 #'            real=list(p=rep(0.4,nocc*ngroups),f0=rep(3,ngroups)),
-#'            simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+#'            simfile="simresults.bin")
 #'            
 #'mod=simmark(simdata,releases=releases,numsims=1,beta=list(p=0,c=0,f0=3),
-#'                    simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+#'                    simfile="simresults.bin")
 #'                    
 #'                    
 #'# Huggins
@@ -544,33 +544,33 @@ NULL
 #'mod=simmark(simdata,releases=releases,numsims=1,
 #'            model.parameters=list(p=list(formula=~-1+time:group,link="sin",share=TRUE)),
 #'            beta=list(p=rep(asin(0.3*2-1),nocc*ngroups)),
-#'            simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+#'            simfile="simresults.bin")
 #'            
 #'# p(t)
 #'mod=simmark(simdata,releases=releases,numsims=1,
 #'            model.parameters=list(p=list(formula=~-1+time,link="sin",share=TRUE)),
 #'            beta=list(p=rep(asin(0.3*2-1),nocc)),
-#'            simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+#'            simfile="simresults.bin")
 #'            
 #'# p(g)
 #'mod=simmark(simdata,releases=releases,numsims=1,
 #'            model.parameters=list(p=list(formula=~-1+group,link="sin",share=TRUE)),
 #'            beta=list(p=rep(asin(0.3*2-1),ngroups)),
-#'            simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+#'            simfile="simresults.bin")
 #'            
 #'            
 #'# p(.)
 #'mod=simmark(simdata,releases=releases,numsims=1,
 #'            model.parameters=list(p=list(formula=~1,link="sin",share=TRUE)),
 #'            beta=list(p=asin(0.3*2-1)),
-#'            simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+#'            simfile="simresults.bin")
 #'            
 #'# p(p,c,g)
 #'mod=simmark(simdata,releases=releases,numsims=1,
 #'            model.parameters=list(p=list(formula=~-1+group,link="sin"),
 #'                                  c=list(formula=~-1+group,link="sin")),
 #'            beta=list(p=rep(asin(0.3*2-1),ngroups),c=rep(-1,ngroups)),
-#'            simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+#'            simfile="simresults.bin")
 #'            
 #'            
 #'# HugHet
@@ -587,14 +587,14 @@ NULL
 #'                                  p=list(formula=~-1+mixture:group,link="sin")),
 #'            beta=list(pi=rep(logit_from_real(0.4),ngroups),
 #'                      p=rep(c(asin(0.3*2-1),asin(0.7*2-1)),ngroups)),
-#'            simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+#'            simfile="simresults.bin")
 #'            
 #'mod=simmark(simdata,releases=releases,numsims=1,
 #'            model.parameters=list(pi=list(formula=~-1+group),
 #'                                  p=list(formula=~-1+mixture:group,link="sin")),
 #'            beta=list(pi=c(logit_from_real(0.4),logit_from_real(0.3)),
 #'                      p=c(asin(0.3*2-1),asin(0.7*2-1),asin(0.2*2-1),asin(0.8*2-1))),
-#'            simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+#'            simfile="simresults.bin")
 #'            
 #'
 #'# HugFullHet
@@ -613,7 +613,7 @@ NULL
 #'                                  p=list(formula=~mixture+time,share=TRUE)),
 #'            beta=list(pi=logit_from_real(0.6),
 #'               p=c(logit_from_real(0.3),logit_from_real(0.5)-logit_from_real(.3),rep(0,nocc-1))),
-#'            simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+#'            simfile="simresults.bin")
 #'   
 #'   
 #'# HugFullHet
@@ -630,7 +630,7 @@ NULL
 #'                              logit_from_real(0.5)-logit_from_real(0.3),
 #'                              logit_from_real(0.6)-logit_from_real(0.3),rep(0,nocc-1),
 #'                              logit_from_real(0.5)-logit_from_real(0.6)))),
-#'            simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+#'            simfile="simresults.bin")
 #' 
 #'            
 #'# HugginsRE
@@ -647,7 +647,7 @@ NULL
 #'            model.parameters=list(sigmap=list(formula=~-1+group),
 #'                                  p=list(formula=~-1+time:group,link="sin",share=TRUE)),
 #'            beta=list(sigmap=log(c(0.5,1)),p=rep(asin(0.3*2-1),nocc*ngroups)),
-#'            simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+#'            simfile="simresults.bin")
 #'            
 #' }
 NULL

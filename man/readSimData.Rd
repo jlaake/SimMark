@@ -6,7 +6,6 @@
 \usage{
 readSimData(
   inp.filename,
-  nreps,
   group.df = NULL,
   covariates = NULL,
   use.comments = FALSE
@@ -15,8 +14,6 @@ readSimData(
 \arguments{
 \item{inp.filename}{name of input file; inp extension is assumed and does
 not need to be specified}
-
-\item{nreps}{number of simulation reps}
 
 \item{group.df}{dataframe with grouping variables that contains a row for
 each group defined in the input file row1=group1, row2=group2 etc.  Names

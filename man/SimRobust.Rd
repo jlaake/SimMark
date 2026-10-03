@@ -24,7 +24,7 @@ mod=simmark(simdata,releases=releases,numsims=1,
            beta=list(S=c(rep(logit_from_real(0.9),(simdata$nocc-1)*ngroups)),
                      p=c(rep(logit_from_real(0.6),nocc*ngroups)),
                      GammaDoublePrime=c(rep(logit_from_real(0.2),(simdata$nocc-1)*ngroups))),
-           simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+           simfile="simresults.bin")
 
 mod=simmark(simdata,releases=releases,numsims=1,
            model.parameters=list(S=list(formula=~-1+time),
@@ -35,7 +35,7 @@ mod=simmark(simdata,releases=releases,numsims=1,
                      p=c(rep(logit_from_real(0.6),nocc*ngroups)),
                      GammaDoublePrime=c(rep(logit_from_real(0.2),simdata$nocc-1)),
                      GammaPrime=c(rep(logit_from_real(0.2),simdata$nocc-2))),
-           simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+           simfile="simresults.bin")
 
            
 # RD Huggins
@@ -51,7 +51,7 @@ mod=simmark(simdata,releases=releases,numsims=1,
            beta=list(S=c(rep(logit_from_real(0.9),(simdata$nocc-1)*ngroups)),
                      p=c(rep(logit_from_real(0.6),nocc*ngroups)),
                      GammaDoublePrime=c(rep(logit_from_real(0.2),(simdata$nocc-1)*ngroups))),
-           simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+           simfile="simresults.bin")
 
 mod=simmark(simdata,releases=releases,numsims=1,
            model.parameters=list(S=list(formula=~-1+time),
@@ -62,7 +62,7 @@ mod=simmark(simdata,releases=releases,numsims=1,
                      p=c(rep(logit_from_real(0.6),nocc*ngroups)),
                      GammaDoublePrime=c(rep(logit_from_real(0.2),simdata$nocc-1)),
                      GammaPrime=c(rep(logit_from_real(0.2),simdata$nocc-2))),
-           simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+           simfile="simresults.bin")
 
 # parmvals with real list -- will fail because of p session:time and sharing with c 
 #                           because duplicate rows in design matrix
@@ -75,7 +75,7 @@ mod=simmark(simdata,releases=releases,numsims=1,
                                  real=list(S=c(rep(0.9,simdata$nocc-1)),p=c(rep(0.6,nocc*ngroups)),
                                  GammaDoublePrime=c(rep(0.2,simdata$nocc-1)),
                                  GammaPrime=c(rep(0.2,simdata$nocc-2))),
-           simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+           simfile="simresults.bin")
 }
 
 }

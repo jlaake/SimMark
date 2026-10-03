@@ -20,16 +20,16 @@ mod=simmark(simdata,releases=releases,numsims=1,
             model.parameters=list(p=list(formula=~-1+time,link="sin",share=TRUE),
                                   f0=list(formula=~-1+group)),
             real=list(p=rep(0.4,nocc),f0=rep(3,ngroups)),
-            simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+            simfile="simresults.bin")
             
 mod=simmark(simdata,releases=releases,numsims=1,
            model.parameters=list(p=list(formula=~-1+time:group,link="sin",share=TRUE),
                                 f0=list(formula=~-1+group)),
            real=list(p=rep(0.4,nocc*ngroups),f0=rep(3,ngroups)),
-           simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+           simfile="simresults.bin")
            
 mod=simmark(simdata,releases=releases,numsims=1,beta=list(p=0,c=0,f0=3),
-                   simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+                   simfile="simresults.bin")
                    
                    
 # Huggins
@@ -45,33 +45,33 @@ simdata=create.data("Huggins",nocc,ngroups)
 mod=simmark(simdata,releases=releases,numsims=1,
            model.parameters=list(p=list(formula=~-1+time:group,link="sin",share=TRUE)),
            beta=list(p=rep(asin(0.3*2-1),nocc*ngroups)),
-           simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+           simfile="simresults.bin")
            
 # p(t)
 mod=simmark(simdata,releases=releases,numsims=1,
            model.parameters=list(p=list(formula=~-1+time,link="sin",share=TRUE)),
            beta=list(p=rep(asin(0.3*2-1),nocc)),
-           simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+           simfile="simresults.bin")
            
 # p(g)
 mod=simmark(simdata,releases=releases,numsims=1,
            model.parameters=list(p=list(formula=~-1+group,link="sin",share=TRUE)),
            beta=list(p=rep(asin(0.3*2-1),ngroups)),
-           simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+           simfile="simresults.bin")
            
            
 # p(.)
 mod=simmark(simdata,releases=releases,numsims=1,
            model.parameters=list(p=list(formula=~1,link="sin",share=TRUE)),
            beta=list(p=asin(0.3*2-1)),
-           simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+           simfile="simresults.bin")
            
 # p(p,c,g)
 mod=simmark(simdata,releases=releases,numsims=1,
            model.parameters=list(p=list(formula=~-1+group,link="sin"),
                                  c=list(formula=~-1+group,link="sin")),
            beta=list(p=rep(asin(0.3*2-1),ngroups),c=rep(-1,ngroups)),
-           simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+           simfile="simresults.bin")
            
            
 # HugHet
@@ -88,14 +88,14 @@ mod=simmark(simdata,releases=releases,numsims=1,
                                  p=list(formula=~-1+mixture:group,link="sin")),
            beta=list(pi=rep(logit_from_real(0.4),ngroups),
                      p=rep(c(asin(0.3*2-1),asin(0.7*2-1)),ngroups)),
-           simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+           simfile="simresults.bin")
            
 mod=simmark(simdata,releases=releases,numsims=1,
            model.parameters=list(pi=list(formula=~-1+group),
                                  p=list(formula=~-1+mixture:group,link="sin")),
            beta=list(pi=c(logit_from_real(0.4),logit_from_real(0.3)),
                      p=c(asin(0.3*2-1),asin(0.7*2-1),asin(0.2*2-1),asin(0.8*2-1))),
-           simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+           simfile="simresults.bin")
            
 
 # HugFullHet
@@ -114,7 +114,7 @@ mod=simmark(simdata,releases=releases,numsims=1,
                                  p=list(formula=~mixture+time,share=TRUE)),
            beta=list(pi=logit_from_real(0.6),
               p=c(logit_from_real(0.3),logit_from_real(0.5)-logit_from_real(.3),rep(0,nocc-1))),
-           simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+           simfile="simresults.bin")
   
   
 # HugFullHet
@@ -131,7 +131,7 @@ mod=simmark(simdata,releases=releases,numsims=1,
                              logit_from_real(0.5)-logit_from_real(0.3),
                              logit_from_real(0.6)-logit_from_real(0.3),rep(0,nocc-1),
                              logit_from_real(0.5)-logit_from_real(0.6)))),
-           simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+           simfile="simresults.bin")
 
            
 # HugginsRE
@@ -148,7 +148,7 @@ mod=simmark(simdata,releases=releases,numsims=1,
            model.parameters=list(sigmap=list(formula=~-1+group),
                                  p=list(formula=~-1+time:group,link="sin",share=TRUE)),
            beta=list(sigmap=log(c(0.5,1)),p=rep(asin(0.3*2-1),nocc*ngroups)),
-           simfile="simresults.bin",invisible=TRUE,silent=TRUE)
+           simfile="simresults.bin")
            
 }
 }
