@@ -7,18 +7,19 @@
 #' @param nocc number of occasions
 #' @param ngroups number of groups
 #' @param nstates number of states in multistate model
+#' @param groupname field name for the group variable; best to use something other than group which will already be in the data
 #' @param time.intervals needs to be specified for robust models
 #' @param ... additional arguments that can be passed to process.data
 #' @return list of processed data set run through process.data
 #' @author Jeff Laake
 #' @export
-create.data=function(model,nocc,ngroups,nstates=1,time.intervals=NULL,...)
+create.data=function(model,nocc,ngroups,nstates=1,groupname="grp",time.intervals=NULL,...)
 {
   model_def=setup.model(model,nocc)
   if(nstates==1)
-    return(create.nonstate.data(model,nocc,ngroups,time.intervals=time.intervals,divisor=model_def$divisor,live=model_def$LD,...))
+    return(create.nonstate.data(model,nocc,ngroups,groupname,time.intervals=time.intervals,divisor=model_def$divisor,live=model_def$LD,...))
   else
-    return(create.ms.data(model,nocc,ngroups,nstates,time.intervals=time.intervals,divisor=model_def$divisor,live=model_def$LD,...))
+    return(create.ms.data(model,nocc,ngroups,groupname,nstates,time.intervals=time.intervals,divisor=model_def$divisor,live=model_def$LD,...))
 }
 #' Dummy data creation for models without states
 #'
@@ -28,7 +29,7 @@ create.data=function(model,nocc,ngroups,nstates=1,time.intervals=NULL,...)
 #' @param model supported c-r model name (eg "CJS","multistrata")
 #' @param nocc number of occasions
 #' @param ngroups number of groups
-#'# @param robust logical as to whether it is a robust design model
+#' @param groupname field name for the group variable; best to use something other than group which will already be in the data
 #' @param time.intervals needs to be specified for robust models
 #' @param divisor if 2 then double the nocc to create the capture history
 #' @param live defaults to FALSE, TRUE if live-dead include encounters
@@ -36,7 +37,7 @@ create.data=function(model,nocc,ngroups,nstates=1,time.intervals=NULL,...)
 #' @return processed data set list run through process.data
 #' @author Jeff Laake
 #' @export
-  create.nonstate.data=function(model,nocc,ngroups,time.intervals,divisor,live=FALSE,...)
+  create.nonstate.data=function(model,nocc,ngroups,groupname,time.intervals,divisor,live=FALSE,...)
   {
     if(divisor==1)
     {
@@ -57,8 +58,9 @@ create.data=function(model,nocc,ngroups,nstates=1,time.intervals=NULL,...)
       if(live) ch=c(ch,paste(rep(c(1,0),nocc),collapse=""))
     }
     simdata=data.frame(ch=rep(ch,ngroups),group=factor(1:ngroups))
+    names(simdata)[2]=groupname
     if(ngroups>1)
-      dp=process.data(simdata,model=model,groups="group",time.intervals=time.intervals,...)
+      dp=process.data(simdata,model=model,groups=groupname,time.intervals=time.intervals,...)
     else
       dp=process.data(simdata,model=model,time.intervals=time.intervals,...)
     return(dp)
@@ -72,8 +74,8 @@ create.data=function(model,nocc,ngroups,nstates=1,time.intervals=NULL,...)
 #' @param model supported c-r model name (eg "CJS","multistrata")
 #' @param nocc number of occasions
 #' @param ngroups number of groups
+#' @param groupname field name for the group variable; best to use something other than group which will already be in the data
 #' @param nstates number of states in multistate model
-#' #@param robust logical as to whether it is a robust design model
 #' @param time.intervals needs to be specified for robust models
 #' @param divisor if 2 then double the nocc to create the capture history
 #' @param live defaults to FALSE, TRUE if live-dead include encounters
@@ -81,13 +83,14 @@ create.data=function(model,nocc,ngroups,nstates=1,time.intervals=NULL,...)
 #' @return processed data set list from process.data
 #' @author Jeff Laake
 #' @export
-  create.ms.data=function(model,nocc,ngroups,nstates,time.intervals,divisor,live=FALSE,...)
+  create.ms.data=function(model,nocc,ngroups,groupname,nstates,time.intervals,divisor,live=FALSE,...)
 {
   strata=LETTERS[1:nstates]
   if(divisor==1)
   {
     simdata=data.frame(ch=apply(matrix(rep(suppressWarnings(t(matrix(strata,ncol=nocc))),ngroups),ncol=nocc),1,paste,collapse=""),group=1:ngroups)
     simdata$group=factor(simdata$group)
+    names(simdata)[2]=groupname
   }else
   {
     mat=diag(1,nocc,nocc)
@@ -108,12 +111,13 @@ create.data=function(model,nocc,ngroups,nstates=1,time.intervals=NULL,...)
     if(live)
       for(i in 1:nstates)
         if(live) ch=c(ch,paste(rep(c(strata[i],0),nocc),collapse=""))
-    if(model=="MSBarker")
-      ch=gsub("1","U",ch)
+    if(model%in%c("MSBarker","MSUncBarker","MSUnc2Barker"))
+      ch=gsub("1","a",ch)
     simdata=data.frame(ch=rep(ch,ngroups),group=factor(1:ngroups))
+    names(simdata)[2]=groupname
   }
   if(ngroups>1)
-    dp=process.data(simdata,model=model,groups="group",time.intervals=time.intervals,...)
+    dp=process.data(simdata,model=model,groups=groupname,time.intervals=time.intervals,...)
   else 
     dp=process.data(simdata,model=model,time.intervals=time.intervals,...)
   return(dp)

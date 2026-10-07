@@ -8,6 +8,7 @@ create.ms.data(
   model,
   nocc,
   ngroups,
+  groupname,
   nstates,
   time.intervals,
   divisor,
@@ -22,8 +23,9 @@ create.ms.data(
 
 \item{ngroups}{number of groups}
 
-\item{nstates}{number of states in multistate model
-#@param robust logical as to whether it is a robust design model}
+\item{groupname}{field name for the group variable; best to use something other than group which will already be in the data}
+
+\item{nstates}{number of states in multistate model}
 
 \item{time.intervals}{needs to be specified for robust models}
 

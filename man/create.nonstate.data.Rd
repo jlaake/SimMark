@@ -8,6 +8,7 @@ create.nonstate.data(
   model,
   nocc,
   ngroups,
+  groupname,
   time.intervals,
   divisor,
   live = FALSE,
@@ -19,8 +20,9 @@ create.nonstate.data(
 
 \item{nocc}{number of occasions}
 
-\item{ngroups}{number of groups
-# @param robust logical as to whether it is a robust design model}
+\item{ngroups}{number of groups}
+
+\item{groupname}{field name for the group variable; best to use something other than group which will already be in the data}
 
 \item{time.intervals}{needs to be specified for robust models}
 

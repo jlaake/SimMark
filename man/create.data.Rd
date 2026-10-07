@@ -4,7 +4,15 @@
 \alias{create.data}
 \title{Dummy data creation for simulation}
 \usage{
-create.data(model, nocc, ngroups, nstates = 1, time.intervals = NULL, ...)
+create.data(
+  model,
+  nocc,
+  ngroups,
+  nstates = 1,
+  groupname = "grp",
+  time.intervals = NULL,
+  ...
+)
 }
 \arguments{
 \item{model}{supported c-r model name (eg "CJS","multistrata")}
@@ -14,6 +22,8 @@ create.data(model, nocc, ngroups, nstates = 1, time.intervals = NULL, ...)
 \item{ngroups}{number of groups}
 
 \item{nstates}{number of states in multistate model}
+
+\item{groupname}{field name for the group variable; best to use something other than group which will already be in the data}
 
 \item{time.intervals}{needs to be specified for robust models}
 

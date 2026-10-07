@@ -211,10 +211,10 @@ if(type%in%c("Triang","STriang"))
 			  param.name=paste(param.name,"[",stratum,"]",sep="")
 		  else
 		  {
-		    if(param.name%in%c("Delta","pi") & !is.null(event))
+		    if(param.name%in%c("Delta","pi","rho","rho'","b") & !is.null(event))
 		    {
-		      if(param.name=="Delta") 
-		        param.name=paste("Delta ",event,"|",stratum,sep="")
+		      if(param.name%in%c("Delta","rho","rho'","b"))
+		        param.name=paste(param.name," ",event,"|",stratum,sep="")
 		      else
 		        param.name=paste("pi ",stratum,"|",event,sep="")
 		    } else
@@ -470,17 +470,20 @@ else
 			sep = " ", col.names = FALSE, row.names = FALSE, quote = FALSE, append = TRUE)
 }
 # output releases for each group (releases(nocc,nstrata+nevents,number.of.groups))
-if(!is.null(data$events))
-  nevents=length(data$events)
-else
-  nevents=0
+ if(!is.null(data$events))
+    nevents=length(data$events)
+ else
+    nevents=0
 if(data$model%in%c("MSJollySeber","HMMMSJollySeber"))
   output_releases(outfile,releases,nocc=nocc,number.of.groups=number.of.groups,nstrata=1,nevents=0)
 else
-  if(data$model%in%c("MSBarker","MSUncBarker","MSUnc2Barker"))
+  if(data$model%in%c("MSBarker"))
     output_releases(outfile,releases,nocc=nocc,number.of.groups=number.of.groups,nstrata=nstrata+1,nevents=nevents)
   else
-    output_releases(outfile,releases,nocc=nocc,number.of.groups=number.of.groups,nstrata=nstrata,nevents=nevents)
+    if(data$model%in%c("MSUncBarker","MSUnc2Barker"))
+      output_releases(outfile,releases,nocc=nocc,number.of.groups=number.of.groups,nstrata=nstrata,nevents=length(data$eventsp))
+    else
+      output_releases(outfile,releases,nocc=nocc,number.of.groups=number.of.groups,nstrata=nstrata,nevents=nevents)
 # output marked if not NULL
 if(!is.null(marked) & model.list$MarkNumber%in% c(114,115,120,158,159,160,171,172,173,174))
 {
@@ -951,36 +954,22 @@ create.agenest.var=function(data,init.agevar,time.intervals)
 	  zzd[,2:(ng+1)]=freq
 	  zz=zzd[,1:(ng+1)]
   }
-# Output proc simulate statement 
-  #test_releases(releases,nocc=nocc,number.of.groups=number.of.groups,nstrata=nstrata,nevents=0)
-  # if(is.null(releases))
-  #   stop("\nMust specify releases")
-  # if(!is.array(releases))
-  #   stop("\nreleases must be an array")
-  # len=dim(releases)
-  # len=len[length(len)]
-  # if(!len==number.of.groups)
-  #   stop("number of rows must be number of groups")
-  # len=dim(releases)
-  # len=len[1]
-  # if(len!=nocc-1)
-  #   stop("number of releases must be # of occasions -1")
-  # len=dim(releases)
-  # if(length(len)>2)
-  # {
-  #    if(len[2]!=nstrata)
-  #      stop("number of columns must be number of strata")
-  # }
   hist=sum(releases)
   string=paste("proc title ",title,";")
   if(is.null(nocc.secondary))
-     if(is.null(data$events))
-       string=paste(string,"\nproc simulate occasions=",nocc," groups=",number.of.groups," etype=",etype, " Nodes=",nodes,sep="")
-     else
-       string=paste("\nproc simulate occasions=",nocc," groups=",number.of.groups," etype=",etype, 
-       " events=",length(data$events),sep="")
-  else
-     string=paste("\nproc simulate occasions=",sum(nocc.secondary)," groups=",number.of.groups," etype=",etype," Nodes=",nodes,sep="")
+  {
+    if(is.null(data$events))
+      string=paste(string,"\nproc simulate occasions=",nocc," groups=",number.of.groups," etype=",etype, " Nodes=",nodes,sep="")
+    else{
+      if(is.null(data$eventsp))
+        string=paste("\nproc simulate occasions=",nocc," groups=",number.of.groups," etype=",etype, 
+                     " events=",length(data$events),sep="")
+      else
+        string=paste("\nproc simulate occasions=",nocc," groups=",number.of.groups," etype=",etype, 
+                     " events=",length(data$events), " eventsp=",length(data$eventsp)," eventsLR=",length(data$eventsLR)," eventsBR=",length(data$eventsBR),sep="")
+    }
+  } else
+      string=paste("\nproc simulate occasions=",sum(nocc.secondary)," groups=",number.of.groups," etype=",etype," Nodes=",nodes,sep="")
   if(model.list$strata)string=paste(string," strata=",data$nstrata,sep="")
   if(!is.null(simdata))
      string=paste(string," hist=",hist," numsims=",numsims," seed=",seed," simdata=",simdata,sep="")
@@ -1058,6 +1047,12 @@ create.agenest.var=function(data,init.agevar,time.intervals)
 	        events=1 
 	      else 
 	        events=data$events
+	      if(data$model%in%c("MSUncBarker","MSUnc2Barker"))
+	      {
+	        if(names(parameters)[i]%in%c("pi","Delta")) events=data$eventsp
+	        if(names(parameters)[i]%in%c("rho","rhoPrime")) events=data$eventsLR
+	        if(names(parameters)[i]%in%c("b")) events=data$eventsBR
+	      }
 	      for(jjj in events)
 	      {
 	        if(is.null(parameters[[i]]$bystratum)||!parameters[[i]]$bystratum||(data$model%in%c("MSJollySeber","HMMMSJollySeber")&names(parameters)[i]=="pi"))
@@ -1639,7 +1634,7 @@ create.agenest.var=function(data,init.agevar,time.intervals)
 			                    string=c(string,paste("mlogit(",new.indices[k],")",sep="")) 
 				              max.logit.number=max.logit.number+max(new.indices)
 				       }
-				       if(!parx%in%c("Psi","pent","alpha","pi","Omega","Delta")&!(parx=="p" & data$model=="RDMSOccupancy"))
+				       if(!parx%in%c("Psi","pent","alpha","pi","Omega","Delta","rho","rhoPrime","b")&!(parx=="p" & data$model=="RDMSOccupancy"))
 				              stop(paste("Mlogit link not allowed with parameter",parx))
             } else
             {
