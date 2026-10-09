@@ -1603,6 +1603,8 @@ create.agenest.var=function(data,init.agevar,time.intervals)
 	                    number.of.events=1
                   else
 	                    number.of.events=length(data$events)
+                  if(data$model%in%c("MSUncBarker","MSUnc2Barker") & parx=="pi")
+                    number.of.events=length(data$eventsp)
                   for(kkk in 1:number.of.events)
 	                for (kk in 1:number.of.groups)
 	                {
@@ -1611,11 +1613,20 @@ create.agenest.var=function(data,init.agevar,time.intervals)
 			              string=c(string,paste("mlogit(",logit.numbers,")",sep=""))
 	                }			 				 
                }
-				       if(parx=="Delta"){
+				       if(parx=="Delta" | (data$model%in%c("MSUncBarker","MSUnc2Barker") & parx%in%c("rho","rhoPrime","b"))){
 				              if(is.null(data$events)) 
 				                  number.of.events=1
 				              else
 				                  number.of.events=length(data$events)
+				              if(data$model%in%c("MSUncBarker","MSUnc2Barker"))
+				              {
+				                if(parx=="Delta")
+				                  number.of.events=length(data$eventsp)
+				                if(parx%in%c("rho","rhoPrime"))
+				                  number.of.events=length(data$eventsLR)
+				                if(parx%in%c("b"))
+				                  number.of.events=length(data$eventsBR)
+				              }
 				              for (kk in 1:number.of.groups)
 				              {
 				                 logit.numbers=max.logit.number+rep(1:(nrow(full.ddl[[parx]])/(number.of.events*number.of.groups)),number.of.events)
