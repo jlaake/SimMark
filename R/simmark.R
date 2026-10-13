@@ -133,7 +133,7 @@
 #' @param events vector of character events for Hidden Markov models
 #' @param useddl if TRUE and no rows of ddl are missing (deleted) then it will use ddl in place of full.ddl that is created internally.
 #' @param check.model if TRUE, code does an internal consistency check between PIMs and design data when making model.
-#'#' @param default.fixed if TRUE, real parameters for which the design data have
+#' @param default.fixed if TRUE, real parameters for which the design data have
 #' been deleted are fixed to default values
 #' @param icvalues numeric vector of individual covariate values for computation of real values
 #' @param profile.int if TRUE will compute profile intervals for each real
@@ -142,6 +142,7 @@
 #' @param default.fixed if TRUE, real parameters for which the design data have
 #' been deleted are fixed to default values
 #' @param parm.specific if TRUE, forces a link to be specified for each parameter
+#' @param run if FALSE does not run model after creation 
 #' @return model: a MARK object containing structure used to simulate the data (parmvals) and some output. 
 #' If simdata argument is specified, no further results are provided but simulated data is in 
 #' the specified file (default data.inp). If mark does the estimation then model contains the simulation results
@@ -161,7 +162,7 @@ design.parameters=list(), right=TRUE, groups = NULL, age.var = NULL, initial.age
 numsims=1,seed=0, releases=NULL,marked=NULL,beta=NULL,real=NULL,param.link=NULL,nocc=NULL,simfile="simresults.bin",simdata=NULL,
 invisible=TRUE,mixtures=1,filename=NULL,prefix="marksim",default.fixed=TRUE,silent=FALSE,options=NULL,
 delete=FALSE,profile.int=FALSE,chat=NULL,input.links=NULL,parm.specific=FALSE,mlogit0=TRUE,threads=-1,hessian=FALSE,accumulate=TRUE,
-allgroups=FALSE,strata.labels=NULL,counts=NULL,icvalues=NULL,wrap=TRUE,events=NULL,nodes=101,useddl=FALSE,check.model=FALSE)
+allgroups=FALSE,strata.labels=NULL,counts=NULL,icvalues=NULL,wrap=TRUE,events=NULL,nodes=101,useddl=FALSE,check.model=FALSE,run=TRUE)
 {
 # 
 #  test to see if model is supported for simulation; will stop if not supported
@@ -247,15 +248,19 @@ else
 #
 # Run model
 #
-if(silent)
-  runmodel<-suppressMessages(run.simmark.model(model,invisible=invisible,threads=threads,ignore.stderr=silent))
-else
- runmodel<-run.simmark.model(model,invisible=invisible,threads=threads,ignore.stderr=silent)
-if(is.null(runmodel))
+if(run)
 {
- if(!silent)message("\n\n********Following model failed to run :",model$model.name,"**********\n\n")
- return(invisible())
-}
+  if(silent)
+    runmodel<-suppressMessages(run.simmark.model(model,invisible=invisible,threads=threads,ignore.stderr=silent))
+  else
+    runmodel<-run.simmark.model(model,invisible=invisible,threads=threads,ignore.stderr=silent)
+  if(is.null(runmodel))
+  {
+    if(!silent)message("\n\n********Following model failed to run :",model$model.name,"**********\n\n")
+    return(invisible())
+  }
+} else
+  return(invisible)
 #
 # read in outfile and search for R Variable Values:
 # read in next 3 lines until ; and execute them and then call function to summarize

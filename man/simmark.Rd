@@ -54,7 +54,8 @@ simmark(
   events = NULL,
   nodes = 101,
   useddl = FALSE,
-  check.model = FALSE
+  check.model = FALSE,
+  run = TRUE
 )
 }
 \arguments{
@@ -175,9 +176,9 @@ problem set to FALSE and it will run faster}
 
 \item{useddl}{if TRUE and no rows of ddl are missing (deleted) then it will use ddl in place of full.ddl that is created internally.}
 
-\item{check.model}{if TRUE, code does an internal consistency check between PIMs and design data when making model.
-#' @param default.fixed if TRUE, real parameters for which the design data have
-been deleted are fixed to default values}
+\item{check.model}{if TRUE, code does an internal consistency check between PIMs and design data when making model.}
+
+\item{run}{if FALSE does not run model after creation}
 }
 \value{
 model: a MARK object containing structure used to simulate the data (parmvals) and some output. 

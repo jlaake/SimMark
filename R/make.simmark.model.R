@@ -1041,19 +1041,20 @@ create.agenest.var=function(data,init.agevar,time.intervals)
      if(data$model%in%c("MSJollySeber","HMMMSJollySeber")&names(parameters)[i]=="pi")parameters[[i]]$num=parameters[[i]]$num+nstrata-2
      pim[[i]]=list()
      k=0
-     for(j in 1:number.of.groups)
+     if(is.null(parameters[[i]]$events)) 
+       events=1 
+     else 
+       events=data$events
+     if(data$model%in%c("MSUncBarker","MSUnc2Barker"))
      {
-	      if(is.null(parameters[[i]]$events)) 
-	        events=1 
-	      else 
-	        events=data$events
-	      if(data$model%in%c("MSUncBarker","MSUnc2Barker"))
-	      {
-	        if(names(parameters)[i]%in%c("pi","Delta")) events=data$eventsp
-	        if(names(parameters)[i]%in%c("rho","rhoPrime")) events=data$eventsLR
-	        if(names(parameters)[i]%in%c("b")) events=data$eventsBR
-	      }
-	      for(jjj in events)
+       if(names(parameters)[i]%in%c("pi","Delta")) events=data$eventsp
+       if(names(parameters)[i]%in%c("rho","rhoPrime")) events=data$eventsBR
+       if(names(parameters)[i]%in%c("b")) events=data$eventsLR
+     }
+     
+     for(jjj in events)
+     {
+	      for(j in 1:number.of.groups)
 	      {
 	        if(is.null(parameters[[i]]$bystratum)||!parameters[[i]]$bystratum||(data$model%in%c("MSJollySeber","HMMMSJollySeber")&names(parameters)[i]=="pi"))
 	          xstrata=1
@@ -1134,16 +1135,21 @@ create.agenest.var=function(data,init.agevar,time.intervals)
   }
   npar=npar-1
   names(pim)=names(parameters)
-  check_model=function(pims,ddl,parameters,groups)
+ 
+  check_model=function(model,pims,ddl,parameters,groups)
   {
+    notgood=FALSE
     for(parx in names(parameters))
     {
+      cat("\n",parx,"\n")
       pim=pims[[parx]] 
       for(i in 1:length(pim))
       {
         index=sort(unique(as.vector(pim[[i]]$pim)))
         index=index[index!=0]
         vars=names(pim[[i]])[!names(pim[[i]])%in%c("pim")]
+        # exception needed for these models because columns represent strata
+        if(model%in%c("MSJollySeber","HMMMSJollySeber")&parx=="pi") vars=vars[!vars=="stratum"]
         df=data.frame(model.index=index)
         for(j in vars)
         {
@@ -1162,12 +1168,24 @@ create.agenest.var=function(data,init.agevar,time.intervals)
       ddlvalues=apply(subset(ddl[[parx]],select=vars),1,paste,collapse="")
       pimvalues=apply(dfx[,vars],1,paste,collapse="")
       if(any(ddlvalues!=pimvalues))
-        stop("model not correct for parameter ",parx)
+      {
+        dpvalues=cbind(ddlvalues,pimvalues)
+        dpvalues=apply(dpvalues,1,paste,collapse=" ")
+        cat("dpvalues\n",paste(dpvalues,collapse="\n "))
+        cat("\nnot ok\n")
+        notgood=TRUE
+      } else
+      {
+        cat(" ok")
+      }
+    }
+    if(notgood) 
+    {
+      stop("\n Maintainer needs to fix errors before continuing with this model\n")
     }
     return(NULL)
   }
-  if(check.model) check_model(pims=pim,full.ddl,parameters,data$group.covariates)
-  
+  if(check.model) check_model(data$model,pims=pim,full.ddl,parameters,data$group.covariates)
 #
 # If there are fixed parameters output the text here
 #
@@ -1613,27 +1631,33 @@ create.agenest.var=function(data,init.agevar,time.intervals)
 			              string=c(string,paste("mlogit(",logit.numbers,")",sep=""))
 	                }			 				 
                }
-				       if(parx=="Delta" | (data$model%in%c("MSUncBarker","MSUnc2Barker") & parx%in%c("rho","rhoPrime","b"))){
+				       if(parx=="Delta" & !data$model%in%c("HidMarkov","MSUncBarker","MSUnc2Barker")){
 				              if(is.null(data$events)) 
 				                  number.of.events=1
 				              else
 				                  number.of.events=length(data$events)
-				              if(data$model%in%c("MSUncBarker","MSUnc2Barker"))
-				              {
-				                if(parx=="Delta")
-				                  number.of.events=length(data$eventsp)
-				                if(parx%in%c("rho","rhoPrime"))
-				                  number.of.events=length(data$eventsLR)
-				                if(parx%in%c("b"))
-				                  number.of.events=length(data$eventsBR)
-				              }
-				              for (kk in 1:number.of.groups)
+					            for (kk in 1:number.of.groups)
 				              {
 				                 logit.numbers=max.logit.number+rep(1:(nrow(full.ddl[[parx]])/(number.of.events*number.of.groups)),number.of.events)
 				                 max.logit.number=max(logit.numbers)
 				                 string=c(string,paste("mlogit(",logit.numbers,")",sep=""))
 				              }			 				 
 				       }
+               if(data$model%in%c("HidMarkov","MSUncBarker","MSUnc2Barker") & parx%in%c("Delta","rho","rhoPrime","b")){
+                 if(is.null(data$events)) 
+                   number.of.events=1
+                 else
+                   number.of.events=length(data$events)
+                 if(parx=="Delta" & !data$model=="HidMarkov")
+                     number.of.events=length(data$eventsp)
+                 if(parx%in%c("rho","rhoPrime"))
+                     number.of.events=length(data$eventsBR)
+                 if(parx%in%c("b"))
+                     number.of.events=length(data$eventsLR)
+                   logit.numbers=max.logit.number+rep(1:(nrow(full.ddl[[parx]])/(number.of.events)),number.of.events)
+                     max.logit.number=max(logit.numbers)
+                   string=c(string,paste("mlogit(",logit.numbers,")",sep=""))
+               }
                if(parx=="p" & data$model=="RDMSOccupancy")
 				       {
 				              subp=subset(full.ddl[[parx]],select=c("session","time","tostratum","group"))
