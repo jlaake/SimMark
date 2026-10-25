@@ -13,48 +13,40 @@
 summarize.simmark <- function(ncovs,nlogit,nderived,filename)
 {
 
-nestimates=(ncovs*3+nlogit*3+nderived*2);
+  # First 5 values are -2logL, deviance, ndf, ndfdev, and estimated number of parameters
+  nestimates=5+(ncovs*3+nlogit*3+nderived*2)
 
 read_fortran_records_to_array <- function(file, nestimates, endian = "little") {
   con <- file(file, "rb")
   on.exit(close(con))
-
   records <- list()
-
   repeat {
     # Read leading record marker
     marker <- readBin(con, integer(), size = 4, n = 1, endian = endian)
-
     # EOF reached
     if (length(marker) == 0) break
-
     # Expected number of bytes in the record
     expected_bytes <- nestimates * 8
-
     if (marker != expected_bytes) {
       stop("Record length mismatch: expected ", expected_bytes,
            " bytes but record marker says ", marker)
     }
-
     # Read the data block
     vals <- readBin(con, numeric(), size = 8, n = nestimates, endian = endian)
-
     # Skip trailing marker
     readBin(con, integer(), size = 4, n = 1, endian = endian)
-
     # Store
     records[[length(records) + 1]] <- vals
   }
-
-  # Convert list → matrix
-  out <- do.call(rbind, records)
-#
-# create column names depending on values of arguments
-#
-   cnames=c(paste("BetaTrue",1:ncovs,sep=""),paste("BetaEst",1:ncovs,sep=""),paste("BetaSE",1:ncovs,sep=""))
-   if(nlogit>0)  cnames=c(cnames,paste("RealTrue",1:nlogit,sep=""),paste("RealEst",1:nlogit,sep=""),paste("RealSE",1:nlogit,sep=""))
-   if(nderived>0)cnames=c(cnames,paste("DerivedEst",1:nderived,sep=""),paste("DerivedSE",1:nderived,sep=""))
-   colnames(out) <- cnames
+  # Convert list ? matrix
+    out <- do.call(rbind, records)
+  #
+  # create column names depending on values of arguments
+  #
+    cnames=c("-2logL","Deviance","df.data","df.dev","df.model",paste("BetaTrue",1:ncovs,sep=""),paste("BetaEst",1:ncovs,sep=""),paste("BetaSE",1:ncovs,sep=""))
+    if(nlogit>0)  cnames=c(cnames,paste("RealTrue",1:nlogit,sep=""),paste("RealEst",1:nlogit,sep=""),paste("RealSE",1:nlogit,sep=""))
+    if(nderived>0)cnames=c(cnames,paste("DerivedEst",1:nderived,sep=""),paste("DerivedSE",1:nderived,sep=""))  
+    colnames(out) <- cnames
   return(out)
 }
 

@@ -483,7 +483,7 @@ else
     if(data$model%in%c("MSUncBarker","MSUnc2Barker"))
       output_releases(outfile,releases,nocc=nocc,number.of.groups=number.of.groups,nstrata=nstrata,nevents=length(data$eventsp))
     else
-      if(model.list$MarkNumber%in% c(126,142,184))
+      if(model.list$MarkNumber%in% c(121,126,142,184))
          output_releases(outfile,releases,nocc=nocc,number.of.groups=number.of.groups,nstrata=nstrata,nevents=1)
       else
          output_releases(outfile,releases,nocc=nocc,number.of.groups=number.of.groups,nstrata=nstrata,nevents=nevents)
@@ -974,6 +974,7 @@ create.agenest.var=function(data,init.agevar,time.intervals)
     }
   } else
       string=paste("\nproc simulate occasions=",sum(nocc.secondary)," groups=",number.of.groups," etype=",etype," Nodes=",nodes,sep="")
+  if(!is.null(chat))string=paste(string," chat = ",chat," ",sep="")
   if(model.list$strata)string=paste(string," strata=",data$nstrata,sep="")
   if(!is.null(simdata))
      string=paste(string," hist=",hist," numsims=",numsims," seed=",seed," simdata=",simdata,sep="")
