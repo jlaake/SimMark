@@ -1,10 +1,3 @@
-get_releases=function(data)
-{
-  if(is.null(data$model)) stop("\ndata argument must be a processed data list\n")
-  chsummary=summary_ch(data)
-  x=sapply(chsummary,function(x)x$Released)
-  return(x)
-}
 output_releases=function(outfile,releases,nocc,number.of.groups,nstrata,nevents)
 {
 if(length(releases)==1)
@@ -31,7 +24,14 @@ if(nstrata<=1)
   }
 }
 }
-
+get_releases=function(data)
+{
+  if(is.null(data$model)) stop("\ndata argument must be a processed data list\n")
+  chsummary=summary_ch(data)
+  if(any(chsummary=="STOP")) return("STOP")
+  x=sapply(chsummary,function(x)x$Released)
+  return(x)
+}
 test_releases=function(releases,nocc,number.of.groups,nstrata,nevents)
 {
   if(is.null(releases))

@@ -67,7 +67,7 @@
 #' Notes:
 #' 
 #' 1) Examples may generate a fair number of files from RMark and SimMark. To cleanup, use cleanup(ask=FALSE) to 
-#' removed mark files and cleanup(ask=FALSE,prefix="simmark") to delete SimMark files.
+#' removed mark files and cleanup(ask=FALSE,prefix="simmark") to delete SimMark files. Alternatively you can set delete=TRUE as argument in simmark
 #' 2) Some of these arguments to the function have been carried over from RMark mark function
 #' out of ease and they may not necessarily be useful.
 #' 
@@ -143,6 +143,7 @@
 #' been deleted are fixed to default values
 #' @param parm.specific if TRUE, forces a link to be specified for each parameter
 #' @param run if FALSE does not run model after creation 
+#' @param delete if TRUE, deletes inp and out files after running
 #' @return model: a MARK object containing structure used to simulate the data (parmvals) and some output. 
 #' If simdata argument is specified, no further results are provided but simulated data is in 
 #' the specified file (default data.inp). If mark does the estimation then model contains the simulation results
@@ -282,5 +283,12 @@ if(length(x)!=0)
   runmodel$simresults=summarize.simmark(ncovs,nlogit,nderived,simfile)
 } else
   runmodel$simresults=NULL
+if(delete)
+{
+  inputfile=paste(runmodel$output,".inp",sep="")
+  unlink(outfile)
+  unlink(inputfile)
+}
+
 return(runmodel)
 }

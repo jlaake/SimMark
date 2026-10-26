@@ -133,8 +133,7 @@ been deleted are fixed to default values}
 \item{options}{character string of options for Proc Estimate statement in
 MARK .inp file}
 
-\item{delete}{if TRUE the output files are deleted after the results are
-extracted}
+\item{delete}{if TRUE, deletes inp and out files after running}
 
 \item{profile.int}{if TRUE will compute profile intervals for each real
 parameter; or you can specify a vector of real parameter indices}
@@ -254,7 +253,7 @@ Numerous examples are provided in \code{\link{SimCJS}}, \code{\link{SimMS}},\cod
 Notes:
 
 1) Examples may generate a fair number of files from RMark and SimMark. To cleanup, use cleanup(ask=FALSE) to 
-removed mark files and cleanup(ask=FALSE,prefix="simmark") to delete SimMark files.
+removed mark files and cleanup(ask=FALSE,prefix="simmark") to delete SimMark files. Alternatively you can set delete=TRUE as argument in simmark
 2) Some of these arguments to the function have been carried over from RMark mark function
 out of ease and they may not necessarily be useful.
 }
