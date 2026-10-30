@@ -2,24 +2,29 @@
 % Please edit documentation in R/median_chat.r
 \name{compute_median_chat}
 \alias{compute_median_chat}
-\title{Computes median chat for some models}
+\title{Computes a single median chat and associated statistics}
 \usage{
 compute_median_chat(
   model,
   chat.range = c(1, 3),
-  nsample = 10,
   npts = 5,
-  plot = FALSE
+  nsample = 10,
+  plot = FALSE,
+  show = TRUE
 )
 }
 \arguments{
 \item{model}{MARK model created by \code{\link{make.simmark.model}}}
 
-\item{chat.range}{lower and upper values for range os chat values to simulate}
+\item{chat.range}{lower and upper values for range of chat values to simulate}
+
+\item{npts}{number of true chat values to simulate within the chat.range}
 
 \item{nsample}{number of simulations at a specific true chat value}
 
 \item{plot}{if TRUE plots observed and predicted values and conf interval for logistic regression}
+
+\item{show}{if TRUE, show progress with simulations}
 }
 \value{
 list of results for median chat calculation including median chat estimate,lrmod the fitted logistic 

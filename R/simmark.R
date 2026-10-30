@@ -167,8 +167,9 @@ allgroups=FALSE,strata.labels=NULL,counts=NULL,icvalues=NULL,wrap=TRUE,events=NU
 {
 # 
 #  test to see if model is supported for simulation; will stop if not supported
-#  currently disabled here and it setup.model 
-#   dummy=setup.model(model,1,1)
+#  
+   dummy=setup.model(model,1,1)
+   if(!dummy$simulate) stop(paste("\nSimulation is not supported for this model: ",model,"\n"))
 
 # test to see if there are duplicate specifications in beta and real arguments and model.parameters
   if(!is.null(beta))
