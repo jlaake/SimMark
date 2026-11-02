@@ -76,13 +76,6 @@ create_dlabels=function(model,ddf,nocc,secnocc,ngroups,nstates)
           }
    }
   }
- # if(model=="MSJollySeber" & ngroups>1)
- #  {
- #    start=length(dlabels)-4*ngroups+1
- #   for(i in 1:ngroups)
- #      dlabels[(start+(i-1)*4):(start+(i-1)*4+3)]=paste(paste("dlabel(",(start+(i-1)*4):(start+(i-1)*4+3),sep=""),")=",
- #                                                      hold[seq(start+(i-1),start+(i-1)+ngroups*4-1,ngroups)],sep="")
- #  }
   return(dlabels)
 }
 
