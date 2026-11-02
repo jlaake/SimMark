@@ -10,7 +10,7 @@ median_chat(
   upper = 3,
   sample = TRUE,
   targetcv = 0.2,
-  npts = 8,
+  npts = 10,
   nsample = 10,
   plot = TRUE,
   show = TRUE
@@ -51,7 +51,15 @@ associated statistics and can plot results.
 data(dipper)
 dp=process.data(dipper,groups="sex")
 model=mark(dp,model.parameters=list(p=list(formula=~time)),delete=TRUE,invisible=TRUE,silent=TRUE)
-chat_results=median_chat(model,lower=1,upper=2,sample=TRUE,targetcv=0.2)
+beta.values=get_beta_values(model)
+chat_results1=median_chat(model,lower=1,upper=2,sample=TRUE,targetcv=0.2)
+releases=get_releases(model$data)
+test=simmark(dp,releases=releases*10,numsims=1,chat=2,invisible=TRUE,silent=TRUE,model.parameters=list(p=list(formula=~time)),
+            beta=get_beta_values(model),simdata="data.inp",seed=42)
+simdata=readSimData("data.inp",group.df=data.frame(sex=c("Female","Male")))
+dp=process.data(simdata[[1]],groups="sex")
+model=mark(dp,model.parameters=list(p=list(formula=~time)))
+chat_results2=median_chat(model,lower=1,upper=3,sample=TRUE,targetcv=0.2)
 }
 }
 \author{

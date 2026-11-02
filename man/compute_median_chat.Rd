@@ -7,9 +7,9 @@
 compute_median_chat(
   model,
   chat.range = c(1, 3),
-  npts = 5,
+  npts = 10,
   nsample = 10,
-  plot = FALSE,
+  plot = TRUE,
   show = TRUE
 )
 }
@@ -34,19 +34,6 @@ var_chat the variance of the estimated median chat, and ci the 95% inverse conf 
 }
 \description{
 Computes estimated median chat value and related results and can plot fitted logistic regression
-}
-\examples{
-{ 
-data(dipper)
-dp=process.data(dipper,groups="sex")
-model=mark(dp,model.parameters=list(p=list(formula=~time)),delete=TRUE)
-chat_results=compute_median_chat(model,chat.range=c(1,2.3),npts=10,nsample=10)
-releases=get_releases(model$data)
-test=simmark(process.data(dipper),releases=releases*1000,numsims=1,chat=2,invisible=TRUE,silent=TRUE,beta=list(Phi=0.242,p=2.226),simdata="data.inp")
-simdata=readSimData("data.inp")
-model=mark(simdata[[1]])
-compute_median_chat(model,chat.range=c(1,3),npts=10,nsample=10)
-}
 }
 \author{
 Jeff Laake
