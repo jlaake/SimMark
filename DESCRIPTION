@@ -1,5 +1,5 @@
 Package: SimMark
-Version: 0.0.1
+Version: 0.0.2
 Date: 2026-08-04
 Title: Interface to Mark for Simulation Analysis
 Authors@R: c(person(given = "Jeff",
