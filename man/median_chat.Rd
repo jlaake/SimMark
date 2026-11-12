@@ -6,18 +6,24 @@
 \usage{
 median_chat(
   model,
+  ddl = NULL,
   lower = 1,
   upper = 3,
   sample = TRUE,
-  targetcv = 0.2,
-  npts = 10,
+  targetcv = 0.1,
   nsample = 10,
+  maxnsample = 50,
+  npts = 10,
+  npts_mult = 2,
   plot = TRUE,
-  show = TRUE
+  show = TRUE,
+  ...
 )
 }
 \arguments{
-\item{model}{MARK model created by \code{\link{make.simmark.model}}}
+\item{model}{MARK model}
+
+\item{ddl}{design data list but can be NULL}
 
 \item{lower}{lower value for range of chat values to simulate (must be 1 or greater)}
 
@@ -27,13 +33,19 @@ median_chat(
 
 \item{targetcv}{desired cv for estimated median chat value; the final result will be approximate}
 
+\item{nsample}{number of simulations at a specific true chat value for initial (sample=TRUE) or final (sample==FALSE)}
+
+\item{maxnsample}{maximum number of simulations at each point to achieve targetcv; if estimate is too large it uses this value}
+
 \item{npts}{number of true chat values to simulate within the chat.range for initial (sample=TRUE) or final (sample==FALSE)}
 
-\item{nsample}{number of simulations at a specific true chat value for initial (sample=TRUE) or final (sample==FALSE)}
+\item{npts_mult}{multiplier for npts if targetcv is not achieved.}
 
 \item{plot}{if TRUE plots observed and predicted values and conf interval for logistic regression}
 
 \item{show}{if TRUE shows simulation progress}
+
+\item{...}{any additional arguments are passed to simmark via compute_median_chat}
 }
 \value{
 list of results for median chat calculation including median chat estimate,lrmod the fitted logistic 
@@ -52,14 +64,16 @@ data(dipper)
 dp=process.data(dipper,groups="sex")
 model=mark(dp,model.parameters=list(p=list(formula=~time)),delete=TRUE,invisible=TRUE,silent=TRUE)
 beta.values=get_beta_values(model)
-chat_results1=median_chat(model,lower=1,upper=2,sample=TRUE,targetcv=0.2)
+chat_results1=median_chat(model,lower=1,upper=2,sample=TRUE,plot=TRUE)
+chat_results1
 releases=get_releases(model$data)
 test=simmark(dp,releases=releases*10,numsims=1,chat=2,invisible=TRUE,silent=TRUE,model.parameters=list(p=list(formula=~time)),
             beta=get_beta_values(model),simdata="data.inp",seed=42)
 simdata=readSimData("data.inp",group.df=data.frame(sex=c("Female","Male")))
 dp=process.data(simdata[[1]],groups="sex")
-model=mark(dp,model.parameters=list(p=list(formula=~time)))
-chat_results2=median_chat(model,lower=1,upper=3,sample=TRUE,targetcv=0.2)
+model=mark(dp,model.parameters=list(p=list(formula=~time)),delete=TRUE,invisible=TRUE,silent=TRUE)
+chat_results2=median_chat(model,lower=1,upper=3,sample=TRUE,plot=TRUE)
+chat_results2
 }
 }
 \author{

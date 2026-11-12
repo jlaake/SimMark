@@ -4,14 +4,10 @@
 \alias{summarize.simmark}
 \title{Passes arguments from MARK output file to read in binary results file and return summary}
 \usage{
-summarize.simmark(ncovs, nlogit, nderived, filename)
+summarize.simmark(model, filename)
 }
 \arguments{
-\item{ncovs}{number of beta estimates}
-
-\item{nlogit}{number of real estimates}
-
-\item{nderived}{number of derived estimates}
+\item{model}{model result}
 
 \item{filename}{name of binary file containing simulation values}
 }

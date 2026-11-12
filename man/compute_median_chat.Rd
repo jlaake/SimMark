@@ -6,15 +6,19 @@
 \usage{
 compute_median_chat(
   model,
+  ddl = NULL,
   chat.range = c(1, 3),
   npts = 10,
   nsample = 10,
   plot = TRUE,
-  show = TRUE
+  show = TRUE,
+  ...
 )
 }
 \arguments{
 \item{model}{MARK model created by \code{\link{make.simmark.model}}}
+
+\item{ddl}{design data list but can be NULL}
 
 \item{chat.range}{lower and upper values for range of chat values to simulate}
 
@@ -25,6 +29,8 @@ compute_median_chat(
 \item{plot}{if TRUE plots observed and predicted values and conf interval for logistic regression}
 
 \item{show}{if TRUE, show progress with simulations}
+
+\item{...}{any additional arguments are passed to simmark}
 }
 \value{
 list of results for median chat calculation including median chat estimate,lrmod the fitted logistic 

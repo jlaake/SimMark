@@ -7,9 +7,12 @@
 run.simmark.model(
   model,
   invisible = FALSE,
-  filename = NULL,
+  prefix = "simmark",
   threads = -1,
-  ignore.stderr = FALSE
+  ignore.stderr = FALSE,
+  keep.input = FALSE,
+  simfile,
+  delete = FALSE
 )
 }
 \arguments{
@@ -17,14 +20,20 @@ run.simmark.model(
 
 \item{invisible}{if TRUE, execution of MARK.EXE is hidden from view}
 
-\item{filename}{if NULL uses base filename of "mark" otherwise filename is the base part of output filename}
+\item{prefix}{base portion of filename with numeric value added for a series of model (eg simmark001,simmark002 etc)}
 
 \item{threads}{number of cpus to use with mark.exe if positive or number of cpus to remain idle if negative}
 
 \item{ignore.stderr}{If set TRUE, messages from mark.exe are suppressed; they are automatically suppressed with Rterm}
+
+\item{keep.input}{if TRUE, keeps input field in the model}
+
+\item{simfile}{simulation binary filename}
+
+\item{delete}{if TRUE, deletes input and output files}
 }
 \value{
-model: mark model object with the base filename stored in
+model: mark model object 
 \code{output} and the extracted simulation results in \code{simresults} from the output file
 onto list; see mark in RMark for a detailed description of many (but not all) values
 \code{mark} object created here.

@@ -55,7 +55,8 @@ simmark(
   nodes = 101,
   useddl = FALSE,
   check.model = FALSE,
-  run = TRUE
+  run = TRUE,
+  keep.input = FALSE
 )
 }
 \arguments{
@@ -178,6 +179,8 @@ problem set to FALSE and it will run faster}
 \item{check.model}{if TRUE, code does an internal consistency check between PIMs and design data when making model.}
 
 \item{run}{if FALSE does not run model after creation}
+
+\item{keep.input}{if TRUE keeps input field in model which is used in median_chat}
 }
 \value{
 model: a MARK object containing structure used to simulate the data (parmvals) and some output. 
