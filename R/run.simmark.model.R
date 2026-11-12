@@ -6,10 +6,13 @@
 #' 
 #' @param model MARK model created by \code{\link{make.simmark.model}}
 #' @param invisible if TRUE, execution of MARK.EXE is hidden from view
-#' @param filename if NULL uses base filename of "mark" otherwise filename is the base part of output filename
+#' @param prefix base portion of filename with numeric value added for a series of model (eg simmark001,simmark002 etc)
 #' @param threads number of cpus to use with mark.exe if positive or number of cpus to remain idle if negative
 #' @param ignore.stderr If set TRUE, messages from mark.exe are suppressed; they are automatically suppressed with Rterm
-#' @return model: mark model object with the base filename stored in
+#' @param keep.input if TRUE, keeps input field in the model
+#' @param simfile simulation binary filename
+#' @param delete if TRUE, deletes input and output files
+#' @return model: mark model object 
 #' \code{output} and the extracted simulation results in \code{simresults} from the output file
 #' onto list; see mark in RMark for a detailed description of many (but not all) values
 #' \code{mark} object created here.
@@ -19,40 +22,17 @@
 #' \code{\link{simmark}}
 #' @keywords model
 run.simmark.model <-
-function(model,invisible=FALSE,filename=NULL,threads=-1,ignore.stderr=FALSE)
+function(model,invisible=FALSE,prefix="simmark",threads=-1,ignore.stderr=FALSE,keep.input=FALSE,simfile,delete=FALSE)
 {
 # -----------------------------------------------------------------------------------------------------------------------
   os=R.Version()$os
-# Run mark.exe to simulate the data; assumed to be in normal location in which Mark is installed unless
-# the variable MarkPath has been defined
-# 24 Aug 05; save all files and give names mark###.*
-#  9 Jan 06; use specified name if given
-#
-  if(!is.null(filename))
+  RunMark=TRUE
+  basefile=paste(prefix,"001",sep="")
+  i = 1
+  while (file.exists(paste(basefile, ".out", sep = ""))) 
   {
-	  basefile=filename
-	  outfile = paste(basefile, ".out", sep = "")
-#
-#     If outfile already exists, ask user if mark object should be created with
-#     existing file
-#
-	  RunMark=TRUE
-	  if(file.exists(outfile))
-	  {
-		  if(toupper(substr(readline("Create mark model with existing file (Y/N)?"),1,1))=="Y")
-		   RunMark=FALSE
-	  }
-  }else
-  {
-	   RunMark=TRUE
-	   prefix="simmark"
-     basefile=paste(prefix,"001",sep="")
-	   i = 1
-       while (file.exists(paste(basefile, ".out", sep = ""))) 
-	   {
-          i = i + 1
-          basefile = paste(prefix, formatC(as.integer(i), flag = "0",width=3),sep = "")
-       }
+      i = i + 1
+      basefile = paste(prefix, formatC(as.integer(i), flag = "0",width=3),sep = "")
   }
   outfile = paste(basefile, ".out", sep = "")
   inputfile = paste(basefile, ".inp", sep = "")
@@ -89,7 +69,13 @@ function(model,invisible=FALSE,filename=NULL,threads=-1,ignore.stderr=FALSE)
   }
   
   model$output=basefile
-  model$input=NULL
+  if(!keep.input)model$input=NULL
+  model=summarize.simmark(model,simfile)
+  if(delete)
+  {
+    unlink(paste(model$output,".out",sep=""))
+    unlink(paste(model$output,".inp",sep=""))
+  }
  return(model)
 }
 

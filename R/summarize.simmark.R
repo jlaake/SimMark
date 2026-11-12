@@ -2,20 +2,14 @@
 #' 
 #' Passes arguments from MARK output file to read in binary results file and return summary
 #' 
-#' @param ncovs number of beta estimates
-#' @param nlogit number of real estimates
-#' @param nderived number of derived estimates
+#' @param model model result
 #' @param filename name of binary file containing simulation values
 #' @return results: summarized simulation results
 #' @author Gary White,Jeff Laake
 #' @export
 #' @seealso \code{\link{simmark}}
-summarize.simmark <- function(ncovs,nlogit,nderived,filename)
+summarize.simmark <- function(model,filename)
 {
-
-  # First 5 values are -2logL, deviance, ndf, ndfdev, and estimated number of parameters
-  nestimates=5+(ncovs*3+nlogit*3+nderived*2)
-
 read_fortran_records_to_array <- function(file, nestimates, endian = "little") {
   con <- file(file, "rb")
   on.exit(close(con))
@@ -50,7 +44,29 @@ read_fortran_records_to_array <- function(file, nestimates, endian = "little") {
   return(out)
 }
 
-results = read_fortran_records_to_array(filename,nestimates)
-return(results)
+#
+# read in outfile and search for R Variable Values:
+# read in next 3 lines until ; and execute them and then call function to summarize
+# and store summary in model results
+#
+# ncovs,nlogit and nderived are set with eval below they are assigned a value NULL to
+# prevent check note
+ncovs=NULL
+nlogit=NULL
+nderived=NULL
+outfile=paste(model$output,".out",sep="")
+out=readLines(outfile)  
+x=grep("R Variable Values:",out,fixed=TRUE)
+if(length(x)!=0)
+{
+  eval(parse(text=out[x+1]))
+  eval(parse(text=out[x+2]))
+  eval(parse(text=out[x+3]))
+  # First 5 values are -2logL, deviance, ndf, ndfdev, and estimated number of parameters
+  nestimates=5+(ncovs*3+nlogit*3+nderived*2)
+  model$simresults = read_fortran_records_to_array(filename,nestimates)
+} else
+  model$simresults=NULL
+return(model)
 }
 

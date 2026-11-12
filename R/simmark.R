@@ -144,6 +144,7 @@
 #' @param parm.specific if TRUE, forces a link to be specified for each parameter
 #' @param run if FALSE does not run model after creation 
 #' @param delete if TRUE, deletes inp and out files after running
+#' @param keep.input if TRUE keeps input field in model which is used in median_chat
 #' @return model: a MARK object containing structure used to simulate the data (parmvals) and some output. 
 #' If simdata argument is specified, no further results are provided but simulated data is in 
 #' the specified file (default data.inp). If mark does the estimation then model contains the simulation results
@@ -163,7 +164,7 @@ design.parameters=list(), right=TRUE, groups = NULL, age.var = NULL, initial.age
 numsims=1,seed=0, releases=NULL,marked=NULL,beta=NULL,real=NULL,param.link=NULL,nocc=NULL,simfile="simresults.bin",simdata=NULL,
 invisible=TRUE,mixtures=1,filename=NULL,prefix="marksim",default.fixed=TRUE,silent=FALSE,options=NULL,
 delete=FALSE,profile.int=FALSE,chat=NULL,input.links=NULL,parm.specific=FALSE,mlogit0=TRUE,threads=-1,hessian=FALSE,accumulate=TRUE,
-allgroups=FALSE,strata.labels=NULL,counts=NULL,icvalues=NULL,wrap=TRUE,events=NULL,nodes=101,useddl=FALSE,check.model=FALSE,run=TRUE)
+allgroups=FALSE,strata.labels=NULL,counts=NULL,icvalues=NULL,wrap=TRUE,events=NULL,nodes=101,useddl=FALSE,check.model=FALSE,run=TRUE,keep.input=FALSE)
 {
 # 
 #  test to see if model is supported for simulation; will stop if not supported
@@ -253,43 +254,16 @@ else
 if(run)
 {
   if(silent)
-    runmodel<-suppressMessages(run.simmark.model(model,invisible=invisible,threads=threads,ignore.stderr=silent))
+    runmodel<-suppressMessages(run.simmark.model(model,invisible=invisible,threads=threads,ignore.stderr=silent,keep.input=keep.input,simfile=simfile,delete=delete))
   else
-    runmodel<-run.simmark.model(model,invisible=invisible,threads=threads,ignore.stderr=silent)
+    runmodel<-run.simmark.model(model,invisible=invisible,threads=threads,ignore.stderr=silent,keep.input=keep.input,simfile=simfile,delete=delete)
   if(is.null(runmodel))
   {
     if(!silent)message("\n\n********Following model failed to run :",model$model.name,"**********\n\n")
     return(invisible())
   }
+  runmodel$simfile=simfile
 } else
   return(invisible)
-#
-# read in outfile and search for R Variable Values:
-# read in next 3 lines until ; and execute them and then call function to summarize
-# and store summary in model results
-#
-# ncovs,nlogit and nderived are set with eval below they are assigned a value NULL to
-# prevent check note
-ncovs=NULL
-nlogit=NULL
-nderived=NULL
-outfile=paste(runmodel$output,".out",sep="")
-out=readLines(outfile)  
-x=grep("R Variable Values:",out,fixed=TRUE)
-if(length(x)!=0)
-{
-  eval(parse(text=out[x+1]))
-  eval(parse(text=out[x+2]))
-  eval(parse(text=out[x+3]))
-  runmodel$simresults=summarize.simmark(ncovs,nlogit,nderived,simfile)
-} else
-  runmodel$simresults=NULL
-if(delete)
-{
-  inputfile=paste(runmodel$output,".inp",sep="")
-  unlink(outfile)
-  unlink(inputfile)
-}
-
 return(runmodel)
 }
