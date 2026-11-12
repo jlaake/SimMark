@@ -24,6 +24,15 @@ if(nstrata<=1)
   }
 }
 }
+#' Get releases from a processed data list
+#' 
+#' Extracts values of releases from a processed data list from a model that has been fitted
+#' 
+#' @param data processed data list 
+#' @return matrix of release numbers per group
+#' @author Jeff Laake
+#' @export
+
 get_releases=function(data)
 {
   if(is.null(data$model)) stop("\ndata argument must be a processed data list\n")
