@@ -12,6 +12,7 @@
 #' @param show if TRUE, show progress with simulations
 #' @param lrdata logistic regression data if re-running with new points otherwise NULL
 #' @param failures number of failures in previous run if running with new points
+#' @param drop percentage of extreme values to drop on ends of data
 #' @param ... any additional arguments are passed to simmark
 #' @return list of results for median chat calculation including median chat estimate,lrmod the fitted logistic 
 #' regression model,obs_prop which is the proportion of samples less than observed chat, lrdata which is the
@@ -19,7 +20,7 @@
 #' var_chat the variance of the estimated median chat, and ci the 95% inverse conf interval.
 #' @author Jeff Laake
 #' @export
-compute_median_chat=function(model,ddl=NULL,chat.range=c(1,3),npts=10,nsample=10,plot=TRUE,show=TRUE,lrdata=NULL, failures=0,...)
+compute_median_chat=function(model,ddl=NULL,chat.range=c(1,3),npts=10,nsample=10,plot=TRUE,show=TRUE,lrdata=NULL,failures=0,drop=0.5,...)
 {
   dummy=setup.model(model$model,1,1)
   if(!dummy$chat)stop("This model is not supported for median chat calculation")
@@ -27,7 +28,11 @@ compute_median_chat=function(model,ddl=NULL,chat.range=c(1,3),npts=10,nsample=10
   releases=get_releases(model,abund=dummy$abundance)
   if(any(releases=="STOP"))stop("Cannot construct median chat with this model")
   observed.chat=model$results$deviance/model$results$deviance.df
-  if(is.null(lrdata)) lrdata=data.frame(Truth=NULL,less=NULL)
+  rerun=FALSE
+  if(is.null(lrdata)) 
+    lrdata=data.frame(Truth=NULL,less=NULL)
+  else
+    rerun=TRUE
   if(show)cat(paste("\nSimulation progress\n",paste(rep("_",npts+2),collapse=""),"\n",sep=""))
   for(i in 1:(npts+2))
   {
@@ -49,6 +54,14 @@ compute_median_chat=function(model,ddl=NULL,chat.range=c(1,3),npts=10,nsample=10
     prev.chat=chat
   }
   if(show)cat("\n")
+  lrdata=lrdata[order(lrdata$Truth),]
+  if(rerun)
+  {
+    cnt0=with(lrdata,length(y[y==0]))
+    cnt10=with(lrdata,length(y[y==n]))
+    remove=c(1:floor(cnt10*drop),c(length(lrdata$y)-(0:floor(cnt0*drop))))
+    lrdata=lrdata[-remove,]
+  }
   suppressWarnings(lrmod<-glm(cbind(y,n-y)~Truth,family="binomial",data=lrdata,maxit=100))
   lrcoef=coef(lrmod)
   obs_prop=lrdata$y/rep(nsample,length(lrdata$y))
@@ -63,8 +76,8 @@ compute_median_chat=function(model,ddl=NULL,chat.range=c(1,3),npts=10,nsample=10
   if(plot)
   {
     lrmod$fitted.values=lrmod$fitted.values[order(lrdata$Truth)]
-    plot(sort(lrdata$Truth),lrmod$fitted.values,type="l", lwd = 2,
-         xlab = "True chat", ylab="Prob(True chat<observed chat)",ylim=c(0,1),xlim=c(min(lrdata$Truth),max(lrdata$Truth)))
+    plot(lrdata$Truth,lrmod$fitted.values,type="l", lwd = 2,
+         xlab = "True chat", ylab="Prob(True chat<observed chat)",ylim=c(0,1),xlim=c(min(c(lrdata$Truth,inverse_estimate[2])),max(c(lrdata$Truth,inverse_estimate[3]))))
     points(lrdata$Truth,obs_prop,pch=19, cex = 1.2)
     lines(inverse_estimate[2:3],c(0.5,0.5))
     points(inverse_estimate[1],c(0.5),pch="x",cex=1.5)
@@ -87,9 +100,10 @@ compute_median_chat=function(model,ddl=NULL,chat.range=c(1,3),npts=10,nsample=10
 #' @param targetcv desired cv for estimated median chat value; the final result will be approximate
 #' @param nsample number of simulations at a specific true chat value for initial (sample=TRUE) or final (sample==FALSE)
 #' @param npts number of true chat values to simulate within the chat.range for initial (sample=TRUE) or final (sample==FALSE)
-#' @param adjustment if sample=TRUE and targetcv not achieved, further sample range of initial$ch*(1-adjustment) to initial$ch*(1+adjustment)
+#' @param adjustment if sample=TRUE and targetcv not achieved, further sample range of initial$chat*(1-adjustment) to initial$chat*(1+adjustment)
 #' @param plot if TRUE plots observed and predicted values and conf interval for logistic regression
 #' @param show if TRUE shows simulation progress
+#' @param drop percentage of extreme values to drop on ends of data
 #' @param ... any additional arguments are passed to simmark via compute_median_chat
 #' @return list of results for median chat calculation including median chat estimate,lrmod the fitted logistic 
 #' regression model,obs_prop which is the proportion of samples less than observed chat, lrdata which is the
@@ -114,7 +128,7 @@ compute_median_chat=function(model,ddl=NULL,chat.range=c(1,3),npts=10,nsample=10
 #'chat_results2=median_chat(model,lower=1,upper=3,sample=TRUE,plot=TRUE)
 #'chat_results2
 #' }
-median_chat=function(model,ddl=NULL,lower=1,upper=3,sample=TRUE,targetcv=0.05,nsample=10,npts=10,adjustment=0.1,plot=TRUE,show=TRUE,...)
+median_chat=function(model,ddl=NULL,lower=1,upper=3,sample=TRUE,targetcv=0.05,nsample=10,npts=10,adjustment=0.1,plot=TRUE,show=TRUE,drop=0.5,...)
 {
   dummy=setup.model(model$model,1,1)
   if(!dummy$chat)stop("This model is not supported for median chat calculation")
@@ -143,7 +157,7 @@ median_chat=function(model,ddl=NULL,lower=1,upper=3,sample=TRUE,targetcv=0.05,ns
        lowerbnd=initial$chat*(1-adjustment)
        upperbnd=initial$chat*(1+adjustment)
        if(show)cat("\nComputing final estimate with specified precision\n")
-       results=compute_median_chat(model,ddl=ddl,chat.range=c(lowerbnd,upperbnd),npts=npts,nsample=nsample,plot=plot,show=show,lrdata=initial$lrdata,failures=initial$failures,...)
+       results=compute_median_chat(model,ddl=ddl,chat.range=c(lowerbnd,upperbnd),npts=npts,nsample=nsample,plot=plot,show=show,lrdata=initial$lrdata,failures=initial$failures,drop=drop,...)
        if(show)cat("\nFinal chat = ",results$chat," cv = ",results$cv_chat,"\n")
        return(results)
     } else

@@ -16,6 +16,7 @@ median_chat(
   adjustment = 0.1,
   plot = TRUE,
   show = TRUE,
+  drop = 0.5,
   ...
 )
 }
@@ -36,11 +37,13 @@ median_chat(
 
 \item{npts}{number of true chat values to simulate within the chat.range for initial (sample=TRUE) or final (sample==FALSE)}
 
-\item{adjustment}{if sample=TRUE and targetcv not achieved, further sample range of initial$ch*(1-adjustment) to initial$ch*(1+adjustment)}
+\item{adjustment}{if sample=TRUE and targetcv not achieved, further sample range of initial$chat*(1-adjustment) to initial$chat*(1+adjustment)}
 
 \item{plot}{if TRUE plots observed and predicted values and conf interval for logistic regression}
 
 \item{show}{if TRUE shows simulation progress}
+
+\item{drop}{percentage of extreme values to drop on ends of data}
 
 \item{...}{any additional arguments are passed to simmark via compute_median_chat}
 }

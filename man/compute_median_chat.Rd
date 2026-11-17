@@ -14,6 +14,7 @@ compute_median_chat(
   show = TRUE,
   lrdata = NULL,
   failures = 0,
+  drop = 0.5,
   ...
 )
 }
@@ -35,6 +36,8 @@ compute_median_chat(
 \item{lrdata}{logistic regression data if re-running with new points otherwise NULL}
 
 \item{failures}{number of failures in previous run if running with new points}
+
+\item{drop}{percentage of extreme values to drop on ends of data}
 
 \item{...}{any additional arguments are passed to simmark}
 }

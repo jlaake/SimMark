@@ -11,13 +11,16 @@ sim.chat(
   beta.values = NULL,
   release.values = NULL,
   testchat = 2,
+  lower = 1,
+  upper = testchat + 1,
   nreps = 100,
   sample = TRUE,
   targetcv = 0.1,
   nsample = 10,
   npts = 10,
   adjustment = 0.1,
-  plot = FALSE
+  plot = FALSE,
+  drop = 0.5
 )
 }
 \arguments{
@@ -33,6 +36,10 @@ sim.chat(
 
 \item{testchat}{value of chat for simulating data}
 
+\item{lower}{lower value for range of chat values to simulate (must be 1 or greater)}
+
+\item{upper}{upper value for range of chat values}
+
 \item{nreps}{number of simulation replicates}
 
 \item{sample}{if TRUE, fits an initial sample and then adjusts sample size to get better cv}
@@ -43,9 +50,11 @@ sim.chat(
 
 \item{npts}{number of true chat values to simulate within the chat.range for initial (sample=TRUE) or final (sample==FALSE)}
 
-\item{adjustment}{if sample=TRUE and targetcv not achieved, further sample range of initial$ch*(1-adjustment) to initial$ch*(1+adjustment)}
+\item{adjustment}{if sample=TRUE and targetcv not achieved, further sample range of initial$chat*(1-adjustment) to initial$chat*(1+adjustment)}
 
 \item{plot}{if TRUE shows plot of fitted median chat logistic regression data}
+
+\item{drop}{percentage of extreme values to drop on ends of data}
 }
 \value{
 dataframe of results for chat calculations including Fletcherchat (if available for model), 

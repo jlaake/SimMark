@@ -8,13 +8,16 @@
 #' @param beta.values beta values to be used for generating the data and fitting the model
 #' @param release.values numbers released for use in simulation
 #' @param testchat value of chat for simulating data
+#' @param lower lower value for range of chat values to simulate (must be 1 or greater)
+#' @param upper upper value for range of chat values
 #' @param nreps number of simulation replicates
 #' @param sample if TRUE, fits an initial sample and then adjusts sample size to get better cv
 #' @param targetcv desired cv for estimated median chat value; the final result will be approximate
 #' @param nsample number of simulations at a specific true chat value for initial (sample=TRUE) or final (sample==FALSE)
 #' @param npts number of true chat values to simulate within the chat.range for initial (sample=TRUE) or final (sample==FALSE)
-#' @param adjustment if sample=TRUE and targetcv not achieved, further sample range of initial$ch*(1-adjustment) to initial$ch*(1+adjustment)
+#' @param adjustment if sample=TRUE and targetcv not achieved, further sample range of initial$chat*(1-adjustment) to initial$chat*(1+adjustment)
 #' @param plot if TRUE shows plot of fitted median chat logistic regression data
+#' @param drop percentage of extreme values to drop on ends of data
 #' @return dataframe of results for chat calculations including Fletcherchat (if available for model), 
 #' chat which is the median chat value, lowerci and upperci which are the 95%  confidence interval for median chat,
 #' cv which is the coefficient of variation for median chat and covered which is 1 if testchat is in the confidence interval
@@ -33,7 +36,7 @@
 #' sim.chat(simdata,dm.formulas=dm.formulas,beta.values=beta.values,
 #'                release.values=release.values,nreps=2)
 #' }
-sim.chat=function(dp,ddl=NULL,dm.formulas=NULL,beta.values=NULL,release.values=NULL,testchat=2,nreps=100,sample=TRUE,targetcv=0.1,nsample=10,npts=10,adjustment=0.1,plot=FALSE)
+sim.chat=function(dp,ddl=NULL,dm.formulas=NULL,beta.values=NULL,release.values=NULL,testchat=2,lower=1,upper=testchat+1,nreps=100,sample=TRUE,targetcv=0.1,nsample=10,npts=10,adjustment=0.1,plot=FALSE,drop=0.5)
 {
   repfailures=NULL
   # create dataframe for results  
@@ -62,7 +65,7 @@ sim.chat=function(dp,ddl=NULL,dm.formulas=NULL,beta.values=NULL,release.values=N
     {
       unlink(paste(mod$output,c(".out",".inp",".vcv",".res"),sep=""))
       # compute median chat
-      chat_results=median_chat(mod,lower=1,upper=testchat+1,sample=sample,targetcv=targetcv,nsample=nsample,npts=npts,adjustment=adjustment,plot=plot)
+      chat_results=median_chat(mod,lower=lower,upper=upper,sample=sample,targetcv=targetcv,nsample=nsample,npts=npts,adjustment=adjustment,plot=plot,drop=drop)
       # store results 
       results[i,]=list(FletcherChat=mod$results$FletcherChat,chat=chat_results$chat,
                      lowerci=chat_results$lower,upperci=chat_results$upper,cv=chat_results$cv_chat,
