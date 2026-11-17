@@ -4,7 +4,7 @@
 #' specified parameter formulas and other parameters.
 #' 
 #' The function simmark is a shell that calls 5 other functions in the following
-#' order as needed: 1) \code{\link{process.data}}, 2)
+#' order as needed: 1) \code{process.data}, 2)
 #' make.design.data in RMark, 3) \code{\link{make.simmark.model}}, 4)
 #' \code{\link{run.simmark.model}}, and 5) \code{\link{summarize.simmark}}. 
 #' Functions 1,3,4 are modifications of the equivalent functions in RMark to 
@@ -154,8 +154,11 @@
 #' @export
 #' @importFrom stats as.formula formula median model.matrix terms
 #' @importFrom utils read.delim write.table read.table
+#' @importFrom graphics lines points
+#' @importFrom stats coef glm
+
 #' @seealso \code{\link{make.simmark.model}}, \code{\link{run.simmark.model}},
-#' \code{\link{process.data}}
+#' \code{process.data}
 #' @keywords models
 #' 
 simmark <-

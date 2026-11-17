@@ -125,7 +125,7 @@ For descriptions of the standard calling arguments see \code{make.mark.model}. A
 arguments for simulation will be described here.
 }
 \seealso{
-\code{\link{process.data}},
+\code{process.data},
 \code{\link{run.simmark.model}} \code{\link{simmark}}
 }
 \author{

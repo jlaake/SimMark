@@ -52,7 +52,7 @@
 #' list contents.
 #' @author Jeff Laake
 #' @export
-#' @seealso \code{\link{process.data}},
+#' @seealso \code{process.data},
 #' \code{\link{run.simmark.model}} \code{\link{simmark}}
 #' @keywords model
 #' 

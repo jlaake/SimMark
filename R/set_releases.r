@@ -28,18 +28,27 @@ if(nstrata<=1)
 #' 
 #' Extracts values of releases from a processed data list from a model that has been fitted
 #' 
-#' @param data processed data list 
+#' @param model fitted mark model 
+#' @param abund if TRUE, use abundance estimates
 #' @return matrix of release numbers per group
 #' @author Jeff Laake
 #' @export
 
-get_releases=function(data)
+get_releases=function(model,abund)
 {
-  if(is.null(data$model)) stop("\ndata argument must be a processed data list\n")
-  chsummary=summary_ch(data)
-  if(any(chsummary=="STOP")) return("STOP")
-  x=sapply(chsummary,function(x)x$Released)
-  return(x)
+  if(class(model)[1]!="mark") stop("\nmodel must be a fitted mark model\n")
+  if(!abund)
+  {
+    chsummary=summary_ch(model$data)
+    if(any(chsummary=="STOP")) return("STOP")
+    x=sapply(chsummary,function(x)x$Released)
+    return(x)
+  } else
+  {
+    model
+    
+  }
+  
 }
 test_releases=function(releases,nocc,number.of.groups,nstrata,nevents)
 {

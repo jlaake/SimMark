@@ -17,9 +17,15 @@ export(sim.chat)
 export(simmark)
 export(summarize.simmark)
 import(RMark)
+importFrom(graphics,
+  lines,
+  points
+)
 importFrom(stats,
   as.formula,
+  coef,
   formula,
+  glm,
   median,
   model.matrix,
   terms

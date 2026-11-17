@@ -194,7 +194,7 @@ specified parameter formulas and other parameters.
 }
 \details{
 The function simmark is a shell that calls 5 other functions in the following
-order as needed: 1) \code{\link{process.data}}, 2)
+order as needed: 1) \code{process.data}, 2)
 make.design.data in RMark, 3) \code{\link{make.simmark.model}}, 4)
 \code{\link{run.simmark.model}}, and 5) \code{\link{summarize.simmark}}. 
 Functions 1,3,4 are modifications of the equivalent functions in RMark to 
@@ -262,7 +262,7 @@ out of ease and they may not necessarily be useful.
 }
 \seealso{
 \code{\link{make.simmark.model}}, \code{\link{run.simmark.model}},
-\code{\link{process.data}}
+\code{process.data}
 }
 \author{
 Jeff Laake

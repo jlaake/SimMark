@@ -10,11 +10,10 @@ median_chat(
   lower = 1,
   upper = 3,
   sample = TRUE,
-  targetcv = 0.1,
+  targetcv = 0.05,
   nsample = 10,
-  maxnsample = 50,
   npts = 10,
-  npts_mult = 2,
+  adjustment = 0.1,
   plot = TRUE,
   show = TRUE,
   ...
@@ -35,11 +34,9 @@ median_chat(
 
 \item{nsample}{number of simulations at a specific true chat value for initial (sample=TRUE) or final (sample==FALSE)}
 
-\item{maxnsample}{maximum number of simulations at each point to achieve targetcv; if estimate is too large it uses this value}
-
 \item{npts}{number of true chat values to simulate within the chat.range for initial (sample=TRUE) or final (sample==FALSE)}
 
-\item{npts_mult}{multiplier for npts if targetcv is not achieved.}
+\item{adjustment}{if sample=TRUE and targetcv not achieved, further sample range of initial$ch*(1-adjustment) to initial$ch*(1+adjustment)}
 
 \item{plot}{if TRUE plots observed and predicted values and conf interval for logistic regression}
 
@@ -67,7 +64,8 @@ beta.values=get_beta_values(model)
 chat_results1=median_chat(model,lower=1,upper=2,sample=TRUE,plot=TRUE)
 chat_results1
 releases=get_releases(model$data)
-test=simmark(dp,releases=releases*10,numsims=1,chat=2,invisible=TRUE,silent=TRUE,model.parameters=list(p=list(formula=~time)),
+test=simmark(dp,releases=releases*10,numsims=1,chat=2,invisible=TRUE,silent=TRUE,
+            model.parameters=list(p=list(formula=~time)),
             beta=get_beta_values(model),simdata="data.inp",seed=42)
 simdata=readSimData("data.inp",group.df=data.frame(sex=c("Female","Male")))
 dp=process.data(simdata[[1]],groups="sex")

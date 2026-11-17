@@ -4,10 +4,12 @@
 \alias{get_releases}
 \title{Get releases from a processed data list}
 \usage{
-get_releases(data)
+get_releases(model, abund)
 }
 \arguments{
-\item{data}{processed data list}
+\item{model}{fitted mark model}
+
+\item{abund}{if TRUE, use abundance estimates}
 }
 \value{
 matrix of release numbers per group

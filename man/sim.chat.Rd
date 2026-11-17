@@ -15,14 +15,15 @@ sim.chat(
   sample = TRUE,
   targetcv = 0.1,
   nsample = 10,
-  maxnsample = 50,
   npts = 10,
-  npts_mult = 2,
+  adjustment = 0.1,
   plot = FALSE
 )
 }
 \arguments{
 \item{dp}{processed initial data to start simulations}
+
+\item{ddl}{design data list previously constructed for processed data}
 
 \item{dm.formulas}{list of formulas for the parameters in the model}
 
@@ -40,11 +41,9 @@ sim.chat(
 
 \item{nsample}{number of simulations at a specific true chat value for initial (sample=TRUE) or final (sample==FALSE)}
 
-\item{maxnsample}{maximum number of simulations at each point to achieve targetcv; if estimate is too large it uses this value}
-
 \item{npts}{number of true chat values to simulate within the chat.range for initial (sample=TRUE) or final (sample==FALSE)}
 
-\item{npts_mult}{multiplier for npts if targetcv is not achieved.}
+\item{adjustment}{if sample=TRUE and targetcv not achieved, further sample range of initial$ch*(1-adjustment) to initial$ch*(1+adjustment)}
 
 \item{plot}{if TRUE shows plot of fitted median chat logistic regression data}
 }
@@ -67,7 +66,8 @@ nocc=8
 ngroups=3
 simdata=create.data("CJS",nocc=nocc,ngroups=ngroups)
 release.values=array(c(rep(500,nocc-1),rep(200,nocc-1),rep(400,nocc-1)),dim=c(nocc-1,1,ngroups))
-sim.chat(simdata,dm.formulas=dm.formulas,beta.values=beta.values,release.values=release.values,nreps=2)
+sim.chat(simdata,dm.formulas=dm.formulas,beta.values=beta.values,
+               release.values=release.values,nreps=2)
 }
 }
 \author{

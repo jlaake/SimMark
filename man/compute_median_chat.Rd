@@ -12,6 +12,8 @@ compute_median_chat(
   nsample = 10,
   plot = TRUE,
   show = TRUE,
+  lrdata = NULL,
+  failures = 0,
   ...
 )
 }
@@ -29,6 +31,10 @@ compute_median_chat(
 \item{plot}{if TRUE plots observed and predicted values and conf interval for logistic regression}
 
 \item{show}{if TRUE, show progress with simulations}
+
+\item{lrdata}{logistic regression data if re-running with new points otherwise NULL}
+
+\item{failures}{number of failures in previous run if running with new points}
 
 \item{...}{any additional arguments are passed to simmark}
 }
