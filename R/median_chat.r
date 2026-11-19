@@ -20,12 +20,12 @@
 #' var_chat the variance of the estimated median chat, and ci the 95% inverse conf interval.
 #' @author Jeff Laake
 #' @export
-compute_median_chat=function(model,ddl=NULL,chat.range=c(1,3),npts=10,nsample=10,plot=TRUE,show=TRUE,lrdata=NULL,failures=0,drop=0.5,...)
+compute_median_chat=function(model,ddl=NULL,chat.range=c(1,3),npts=10,nsample=10,plot=TRUE,show=TRUE,lrdata=NULL,failures=0,drop=0.8,...)
 {
   dummy=setup.model(model$model,1,1)
   if(!dummy$chat)stop("This model is not supported for median chat calculation")
   beta.values=get_beta_values(model)
-  releases=get_releases(model,abund=dummy$abundance)
+  releases=get_releases(model,abund=dummy$abundance,occupancy=dummy$occupancy,multistate=dummy$strata)
   if(any(releases=="STOP"))stop("Cannot construct median chat with this model")
   observed.chat=model$results$deviance/model$results$deviance.df
   rerun=FALSE
@@ -128,7 +128,7 @@ compute_median_chat=function(model,ddl=NULL,chat.range=c(1,3),npts=10,nsample=10
 #'chat_results2=median_chat(model,lower=1,upper=3,sample=TRUE,plot=TRUE)
 #'chat_results2
 #' }
-median_chat=function(model,ddl=NULL,lower=1,upper=3,sample=TRUE,targetcv=0.05,nsample=10,npts=10,adjustment=0.1,plot=TRUE,show=TRUE,drop=0.5,...)
+median_chat=function(model,ddl=NULL,lower=1,upper=3,sample=TRUE,targetcv=0.05,nsample=10,npts=10,adjustment=0.1,plot=TRUE,show=TRUE,drop=0.8,...)
 {
   dummy=setup.model(model$model,1,1)
   if(!dummy$chat)stop("This model is not supported for median chat calculation")

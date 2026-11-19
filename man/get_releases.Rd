@@ -4,12 +4,16 @@
 \alias{get_releases}
 \title{Get releases from a processed data list}
 \usage{
-get_releases(model, abund)
+get_releases(model, abund = FALSE, occupancy = FALSE, multistate = FALSE)
 }
 \arguments{
 \item{model}{fitted mark model}
 
 \item{abund}{if TRUE, use abundance estimates}
+
+\item{occupancy}{if TRUE, uses number of capture histories per group}
+
+\item{multistate}{if TRUE, use multistate releases}
 }
 \value{
 matrix of release numbers per group

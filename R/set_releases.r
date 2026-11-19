@@ -30,14 +30,16 @@ if(nstrata<=1)
 #' 
 #' @param model fitted mark model 
 #' @param abund if TRUE, use abundance estimates
+#' @param occupancy if TRUE, uses number of capture histories per group
+#' @param multistate if TRUE, use multistate releases
 #' @return matrix of release numbers per group
 #' @author Jeff Laake
 #' @export
 
-get_releases=function(model,abund)
+get_releases=function(model,abund=FALSE,occupancy=FALSE,multistate=FALSE)
 {
   if(class(model)[1]!="mark") stop("\nmodel must be a fitted mark model\n")
-  if(!abund)
+  if(!abund&!occupancy&!multistate)
   {
     chsummary=summary_ch(model$data)
     if(any(chsummary=="STOP")) return("STOP")
@@ -45,11 +47,68 @@ get_releases=function(model,abund)
     return(x)
   } else
   {
-    model
-    
+    if(occupancy)
+    {
+      numch=sapply(model$data$freq,sum)
+      if(length(numch)==1) 
+        return(numch)
+      else
+        return(matrix(numch,nrow=1))
+    } else
+      if(abund)
+      {
+         if(model$model=="POPAN")
+         {
+           Nhat=get.real(model,"N")
+           if(length(Nhat)>1)
+             return(matrix(Nhat,nrow=1))
+           else
+             return(Nhat)
+         } else
+         {
+           Nhat=round(model$results$derived[["N Population Size"]]$estimate)
+           if(length(Nhat)>1)
+             return(matrix(Nhat,nrow=1))
+           else
+             return(Nhat)
+         }
+      } else
+      {
+        return(get.MS.releases(model$data))
+      }
   }
-  
 }
+#' Get multistate releases from a processed data list
+#' 
+#' Extracts values of releases from a processed data list from a multistate model that has been fitted
+#' 
+#' @param dp processed data list from fitted mark model 
+#' @return array of release numbers per occasion, state, group
+#' @author Jeff Laake
+#' @export
+
+
+get.MS.releases=function(dp)
+{
+  release.values=array(0,dim=c(nocc-1,length(dp$strata.labels),ncol(dp$freq)))
+  x=dp$data
+  pc=process.ch(x$ch)
+  nocc=nchar(x$ch[1])
+  nch=length(x$ch)
+  cseq=cbind(1:length(x$ch),pc$first)
+  pcmat=matrix((unlist(strsplit(x$ch,""))),byrow=TRUE,ncol=nocc,nrow=nch)
+  whichrows=split(1:nch,list(pcmat[cseq],pc$first))
+  sums=sapply(whichrows,function(i) colSums(dp$freq[i,]))
+  strata.occ=strsplit(colnames(sums),".",fixed=TRUE)
+  for(i in 1:length(strata.occ))
+  {
+    strata=which(dp$strata.labels==strata.occ[[i]][1])
+    occ=as.numeric(strata.occ[[i]][2])
+    if(occ<nocc)release.values[occ,strata,]=sums[,i]
+  }
+  return(release.values)
+}
+
 test_releases=function(releases,nocc,number.of.groups,nstrata,nevents)
 {
   if(is.null(releases))
