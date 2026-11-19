@@ -48,13 +48,17 @@ sim.chat=function(dp,ddl=NULL,dm.formulas=NULL,beta.values=NULL,release.values=N
     # run simulation with specified testchat value
     mod=simmark(dp,ddl=ddl,model.parameters=dm.formulas,releases=release.values,numsims=1,simdata="data.inp",chat=testchat,
                 beta=beta.values,simfile="simresults.bin",invisible=TRUE,silent=TRUE,delete=TRUE)
-    # read in simulated data
+    # read in simulated data and process it
     if(ncol(dp$freq)>1)
-       simdata=readSimData("data.inp",group.df=data.frame(grp=1:ncol(dp$freq)))
+    {
+      simdata=readSimData("data.inp",group.df=data.frame(grp=1:ncol(dp$freq)))
+      dpsim=process.data(simdata[[1]],model=dp$model,groups="grp")
+    }
     else
-       simdata=readSimData("data.inp")
-    # process data 
-    dpsim=process.data(simdata[[1]],model=dp$model,groups="grp")
+    {
+      simdata=readSimData("data.inp")
+      dpsim=process.data(simdata[[1]],model=dp$model)
+    }
     # fit model with simulated data
     mod=mark(dpsim,ddl=ddl,model.parameters=dm.formulas,invisible=TRUE,silent=TRUE)
     if(is.null(mod$results))
