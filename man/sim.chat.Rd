@@ -15,12 +15,14 @@ sim.chat(
   upper = testchat + 1,
   nreps = 100,
   sample = TRUE,
-  targetcv = 0.1,
+  targetcv = 0.05,
   nsample = 10,
   npts = 10,
   adjustment = 0.1,
   plot = FALSE,
-  drop = 0.5
+  drop = 0.5,
+  show = TRUE,
+  test = FALSE
 )
 }
 \arguments{
@@ -55,6 +57,10 @@ sim.chat(
 \item{plot}{if TRUE shows plot of fitted median chat logistic regression data}
 
 \item{drop}{percentage of extreme values to drop on ends of data}
+
+\item{show}{if TRUE, show progress with simulations}
+
+\item{test}{if TRUE, test to see if code to get releases is working; only for developer}
 }
 \value{
 dataframe of results for chat calculations including Fletcherchat (if available for model), 

@@ -32,11 +32,12 @@ if(nstrata<=1)
 #' @param abund if TRUE, use abundance estimates
 #' @param occupancy if TRUE, uses number of capture histories per group
 #' @param multistate if TRUE, use multistate releases
+#' @param LD if TRUE has a live-dead format
 #' @return matrix of release numbers per group
 #' @author Jeff Laake
 #' @export
 
-get_releases=function(model,abund=FALSE,occupancy=FALSE,multistate=FALSE)
+get_releases=function(model,abund=FALSE,occupancy=FALSE,multistate=FALSE,LD=FALSE)
 {
   if(class(model)[1]!="mark") stop("\nmodel must be a fitted mark model\n")
   if(!abund&!occupancy&!multistate)
@@ -74,7 +75,7 @@ get_releases=function(model,abund=FALSE,occupancy=FALSE,multistate=FALSE)
          }
       } else
       {
-        return(get.MS.releases(model$data))
+        return(get.MS.releases(model$data,LD=LD))
       }
   }
 }
@@ -88,23 +89,42 @@ get_releases=function(model,abund=FALSE,occupancy=FALSE,multistate=FALSE)
 #' @export
 
 
-get.MS.releases=function(dp)
+get.MS.releases=function(dp,LD)
 {
   release.values=array(0,dim=c(nocc-1,length(dp$strata.labels),ncol(dp$freq)))
   x=dp$data
+  if (LD) {
+    chmat = t(sapply(strsplit(x$ch, split = ""), function(x) rbind(x)))
+    chmat = chmat[, seq(1, ncol(chmat), 2)]
+    x$ch = apply(chmat, 1, paste, collapse = "")
+  }
   pc=process.ch(x$ch)
   nocc=nchar(x$ch[1])
   nch=length(x$ch)
   cseq=cbind(1:length(x$ch),pc$first)
   pcmat=matrix((unlist(strsplit(x$ch,""))),byrow=TRUE,ncol=nocc,nrow=nch)
   whichrows=split(1:nch,list(pcmat[cseq],pc$first))
-  sums=sapply(whichrows,function(i) colSums(dp$freq[i,]))
-  strata.occ=strsplit(colnames(sums),".",fixed=TRUE)
+  if(ncol(dp$freq)>1)
+  {
+    sums=sapply(whichrows,function(i) colSums(dp$freq[i,]))
+    strata.occ=strsplit(colnames(sums),".",fixed=TRUE)
+  }
+  else 
+  {
+    sums=sapply(whichrows,function(i) sum(dp$freq[i]))
+    strata.occ=strsplit(names(sums),".",fixed=TRUE)
+  }
   for(i in 1:length(strata.occ))
   {
     strata=which(dp$strata.labels==strata.occ[[i]][1])
     occ=as.numeric(strata.occ[[i]][2])
-    if(occ<nocc)release.values[occ,strata,]=sums[,i]
+    if(occ<nocc)
+    {
+      if(ncol(dp$freq)>1)
+          release.values[occ,strata,]=sums[,i]
+      else
+        release.values[occ,strata,]=sums[i]
+    }
   }
   return(release.values)
 }
@@ -135,24 +155,3 @@ test_releases=function(releases,nocc,number.of.groups,nstrata,nevents)
   return(NULL)
 }
   
-# code for testing releases that has been removed from make.simmark.model; may want at some point
-# Output proc simulate statement 
-#test_releases(releases,nocc=nocc,number.of.groups=number.of.groups,nstrata=nstrata,nevents=0)
-# if(is.null(releases))
-#   stop("\nMust specify releases")
-# if(!is.array(releases))
-#   stop("\nreleases must be an array")
-# len=dim(releases)
-# len=len[length(len)]
-# if(!len==number.of.groups)
-#   stop("number of rows must be number of groups")
-# len=dim(releases)
-# len=len[1]
-# if(len!=nocc-1)
-#   stop("number of releases must be # of occasions -1")
-# len=dim(releases)
-# if(length(len)>2)
-# {
-#    if(len[2]!=nstrata)
-#      stop("number of columns must be number of strata")
-# }

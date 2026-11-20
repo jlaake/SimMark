@@ -4,7 +4,7 @@
 \alias{get.MS.releases}
 \title{Get multistate releases from a processed data list}
 \usage{
-get.MS.releases(dp)
+get.MS.releases(dp, LD)
 }
 \arguments{
 \item{dp}{processed data list from fitted mark model}

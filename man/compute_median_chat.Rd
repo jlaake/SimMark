@@ -14,7 +14,7 @@ compute_median_chat(
   show = TRUE,
   lrdata = NULL,
   failures = 0,
-  drop = 0.8,
+  drop = 0.5,
   ...
 )
 }

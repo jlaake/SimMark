@@ -4,7 +4,13 @@
 \alias{get_releases}
 \title{Get releases from a processed data list}
 \usage{
-get_releases(model, abund = FALSE, occupancy = FALSE, multistate = FALSE)
+get_releases(
+  model,
+  abund = FALSE,
+  occupancy = FALSE,
+  multistate = FALSE,
+  LD = FALSE
+)
 }
 \arguments{
 \item{model}{fitted mark model}
@@ -14,6 +20,8 @@ get_releases(model, abund = FALSE, occupancy = FALSE, multistate = FALSE)
 \item{occupancy}{if TRUE, uses number of capture histories per group}
 
 \item{multistate}{if TRUE, use multistate releases}
+
+\item{LD}{if TRUE has a live-dead format}
 }
 \value{
 matrix of release numbers per group

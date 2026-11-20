@@ -18,6 +18,8 @@
 #' @param adjustment if sample=TRUE and targetcv not achieved, further sample range of initial$chat*(1-adjustment) to initial$chat*(1+adjustment)
 #' @param plot if TRUE shows plot of fitted median chat logistic regression data
 #' @param drop percentage of extreme values to drop on ends of data
+#' @param show if TRUE, show progress with simulations
+#' @param test if TRUE, test to see if code to get releases is working; only for developer
 #' @return dataframe of results for chat calculations including Fletcherchat (if available for model), 
 #' chat which is the median chat value, lowerci and upperci which are the 95%  confidence interval for median chat,
 #' cv which is the coefficient of variation for median chat and covered which is 1 if testchat is in the confidence interval
@@ -36,7 +38,8 @@
 #' sim.chat(simdata,dm.formulas=dm.formulas,beta.values=beta.values,
 #'                release.values=release.values,nreps=2)
 #' }
-sim.chat=function(dp,ddl=NULL,dm.formulas=NULL,beta.values=NULL,release.values=NULL,testchat=2,lower=1,upper=testchat+1,nreps=100,sample=TRUE,targetcv=0.1,nsample=10,npts=10,adjustment=0.1,plot=FALSE,drop=0.5)
+sim.chat=function(dp,ddl=NULL,dm.formulas=NULL,beta.values=NULL,release.values=NULL,testchat=2,lower=1,upper=testchat+1,
+                  nreps=100,sample=TRUE,targetcv=0.05,nsample=10,npts=10,adjustment=0.1,plot=FALSE,drop=0.5,show=TRUE,test=FALSE)
 {
   repfailures=NULL
   # create dataframe for results  
@@ -48,7 +51,7 @@ sim.chat=function(dp,ddl=NULL,dm.formulas=NULL,beta.values=NULL,release.values=N
     # run simulation with specified testchat value
     mod=simmark(dp,ddl=ddl,model.parameters=dm.formulas,releases=release.values,numsims=1,simdata="data.inp",chat=testchat,
                 beta=beta.values,simfile="simresults.bin",invisible=TRUE,silent=TRUE,delete=TRUE)
-    # read in simulated data and process it
+     # read in simulated data and process it
     if(ncol(dp$freq)>1)
     {
       simdata=readSimData("data.inp",group.df=data.frame(grp=1:ncol(dp$freq)))
@@ -61,6 +64,24 @@ sim.chat=function(dp,ddl=NULL,dm.formulas=NULL,beta.values=NULL,release.values=N
     }
     # fit model with simulated data
     mod=mark(dpsim,ddl=ddl,model.parameters=dm.formulas,invisible=TRUE,silent=TRUE)
+    # if this is not an abundance model, test to make sure simulated releases match specified releases
+    if(i == 1 & test)
+    {
+      dummy=setup.model(mod$model,1,1)
+      if(!dummy$abund)
+      {
+        if(!dummy$chat)stop("This model is not supported for median chat calculation")
+        releases=get_releases(mod,abund=dummy$abundance,occupancy=dummy$occupancy,multistate=dummy$strata)
+        if(any(releases=="STOP"))stop("Cannot construct median chat with this model")
+        if(sum(releases)!=sum(release.values))
+        {
+          cat("\n",releases)
+          cat("\n\n")
+          cat(release.values)
+          stop()      
+        }
+      }
+    }
     if(is.null(mod$results))
     {
       cat("\nConvergence or other failure fitting model for simulation ",i,"\n")
@@ -69,11 +90,17 @@ sim.chat=function(dp,ddl=NULL,dm.formulas=NULL,beta.values=NULL,release.values=N
     {
       unlink(paste(mod$output,c(".out",".inp",".vcv",".res"),sep=""))
       # compute median chat
-      chat_results=median_chat(mod,lower=lower,upper=upper,sample=sample,targetcv=targetcv,nsample=nsample,npts=npts,adjustment=adjustment,plot=plot,drop=drop)
+      chat_results=median_chat(mod,lower=lower,upper=upper,sample=sample,targetcv=targetcv,nsample=nsample,npts=npts,
+                               adjustment=adjustment,plot=plot,drop=drop,show=show)
       # store results 
-      results[i,]=list(FletcherChat=mod$results$FletcherChat,chat=chat_results$chat,
+      if(is.null(mod$results$FletcherChat))
+         results[i,]=list(FletcherChat=0,chat=chat_results$chat,
                      lowerci=chat_results$lower,upperci=chat_results$upper,cv=chat_results$cv_chat,
                      covered=as.numeric(chat_results$lower<testchat & chat_results$upper>testchat))
+      else
+        results[i,]=list(FletcherChat=mod$results$FletcherChat,chat=chat_results$chat,
+                         lowerci=chat_results$lower,upperci=chat_results$upper,cv=chat_results$cv_chat,
+                         covered=as.numeric(chat_results$lower<testchat & chat_results$upper>testchat))
     }
   }
   if(is.null(repfailures))

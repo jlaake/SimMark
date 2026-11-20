@@ -20,12 +20,12 @@
 #' var_chat the variance of the estimated median chat, and ci the 95% inverse conf interval.
 #' @author Jeff Laake
 #' @export
-compute_median_chat=function(model,ddl=NULL,chat.range=c(1,3),npts=10,nsample=10,plot=TRUE,show=TRUE,lrdata=NULL,failures=0,drop=0.8,...)
+compute_median_chat=function(model,ddl=NULL,chat.range=c(1,3),npts=10,nsample=10,plot=TRUE,show=TRUE,lrdata=NULL,failures=0,drop=0.5,...)
 {
   dummy=setup.model(model$model,1,1)
   if(!dummy$chat)stop("This model is not supported for median chat calculation")
   beta.values=get_beta_values(model)
-  releases=get_releases(model,abund=dummy$abundance,occupancy=dummy$occupancy,multistate=dummy$strata)
+  releases=get_releases(model,abund=dummy$abundance,occupancy=dummy$occupancy,multistate=dummy$strata,LD=dummy$LD)
   if(any(releases=="STOP"))stop("Cannot construct median chat with this model")
   observed.chat=model$results$deviance/model$results$deviance.df
   rerun=FALSE
@@ -82,7 +82,7 @@ compute_median_chat=function(model,ddl=NULL,chat.range=c(1,3),npts=10,nsample=10
     lines(inverse_estimate[2:3],c(0.5,0.5))
     points(inverse_estimate[1],c(0.5),pch="x",cex=1.5)
   }
-  cat("\n",failures," failures out of ",(npts+2)*nsample," trials\n")
+  if(show)cat("\n",failures," failures out of ",(npts+2)*nsample," trials\n")
   return(list(chat=chat,lrmod=lrmod,obs_prop=obs_prop,lrdata=lrdata,vcv=vcv,cv_chat=cv_chat,
               lowerci=lowerci,upperci=upperci,failures=failures))
 }
@@ -128,7 +128,8 @@ compute_median_chat=function(model,ddl=NULL,chat.range=c(1,3),npts=10,nsample=10
 #'chat_results2=median_chat(model,lower=1,upper=3,sample=TRUE,plot=TRUE)
 #'chat_results2
 #' }
-median_chat=function(model,ddl=NULL,lower=1,upper=3,sample=TRUE,targetcv=0.05,nsample=10,npts=10,adjustment=0.1,plot=TRUE,show=TRUE,drop=0.8,...)
+median_chat=function(model,ddl=NULL,lower=1,upper=3,sample=TRUE,targetcv=0.05,nsample=10,npts=10,
+                     adjustment=0.1,plot=TRUE,show=TRUE,drop=0.5,...)
 {
   dummy=setup.model(model$model,1,1)
   if(!dummy$chat)stop("This model is not supported for median chat calculation")
@@ -144,7 +145,11 @@ median_chat=function(model,ddl=NULL,lower=1,upper=3,sample=TRUE,targetcv=0.05,ns
   }
   if(model$results$deviance.df==0)stop("\ndeviance.df=0, cannot estimate chat\n")
   if(!sample)
-     return(compute_median_chat(model,ddl=ddl,chat.range=c(lower,upper),npts=npts,nsample=nsample,plot=plot,show=show,...))
+  {
+     initial=compute_median_chat(model,ddl=ddl,chat.range=c(lower,upper),npts=npts,nsample=nsample,plot=plot,show=show,...)
+     if(show)cat("\nUsing initial as final = ",initial$chat," cv = ",initial$cv_chat,"\n")
+     return(initial)
+  }
   else
   {
     if(show)cat("\nComputing initial estimate\n")

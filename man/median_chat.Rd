@@ -16,7 +16,7 @@ median_chat(
   adjustment = 0.1,
   plot = TRUE,
   show = TRUE,
-  drop = 0.8,
+  drop = 0.5,
   ...
 )
 }
